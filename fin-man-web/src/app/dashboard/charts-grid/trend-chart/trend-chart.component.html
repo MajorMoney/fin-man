@@ -1,0 +1,14 @@
+<div class="chart card">
+  <div class="chart-header">
+    <h3>Monthly View</h3>
+    
+  </div>
+
+  <div class="chart-wrapper">
+    <canvas #chartCanvas></canvas>
+  </div>
+  
+  <div *ngIf="loading" class="loading-overlay">
+    <span>Loading...</span>
+  </div>
+</div>

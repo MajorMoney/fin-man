@@ -1,0 +1,10 @@
+<nav class="side-navbar">
+  <ul>
+    <li *ngFor="let item of navItems">
+      <a [routerLink]="item.route || '#'">
+        <span *ngIf="item.icon" class="{{ item.icon }}"></span>
+        {{ item.label }}
+      </a>
+    </li>
+  </ul>
+</nav>

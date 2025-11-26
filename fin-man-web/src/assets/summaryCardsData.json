@@ -1,0 +1,8 @@
+[
+  { "title": "Total Income", "metric": "totalIncome" },
+  { "title": "Total Expenses", "metric": "totalExpenses" },
+  { "title": "Net Savings", "metric": "netSavings" },
+  { "title": "Savings Rate", "metric": "savingsRate" },
+  { "title": "Average Monthly Expense", "metric": "averageMonthlyExpense" },
+  { "title": "Top Category", "metric": "topCategory" }
+]

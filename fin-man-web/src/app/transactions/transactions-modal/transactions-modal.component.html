@@ -1,0 +1,194 @@
+<div class="modal-overlay" *ngIf="isOpen">
+  <div class="modal-content" (click)="(null)">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h3>{{ mode === 'create' ? 'Add Expense' : 'Edit Expense' }}</h3>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+
+    <!-- Scrollable Body Wrapper -->
+    <div class="modal-scrollable">
+      <div class="modal-body" *ngIf="editForm">
+        <div class="form-group">
+          <label for="edit-date">Date *</label>
+          <input
+            id="edit-date"
+            type="date"
+            [(ngModel)]="editForm.date"
+            class="form-input"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="edit-description">Description *</label>
+          <input
+            id="edit-description"
+            type="text"
+            [(ngModel)]="editForm.description"
+            class="form-input"
+            placeholder="e.g., Grocery shopping"
+            required
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-amount">Amount *</label>
+            <input
+              id="edit-amount"
+              type="number"
+              [(ngModel)]="editForm.amount"
+              class="form-input"
+              step="0.01"
+              min="0"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="edit-currency">Currency *</label>
+            <input
+              id="edit-currency"
+              type="text"
+              [(ngModel)]="editForm.currency"
+              class="form-input"
+              placeholder="USD"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-category">Category *</label>
+          <div class="custom-select-wrapper">
+            <input
+              id="edit-category"
+              type="text"
+              [(ngModel)]="editForm.category"
+              (input)="filterCategories()"
+              (blur)="onCategoryBlur()"
+              placeholder="e.g., Food"
+              class="form-input"
+              required
+              autocomplete="off"
+            />
+
+            <ul
+              class="custom-select-dropdown"
+              *ngIf="filteredCategoryOptions.length > 0"
+            >
+              <li
+                *ngFor="let cat of filteredCategoryOptions"
+                (click)="selectCategory(cat.name)"
+              >
+                {{ cat.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-user">User *</label>
+          <select
+            id="edit-user"
+            [(ngModel)]="editForm.user"
+            (ngModelChange)="onUserChange()"
+            class="form-input"
+            required
+          >
+            <option value="" disabled selected>Select user</option>
+            <option *ngFor="let u of users$ | async" [value]="u.name">
+              {{ u.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-account">Account *</label>
+          <select
+            id="edit-account"
+            [(ngModel)]="editForm.account"
+            class="form-input"
+          >
+            <option value="" disabled selected>Select account</option>
+            <option
+              *ngFor="let a of filteredAccounts$ | async"
+              [value]="a.name"
+            >
+              {{ a.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-type">Type *</label>
+          <select id="edit-type" [(ngModel)]="editForm.type" class="form-input">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>
+            <input type="checkbox" [(ngModel)]="editForm.recurring" />
+            Recurring Transaction
+          </label>
+        </div>
+
+        <div *ngIf="editForm.recurring">
+          <div class="form-group">
+            <label for="recurrence-rule">Recurrence Rule *</label>
+            <select
+              id="recurrence-rule"
+              [(ngModel)]="editForm.recurrenceRule"
+              class="form-input"
+            >
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="end-date">End Date (optional)</label>
+            <input
+              id="end-date"
+              type="date"
+              [(ngModel)]="editForm.endDate"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-notes">Notes</label>
+          <textarea
+            id="edit-notes"
+            [(ngModel)]="editForm.notes"
+            class="form-input"
+            rows="3"
+            placeholder="Additional notes..."
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button
+        class="btn btn-danger"
+        *ngIf="mode === 'edit'"
+        (click)="onDelete()"
+      >
+        Delete
+      </button>
+      <div class="footer-right">
+        <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+        <button
+          class="btn btn-primary"
+          (click)="mode === 'create' ? onCreate() : onSave()"
+        >
+          {{ mode === 'create' ? 'Add Expense' : 'Save Changes' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

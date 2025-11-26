@@ -1,0 +1,23 @@
+<div class = "view">
+  <div class="view-header">
+    <h2>Users</h2>
+    <button class="add" (click)="openCreateUser()">+ Add User</button>
+  </div>
+
+  <div class="list">
+    <!-- render one card per user -->
+    <app-user-card
+      *ngFor="let user of users"
+      [user]="user"
+      (edit)="openEditUser(user)"
+    >
+    </app-user-card>
+  </div>
+</div>
+<!-- single modal instance outside the loop -->
+<app-user-modal
+  [isOpen]="isUserModalOpen"
+  [mode]="modalMode"
+  [user]="selectedUser"
+  (closeModal)="closeUserModal()"
+></app-user-modal>

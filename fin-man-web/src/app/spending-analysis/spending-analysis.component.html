@@ -1,0 +1,21 @@
+<div class="view">
+  <div class="header">
+    <h1>Spending Analysis</h1>
+    <app-category-filter 
+      [categories]="categories"
+      [selectedCategory]="selectedCategory"
+      (categoryChange)="onCategoryChange($event)">
+    </app-category-filter>
+  </div>
+
+  <div class="content-grid">
+    <div class="left-panel">
+      <app-top-spending-chart [data]="topSpendingData"></app-top-spending-chart>
+      <app-monthly-analysis></app-monthly-analysis>
+    </div>
+
+    <div class="right-panel">
+      <app-detailed-transactions-placeholder></app-detailed-transactions-placeholder>
+    </div>
+  </div>
+</div>
