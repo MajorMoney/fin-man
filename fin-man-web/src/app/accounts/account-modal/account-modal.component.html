@@ -1,0 +1,86 @@
+<div class="modal-overlay" *ngIf="isOpen">
+  <div class="modal-content" (click)="onContentClick($event)">
+    <div class="modal-header">
+      <h3>{{ mode === 'create' ? 'Add Account' : 'Edit Account' }}</h3>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+
+    <div class="modal-body" *ngIf="editForm">
+      <div class="form-group">
+        <label>Name *</label>
+        <input type="text" class="form-input" [(ngModel)]="editForm.name" />
+      </div>
+
+      <div class="form-group">
+        <label>Holdings *</label>
+        <input
+          type="number"
+          class="form-input"
+          [(ngModel)]="editForm.holdings"
+          min="0"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Holders</label>
+
+        <!-- compact helper row -->
+        <div class="holders-controls">
+          <div class="holders-count">
+            Selected: <strong>{{ editForm?.holders?.length || 0 }}</strong>
+          </div>
+          <!-- optional quick actions -->
+          <div class="holders-actions">
+            <button
+              type="button"
+              class="btn small"
+              (click)="selectAllHolders()"
+            >
+              Select All
+            </button>
+            <button
+              type="button"
+              class="btn small ghost"
+              (click)="clearHolders()"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable list of user checkboxes -->
+        <div class="holders-list" *ngIf="users?.length; else noUsers">  
+          <label class="holder-item" *ngFor="let u of users">
+            <input
+              type="checkbox"
+              [checked]="isHolder(u.name)"
+              (change)="toggleHolder(u)"
+            />
+            <span class="holder-name">{{ u.name }}</span>
+          </label>
+        </div>
+
+        <ng-template #noUsers>
+          <div class="no-users">No registered users. Add users first.</div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        class="btn btn-danger"
+        *ngIf="mode === 'edit'"
+        (click)="onDelete()"
+      >
+        Delete
+      </button>
+
+      <div class="footer-right">
+        <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+        <button class="btn btn-primary" (click)="onSave()">
+          {{ mode === 'create' ? 'Add Account' : 'Save' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

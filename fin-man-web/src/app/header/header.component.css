@@ -1,0 +1,16 @@
+.app-header {
+  height: 60px;
+  background-color: #2c3e50;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* title left, user selector right */
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.app-title {
+  margin: 0;            /* remove default top/bottom margin */
+  font-size: 1.5rem;
+  line-height: 1;       /* ensure it doesn't add extra height */
+}

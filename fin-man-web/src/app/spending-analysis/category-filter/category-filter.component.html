@@ -1,0 +1,8 @@
+<div class="category-filter">
+  <label>Category</label>
+  <select [value]="selectedCategory" (change)="onSelectChange($event)">
+    <option *ngFor="let category of categories" [value]="category">
+      {{ category }}
+    </option>
+  </select>
+</div>

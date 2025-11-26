@@ -1,0 +1,49 @@
+<div class="view">
+  <h2>Your Savings Goals</h2>
+  <p class="subtitle">Overview</p>
+
+  <div class="goals-grid">
+    <div *ngFor="let goal of goals" class="goal-card">
+      <div class="goal-header">
+        <div class="goal-title">
+          <span class="icon">🏦</span>
+          {{ goal.title }}
+        </div>
+      </div>
+
+      <div class="goal-progress">
+        <div class="goal-amount">
+          <strong>\${{ goal.current | number:'1.0-0' }}</strong>
+          <span class="target">/ \${{ goal.target | number:'1.0-0' }}</span>
+        </div>
+
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            [style.width.%]="(goal.current / goal.target) * 100"
+            [style.background]="goal.color"
+          ></div>
+        </div>
+      </div>
+
+      <div class="goal-details">
+        <div>
+          <span class="label">Needed</span><br />
+          \${{ goal.needed | number:'1.0-0' }}
+        </div>
+        <div>
+          <span class="label">Days Left</span><br />
+          {{ goal.daysLeft }}
+        </div>
+        <div>
+          <span class="label">Monthly Contribution</span><br />
+          <span class="contribution" [style.color]="goal.color">
+            \${{ goal.monthlyContribution | number:'1.0-0' }}
+          </span>
+        </div>
+      </div>
+
+      <button class="details-btn">View Details</button>
+    </div>
+  </div>
+</div>

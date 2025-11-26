@@ -1,0 +1,35 @@
+.side-navbar {
+  width: 180px;          /* fixed width for sidebar */
+  height: 100%;           /* fill height of parent (app-body) */
+  background-color: #2c3e50;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;       /* scroll if sidebar content is too tall */
+  box-sizing: border-box;
+  padding-top: 1rem;
+}
+
+/* Sidebar list items */
+.side-navbar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.side-navbar li {
+  margin: 0;
+}
+
+.side-navbar a {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: white;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.side-navbar a:hover {
+  background-color: #34495e;
+  cursor: pointer;
+}

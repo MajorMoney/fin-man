@@ -1,0 +1,15 @@
+<div class="card">
+  <div class="title">{{ account.name }}</div>
+
+  <div class="subtitle">
+    Holdings: <strong>{{ account.holdings }} €</strong>
+  </div>
+
+  <div class="subtitle">
+    Holders: <strong>{{ account.holders.join(', ') }}</strong>
+  </div>
+
+  <div class="actions">
+    <button class="edit" (click)="edit.emit(account)">Edit</button>
+  </div>
+</div>

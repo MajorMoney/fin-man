@@ -1,0 +1,184 @@
+<div class="expenses-container">
+  <div class="list-header">
+    <h2>Expenses List</h2>
+    <div class="list-info">
+      <span class="total-count">Total: {{ totalItems }} expenses</span>
+      <div class="items-per-page">
+        <label for="itemsPerPage">Show:</label>
+        <select
+          id="itemsPerPage"
+          [value]="itemsPerPage"
+          (change)="onItemsPerPageChange($event)"
+          class="items-select"
+        >
+          <option *ngFor="let option of itemsPerPageOptions" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+        <span>per page</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="sortable" (click)="onSort('date')">
+            Date <span>{{ getSortIcon('date') }}</span>
+          </th>
+          <th class="sortable" (click)="onSort('type')">
+            Type <span>{{ getSortIcon('type') }}</span>
+          </th>
+          <th class="sortable" (click)="onSort('description')">
+            Description <span>{{ getSortIcon('description') }}</span>
+          </th>
+          <th class="sortable" (click)="onSort('amount')">
+            Amount <span>{{ getSortIcon('amount') }}</span>
+          </th>
+          <th>Recurring</th>
+          <th class="sortable" (click)="onSort('account')">
+            Account <span>{{ getSortIcon('account') }}</span>
+          </th>
+          <th class="sortable" (click)="onSort('category')">
+            Category <span>{{ getSortIcon('category') }}</span>
+          </th>
+          <th class="sortable" (click)="onSort('notes')">
+            Notes <span>{{ getSortIcon('notes') }}</span>
+          </th>
+          <th class="sortable" (click)="onSort('user')">
+            User <span>{{ getSortIcon('user') }}</span>
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tx of paginatedExpenses; trackBy: trackById">
+          <!-- DATE -->
+          <td>{{ tx.date | date : 'shortDate' }}</td>
+
+          <!-- TYPE (Income / Expense) -->
+          <td>
+            <span
+              class="type-badge"
+              [class.income]="tx.type === 'income'"
+              [class.expense]="tx.type === 'expense'"
+            >
+              {{ tx.type === 'income' ? '↑ Income' : '↓ Expense' }}
+            </span>
+          </td>
+
+          <!-- DESCRIPTION -->
+          <td>{{ tx.description }}</td>
+
+          <!-- AMOUNT with Currency -->
+          <td
+            class="amount"
+            [class.income]="tx.type === 'income'"
+            [class.expense]="tx.type === 'expense'"
+          >
+            {{ tx.amount | number : '1.2-2' }} {{ tx.currency }}
+          </td>
+
+          <!-- RECURRING -->
+          <td>
+            <span *ngIf="tx.recurring" class="recurring-badge"
+              >♻ Recurring</span
+            >
+            <span *ngIf="!tx.recurring" class="non-recurring">—</span>
+          </td>
+
+          <!-- ACCOUNT -->
+          <td>{{ tx.account }}</td>
+
+          <!-- CATEGORY -->
+          <td>
+            <span class="category-badge">{{ tx.category }}</span>
+          </td>
+
+          <!-- NOTES -->
+          <td class="notes">{{ tx.notes || '-' }}</td>
+
+          <!-- USER -->
+          <td>{{ tx.user }}</td>
+
+          <!-- EDIT -->
+          <td>
+            <span
+              class="category-badge"
+              style="cursor: pointer"
+              (click)="openEditModal(tx)"
+            >
+              Edit
+            </span>
+          </td>
+        </tr>
+
+        <tr *ngIf="paginatedExpenses.length === 0">
+          <td colspan="10" class="no-data">No transactions found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button
+      class="page-btn"
+      [disabled]="currentPage === 1"
+      (click)="previousPage()"
+    >
+      « Previous
+    </button>
+
+    <button
+      *ngIf="getPageNumbers()[0] > 1"
+      class="page-btn"
+      (click)="goToPage(1)"
+    >
+      1
+    </button>
+
+    <span *ngIf="getPageNumbers()[0] > 2" class="ellipsis">...</span>
+
+    <button
+      *ngFor="let page of getPageNumbers()"
+      class="page-btn"
+      [class.active]="page === currentPage"
+      (click)="goToPage(page)"
+    >
+      {{ page }}
+    </button>
+
+    <span
+      *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1"
+      class="ellipsis"
+      >...</span
+    >
+
+    <button
+      *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages"
+      class="page-btn"
+      (click)="goToPage(totalPages)"
+    >
+      {{ totalPages }}
+    </button>
+
+    <button
+      class="page-btn"
+      [disabled]="currentPage === totalPages"
+      (click)="nextPage()"
+    >
+      Next »
+    </button>
+
+    <span class="page-info"> Page {{ currentPage }} of {{ totalPages }} </span>
+  </div>
+</div>
+<!-- Edit Modal Component -->
+<app-transactions-modal
+  [isOpen]="isEditModalOpen"
+  [transaction]="editingTransaction"
+  (closeModal)="closeEditModal()"
+>
+</app-transactions-modal>

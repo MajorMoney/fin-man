@@ -1,0 +1,44 @@
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+/* Add Account = Blue button */
+.add {
+  padding: 0.55rem 1.25rem;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  background: var(--blue);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.add:hover {
+  background: var(--blue-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Grid list */
+.list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 640px) {
+  .list {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
