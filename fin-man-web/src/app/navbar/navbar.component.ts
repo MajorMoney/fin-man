@@ -11,6 +11,7 @@ export class NavbarComponent {
     { label: 'Dashboard', route: '/dashboard' },
     { label: 'Spending Analysis', route: '/analysis' },
     { label: 'Transactions', route: '/transactions' },
+    { label: 'Recurring Transactions', route: '/recurrent-transanctions' },
     { label: 'Saving Goals', route: '/savings' },
     { label: 'Users', route: '/users' },
     { label: 'Accounts', route: '/accounts' },

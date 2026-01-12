@@ -14,6 +14,8 @@ import { CreateTransactionDto } from 'src/models/dto/transactions/create-transac
 import { UpdateTransactionDto } from 'src/models/dto/transactions/update-transaction.dto';
 import { User, UserDocument } from 'src/models/schemas/user.schema';
 import { Account, AccountDocument } from 'src/models/schemas/account.schema';
+import { AccountHoldingsService } from 'src/accounts/accounts-holdings.service';
+import { ValidationService } from 'src/validation/validation.service';
 
 @Injectable()
 export class TransactionsService {
@@ -24,47 +26,27 @@ export class TransactionsService {
     private readonly userModel: Model<UserDocument>,
     @InjectModel(Account.name)
     private readonly accountModel: Model<AccountDocument>,
+    private readonly accountHoldingsService: AccountHoldingsService,
+    private readonly validationService: ValidationService,
   ) {}
 
   async create(dto: CreateTransactionDto) {
-    // 1️⃣ Check if user exists
-    const userExists = await this.userModel.findOne({ name: dto.user }).exec();
-    if (!userExists) {
-      throw new NotFoundException(`User ${dto.user} does not exist`);
-    }
+    // 1 Validate user exists
+    await this.validationService.validateUser(dto.user);
+    // 2 Validate account exists
+    await this.validationService.validateAccountByName(dto.account);
 
-    // 2️⃣ Ensure account is provided
-    if (!dto.account) {
-      throw new BadRequestException('Account is required for the transaction');
-    }
+    // 3 Validate user is a holder
+    await this.validationService.validateHolderByName(dto.user, dto.account);
 
-    // 3️⃣ Check if account exists
-    const account = await this.accountModel
-      .findOne({ name: dto.account })
-      .exec();
-    if (!account) {
-      throw new NotFoundException(`Account ${dto.account} does not exist`);
-    }
+    // 4 Update account holdings
+    await this.accountHoldingsService.updateHoldings(
+      dto.account,
+      dto.type,
+      dto.amount,
+    );
 
-    // 4️⃣ Check if user is a holder
-    if (!account.holders.includes(dto.user)) {
-      throw new BadRequestException(
-        `User ${dto.user} is not a holder of account ${dto.account}`,
-      );
-    }
-
-    // 5️⃣ Update account holdings
-    let newHoldings = account.holdings;
-    if (dto.type === 'income') {
-      newHoldings += dto.amount; // increase for income
-    } else if (dto.type === 'expense') {
-      newHoldings -= dto.amount; // decrease for expense
-    }
-
-    account.holdings = newHoldings;
-    await account.save();
-
-    // 6️⃣ Create the transaction
+    // 5 Create the transaction
     const transaction = new this.transactionModel({
       ...dto,
       id: generateId(),
@@ -114,39 +96,24 @@ export class TransactionsService {
     }
 
     // 3️⃣ Validate user exists
-    const user = await this.userModel.findOne({ name: updated.user }).exec();
-    if (!user)
-      throw new NotFoundException(`User ${updated.user} does not exist`);
-
+    await this.validationService.validateUser(updated.user);
     // 4️⃣ Validate account exists
-    const account = await this.accountModel
-      .findOne({ name: updated.account })
-      .exec();
-    if (!account)
-      throw new NotFoundException(`Account ${updated.account} does not exist`);
+    const account = await this.validationService.validateAccountByName(
+      updated.account,
+    );
 
     // 5️⃣ Validate user is a holder
-    if (!account.holders.includes(updated.user)) {
-      throw new BadRequestException(
-        `User ${updated.user} is not a holder of account ${updated.account}`,
-      );
-    }
+    await this.validationService.validateHolderByName(
+      updated.user,
+      updated.account,
+    );
 
     // 6️⃣ Adjust holdings
-    const delta =
-      (updated.type === 'income' ? updated.amount : -updated.amount) -
-      (existing.type === 'income' ? existing.amount : -existing.amount);
-
-    const newHoldings = account.holdings + delta;
-    if (newHoldings < 0) {
-      throw new BadRequestException(
-        'Insufficient funds in the account after update',
-      );
-    }
-
-    account.holdings = newHoldings;
-    await account.save();
-
+    await this.accountHoldingsService.adjustHoldingsForUpdate(
+      account.name,
+      existing,
+      updated,
+    );
     // 7️⃣ Update transaction
     const updatedTransaction = await this.transactionModel
       .findOneAndUpdate({ id }, dto, { new: true })

@@ -4,6 +4,21 @@ import { TransactionFiltersForm } from '../ui-models/transactions-list-filters';
 import { MonthlyData } from '../ui-models/monthly-data';
 
 export class TransactionUtils {
+  static readonly MONTHS = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
   static filterByUser(
     transactions: Transaction[],
     userName: string
@@ -29,12 +44,7 @@ export class TransactionUtils {
     transactions: Transaction[],
     year: number
   ): Transaction[] {
-    return transactions.filter((t) => {
-      const startYear = new Date(t.date).getFullYear();
-      if (!t.recurring) return startYear === year;
-      const endYear = t.endDate ? new Date(t.endDate).getFullYear() : Infinity;
-      return startYear <= year && year <= endYear;
-    });
+    return transactions.filter((t) => new Date(t.date).getFullYear() === year);
   }
 
   static filterByDateRange(
@@ -59,22 +69,7 @@ export class TransactionUtils {
     transactions: Transaction[],
     year: number
   ): MonthlyData[] {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-
-    const monthlyData: MonthlyData[] = months.map((month) => ({
+    const monthlyData: MonthlyData[] = this.MONTHS.map((month) => ({
       month,
       amount: 0,
     }));
@@ -96,46 +91,10 @@ export class TransactionUtils {
       // -------------------------------------------------------
       // NON-RECURRING TRANSACTION
       // -------------------------------------------------------
-      if (!t.recurring) {
-        if (transactionDate.getFullYear() === year) {
-          const monthIndex = transactionDate.getMonth();
-          monthlyData[monthIndex].amount += t.amount;
-        }
-        return;
-      }
-
-      // -------------------------------------------------------
-      // RECURRING TRANSACTION
-      // -------------------------------------------------------
-      const recurringStart = new Date(
-        transactionDate.getFullYear(),
-        transactionDate.getMonth(),
-        1
-      );
-
-      const recurringEnd = t.endDate
-        ? new Date(
-            new Date(t.endDate).getFullYear(),
-            new Date(t.endDate).getMonth(),
-            1
-          )
-        : year === currentYear
-        ? yearEnd // ongoing → cap at current month
-        : new Date(year, 11, 1); // for other years assume it covers full year
-
-      // Compute actual overlap with the target year
-      const from = recurringStart > yearStart ? recurringStart : yearStart;
-      const to = recurringEnd < yearEnd ? recurringEnd : yearEnd;
-
-      if (from > to) return; // no overlap in this year
-
-      let current = new Date(from.getFullYear(), from.getMonth(), 1);
-      const end = new Date(to.getFullYear(), to.getMonth(), 1);
-
-      while (current <= end) {
-        const monthIndex = current.getMonth();
+      if (transactionDate.getFullYear() === year) {
+        const monthIndex = transactionDate.getMonth();
         monthlyData[monthIndex].amount += t.amount;
-        current.setMonth(current.getMonth() + 1);
+        return;
       }
     });
 
@@ -160,20 +119,7 @@ export class TransactionUtils {
     transactions.forEach((t) => {
       let startYear = new Date(t.date).getFullYear();
       if (startYear > currentYear) return; // ignore future-start transactions
-
-      if (!t.recurring) {
-        years.add(startYear);
-      } else {
-        // Recurring → from startYear to endYear or currentYear, capped at currentYear
-        let endYear = t.endDate
-          ? new Date(t.endDate).getFullYear()
-          : currentYear;
-        if (endYear > currentYear) endYear = currentYear;
-
-        for (let y = startYear; y <= endYear; y++) {
-          years.add(y);
-        }
-      }
+      years.add(startYear);
     });
 
     return Array.from(years).sort((a, b) => b - a); // descending
@@ -197,26 +143,8 @@ export class TransactionUtils {
 
       const sign = t.type === 'income' ? 1 : -1;
 
-      if (!t.recurring) {
-        if (transactionDate >= startDate && transactionDate <= endDate) {
-          total += t.amount * sign;
-        }
-      } else {
-        const recurringStart = transactionDate;
-        const recurringEnd = t.endDate ? new Date(t.endDate) : endDate;
-
-        // Actual recurring period bounded by the requested range
-        const from = recurringStart > startDate ? recurringStart : startDate;
-        const to = recurringEnd < endDate ? recurringEnd : endDate;
-
-        // Count 1 per month in the overlapping period
-        let current = new Date(from.getFullYear(), from.getMonth(), 1);
-        const final = new Date(to.getFullYear(), to.getMonth(), 1);
-
-        while (current <= final) {
-          total += t.amount * sign;
-          current.setMonth(current.getMonth() + 1);
-        }
+      if (transactionDate >= startDate && transactionDate <= endDate) {
+        total += t.amount * sign;
       }
     });
 
@@ -237,25 +165,8 @@ export class TransactionUtils {
       // Skip transactions completely outside the range
       if (transactionDate > endDate) return;
 
-      if (!t.recurring) {
-        if (transactionDate >= startDate && transactionDate <= endDate) {
-          total += t.amount;
-        }
-      } else {
-        const recurringStart = transactionDate;
-        const recurringEnd = t.endDate ? new Date(t.endDate) : endDate;
-
-        // Actual recurring period bounded by the requested range
-        const from = recurringStart > startDate ? recurringStart : startDate;
-        const to = recurringEnd < endDate ? recurringEnd : endDate;
-
-        // Count 1 per month in the overlapping period
-        let current = new Date(from.getFullYear(), from.getMonth(), 1);
-        const end = new Date(to.getFullYear(), to.getMonth(), 1);
-        while (current <= end) {
-          total += t.amount;
-          current.setMonth(current.getMonth() + 1);
-        }
+      if (transactionDate >= startDate && transactionDate <= endDate) {
+        total += t.amount;
       }
     });
 
@@ -271,15 +182,6 @@ export class TransactionUtils {
       start: new Date(Math.min(...dates.map((d) => d.getTime()))),
       end: new Date(Math.max(...dates.map((d) => d.getTime()))),
     };
-  }
-
-  static splitRecurring(transactions: Transaction[]): {
-    recurringTransactions: Transaction[];
-    normalTransactions: Transaction[];
-  } {
-    const recurringTransactions = transactions.filter((t) => t.recurring);
-    const normalTransactions = transactions.filter((t) => !t.recurring);
-    return { recurringTransactions, normalTransactions };
   }
 
   /**
@@ -317,12 +219,6 @@ export class TransactionUtils {
     // 4️⃣ Account filter
     if (filters.account && filters.account !== 'All') {
       filtered = filtered.filter((t) => t.account === filters.account);
-    }
-
-    // 5️⃣ Recurring filter
-    if (filters.recurring !== 'All') {
-      const recurringBool = (filters.recurring as any) === 'true';
-      filtered = filtered.filter((t) => !!t.recurring === recurringBool);
     }
 
     // 6️⃣ Date range filter

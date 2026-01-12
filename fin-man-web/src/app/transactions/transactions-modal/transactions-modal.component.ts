@@ -10,10 +10,12 @@ import {
 import { combineLatest, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Category } from 'src/libs/core/models/category';
+import { RecurringTransaction } from 'src/libs/core/models/recurring-transaction';
 import { Transaction } from 'src/libs/core/models/transactions';
 import { UserHelpers } from 'src/libs/core/models/users';
 import { AccountsService } from 'src/services/account-service';
 import { CategoryService } from 'src/services/categories-service';
+import { RecurringTransactionsService } from 'src/services/recurring-transaction-service';
 import { TransactionsService } from 'src/services/transactions-service';
 import { UserService } from 'src/services/user-service';
 
@@ -25,6 +27,7 @@ import { UserService } from 'src/services/user-service';
 export class TransactionModalComponent implements OnChanges, OnInit {
   constructor(
     private transactionsService: TransactionsService,
+    private recurringService: RecurringTransactionsService,
     private userService: UserService,
     private accountService: AccountsService,
     private categoryService: CategoryService
@@ -54,7 +57,6 @@ export class TransactionModalComponent implements OnChanges, OnInit {
       map((users) => users.filter((u) => !UserHelpers.isAllUsers(u)))
     );
 
-    // Filter categories to only 'expense'
     this.categoryService.categories$.subscribe((cats) => {
       this.categories = cats;
     });
@@ -95,9 +97,6 @@ export class TransactionModalComponent implements OnChanges, OnInit {
         category: '',
         notes: '',
         user: '',
-        recurring: false,
-        recurrenceRule: '',
-        endDate: '',
       };
     }
 
@@ -131,15 +130,13 @@ export class TransactionModalComponent implements OnChanges, OnInit {
     if (!this.editForm.date || isNaN(Date.parse(this.editForm.date)))
       errors.push('A valid date is required.');
 
-    if (this.editForm.recurring && !this.editForm.recurrenceRule) {
-      errors.push('Recurrence rule is required for recurring transactions.');
-    }
     if (errors.length) {
       alert(errors.join('\n'));
       return;
     }
 
     this.transactionsService.addTransaction({ ...this.editForm, id: 0 });
+
     this.onClose();
   }
 
@@ -149,7 +146,6 @@ export class TransactionModalComponent implements OnChanges, OnInit {
 
     if (
       !this.editForm.description ||
-      (this.editForm.recurring && !this.editForm.recurrenceRule) ||
       !this.editForm.amount ||
       !this.editForm.user ||
       !this.editForm.account ||

@@ -35,6 +35,9 @@ export class Transaction {
   @Prop({ required: true })
   user!: string;
 
+  @Prop()
+  parentRecurringId?: number; // optional: id of the RecurringTransaction that generated this instance
+
   // Recurrence
   @Prop({ default: false })
   recurring?: boolean;

@@ -8,12 +8,13 @@ import { ExpensesController } from './expenses/expenses.controller';
 import { UsersController } from './users/users.controller';
 import { AccountsModule } from './accounts/accounts.module';
 import { AccountsController } from './accounts/accounts.controller';
-import { IncomeModule } from './incomes/incomes.module';
-import { IncomeController } from './incomes/incomes.controller';
 import { CategoriesController } from './categories/categories.controller';
 import { CategoriesModule } from './categories/categories.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { TransactionsController } from './transactions/transactions.controller';
+import { RecurringTransactionsModule } from './recurring-transactions/recurring-transactions.module';
+import { ValidationModule } from './validation/validation.module';
+import { RecurringTransactionsController } from './recurring-transactions/recurring-transactions.controller';
 
 @Module({
   imports: [
@@ -21,18 +22,19 @@ import { TransactionsController } from './transactions/transactions.controller';
     ExpensesModule,
     UsersModule,
     AccountsModule,
-    IncomeModule,
     CategoriesModule,
     TransactionsModule,
+    RecurringTransactionsModule,
+    ValidationModule,
   ],
   controllers: [
     AppController,
     ExpensesController,
     UsersController,
     AccountsController,
-    IncomeController,
     CategoriesController,
     TransactionsController,
+    RecurringTransactionsController,
   ],
   providers: [AppService],
   exports: [],

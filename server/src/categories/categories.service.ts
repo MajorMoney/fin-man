@@ -5,6 +5,7 @@ import { generateId } from '../utils/id-generator';
 import { Category, CategoryDocument } from 'src/models/schemas/category.schema';
 import { CreateCategoryDto } from 'src/models/dto/category/create-category';
 import { UpdateCategoryDto } from 'src/models/dto/category/update-category';
+import { StringUtils } from 'src/utils/string.utils';
 @Injectable()
 export class CategoriesService {
   constructor(
@@ -15,6 +16,7 @@ export class CategoriesService {
   async create(dto: CreateCategoryDto) {
     const category = new this.categoryModel({
       ...dto,
+      name: StringUtils.toCamelCase(dto.name),
       id: generateId(), // auto-generate ID like expenses
     });
 

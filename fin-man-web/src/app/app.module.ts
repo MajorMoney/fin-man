@@ -33,6 +33,8 @@ import { UserCardComponent } from './users/user-card/user-card.component';
 import { TransactionsListComponent } from './transactions/transactions-list/transactions-list.component';
 import { TransactionModalComponent } from './transactions/transactions-modal/transactions-modal.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { RecurringTransactionsFormComponent } from './recurring-transactions.ts/recurring-treansactions-form/recurring-transactions-form.component';
+import { RecurringTransactionsComponent } from './recurring-transactions.ts/recurring-transactions.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +65,8 @@ import { TransactionsComponent } from './transactions/transactions.component';
     AccountCardComponent,
     UserCardComponent,
     TransactionsComponent,
+    RecurringTransactionsFormComponent,
+    RecurringTransactionsComponent,
   ],
   imports: [
     BrowserModule,

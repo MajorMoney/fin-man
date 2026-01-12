@@ -10,6 +10,7 @@ import {
 import { TransactionsService } from './transactions.service';
 import type { CreateTransactionDto } from 'src/models/dto/transactions/create-transaction.dto';
 import type { UpdateTransactionDto } from 'src/models/dto/transactions/update-transaction.dto';
+import { TransactionDocument } from 'src/models/schemas/transactions.schema';
 
 @Controller('transactions')
 export class TransactionsController {

@@ -8,6 +8,7 @@ import {
 } from 'src/models/schemas/transactions.schema';
 import { UsersModule } from 'src/users/users.module';
 import { AccountsModule } from 'src/accounts/accounts.module';
+import { ValidationModule } from 'src/validation/validation.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AccountsModule } from 'src/accounts/accounts.module';
     ]),
     UsersModule,
     AccountsModule,
+    ValidationModule,
   ],
   controllers: [TransactionsController],
   providers: [TransactionsService],
