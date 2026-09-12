@@ -1,8 +1,8 @@
 // src/recurring/recurring-transactions.cron.ts
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { RecurringTransactionsProcessingService } from './recurring-transactions-processing.service';
-import { RecurringTransactionsService } from './recurring-transaction.service';
+import { RecurringTransactionsProcessingService } from './services/recurring-transactions-processing.service';
+import { RecurringTransactionsService } from './services/recurring-transaction.service';
 
 @Injectable()
 export class RecurringTransactionsCron {
@@ -23,7 +23,7 @@ export class RecurringTransactionsCron {
         .processRules(allRules)
         .then((res) =>
           this.logger.log(
-            `Processed ${res.processedRules} recurring rules; created ${res.createdInstances} transactions`,
+            `Processed ${allRules.length} recurring rules; created ${res.length} transactions`,
           ),
         );
     } catch (err) {

@@ -3,7 +3,6 @@ export interface TransactionFiltersForm {
   type: 'income' | 'expense' | 'All';
   category: string;
   account: string;
-  recurring: boolean | 'All';
   fromDate: string;
   toDate: string;
   minAmount: number | null;
@@ -15,7 +14,6 @@ export const DEFAULT_TRANSACTION_FILTERS: TransactionFiltersForm = {
   type: 'All',
   category: 'All',
   account: 'All',
-  recurring: 'All',
   fromDate: '',
   toDate: '',
   minAmount: null,

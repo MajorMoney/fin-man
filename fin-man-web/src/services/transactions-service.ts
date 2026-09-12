@@ -41,33 +41,39 @@ export class TransactionsService implements OnDestroy {
     return this.errorSubject.value;
   }
 
-  async initializeTransactions(): Promise<void> {
-    try {
-      this.loadingSubject.next(true);
-      this.errorSubject.next(null);
+async initializeTransactions(): Promise<void> {
+  try {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
 
-      const data = await this.transactionsApi.findAll();
+    const data = await this.transactionsApi.findAll();
+    console.log('[DEBUG] transactionsApi.findAll() returned:', data);
 
-      if (!Array.isArray(data) || data.length === 0) {
-        throw new Error('Invalid transaction data: expected non-empty array');
-      }
-
-      const validTransactions = data.filter((t) => this.isValidTransaction(t));
-      if (validTransactions.length === 0) {
-        throw new Error('No valid transactions found');
-      }
-
-      this.transactionsSubject.next(validTransactions);
-      this.loadingSubject.next(false);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Failed to load transactions';
-      console.error('[TransactionsService] Initialization error:', message);
-      this.errorSubject.next(message);
-      this.transactionsSubject.next([]);
-      this.loadingSubject.next(false);
+    if (!Array.isArray(data)) {
+      throw new Error('Invalid transaction data: expected an array');
     }
+
+    const validTransactions = data.filter((t) => this.isValidTransaction(t));
+
+    // ✅ Emit valid transactions even if empty
+    this.transactionsSubject.next(validTransactions);
+    this.loadingSubject.next(false);
+
+    // Optional: log info if empty
+    if (validTransactions.length === 0) {
+      console.info('[TransactionsService] No transactions found');
+    }
+
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'Failed to load transactions';
+    console.error('[TransactionsService] Initialization error:', message);
+    this.errorSubject.next(message);
+    this.transactionsSubject.next([]);
+    this.loadingSubject.next(false);
   }
+}
+
 
   private isValidTransaction(t: any): boolean {
     return (

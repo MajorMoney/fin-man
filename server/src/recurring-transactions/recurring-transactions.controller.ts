@@ -7,16 +7,17 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { RecurringTransactionsService } from './recurring-transaction.service';
+import { RecurringTransactionsService } from './services/recurring-transaction.service';
 
 import type { CreateRecurringTransactionDto } from 'src/models/dto/recurring-transactions/create-recurring-transaction';
 import type { UpdateRecurringTransactionDto } from 'src/models/dto/recurring-transactions/update-recurring-transaction';
 import { RecurringTransactionDocument } from 'src/models/schemas/recurring-transaction.schema';
+import { RecurringTransactionMediatorService } from './services/recurring-transaction-mediator.service';
 
 @Controller('recurring-transactions')
 export class RecurringTransactionsController {
   constructor(
-    private readonly recurringService: RecurringTransactionsService,
+    private readonly recurringService: RecurringTransactionMediatorService,
   ) {}
 
   // ───────────────────────────────────────────

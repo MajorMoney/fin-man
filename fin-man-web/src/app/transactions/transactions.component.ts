@@ -95,7 +95,6 @@ export class TransactionsComponent implements OnInit, OnDestroy {
         type: [DEFAULT_TRANSACTION_FILTERS.type],
         category: [DEFAULT_TRANSACTION_FILTERS.category],
         account: [DEFAULT_TRANSACTION_FILTERS.account],
-        recurring: [DEFAULT_TRANSACTION_FILTERS.recurring],
         fromDate: [DEFAULT_TRANSACTION_FILTERS.fromDate],
         toDate: [DEFAULT_TRANSACTION_FILTERS.toDate],
         minAmount: [DEFAULT_TRANSACTION_FILTERS.minAmount, [Validators.min(0)]],

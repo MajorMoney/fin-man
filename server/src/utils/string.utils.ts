@@ -7,4 +7,9 @@ export class StringUtils {
 
     return first + rest.map((s) => s[0].toUpperCase() + s.slice(1)).join('');
   }
+
+  static parseDate(dateStr: string): Date {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
 }

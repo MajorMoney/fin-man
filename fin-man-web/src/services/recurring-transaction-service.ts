@@ -43,72 +43,47 @@ export class RecurringTransactionsService implements OnDestroy {
   }
 
   async initializeRecurringTransactions(): Promise<void> {
-    try {
-      this.loadingSubject.next(true);
-      this.errorSubject.next(null);
+  try {
+    this.loadingSubject.next(true);
+    this.errorSubject.next(null);
 
-      const data = await this.recurringTransactionsApi.findAll();
+    const data = await this.recurringTransactionsApi.findAll();
+    console.log('[DEBUG] API returned:', data);
 
-      if (!Array.isArray(data) || data.length === 0) {
-        throw new Error(
-          'Invalid recurring transaction data: expected non-empty array'
-        );
-      }
-
-      const validRecurringTransactions = data.filter((t) =>
-        this.isValidRecurringTransaction(t)
-      );
-      if (validRecurringTransactions.length === 0) {
-        throw new Error('No valid recurring transactions found');
-      }
-
-      this.recurringTransactionsSubject.next(validRecurringTransactions);
-      this.loadingSubject.next(false);
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Failed to load recurring transactions';
-      console.error(
-        '[RecurringTransactionsService] Initialization error:',
-        message
-      );
-      this.errorSubject.next(message);
-      this.recurringTransactionsSubject.next([]);
-      this.loadingSubject.next(false);
+    if (!Array.isArray(data)) {
+      throw new Error('Invalid recurring transaction data: expected an array');
     }
-  }
 
-  private isValidRecurringTransaction(t: any): boolean {
-    return (
-      t &&
-      typeof t === 'object' &&
-      'id' in t &&
-      'type' in t &&
-      'description' in t &&
-      'amount' in t &&
-      'category' in t &&
-      'user' in t &&
-      'frequency' in t &&
-      'startDate' in t &&
-      (t.type === 'income' || t.type === 'expense') &&
-      (typeof t.id === 'number' || t.id === null) &&
-      typeof t.description === 'string' &&
-      typeof t.amount === 'number' &&
-      typeof t.category === 'string' &&
-      typeof t.user === 'string' &&
-      typeof t.frequency === 'string' &&
-      typeof t.startDate === 'string'
+
+    // ✅ Even if empty, emit it — it’s a valid state
+    this.recurringTransactionsSubject.next(data);
+    this.loadingSubject.next(false);
+
+    // Optional: show a message if empty
+    if (data.length === 0) {
+      console.info('No recurring transactions found yet.');
+    }
+
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : 'Failed to load recurring transactions';
+    console.error(
+      '[RecurringTransactionsService] Initialization error:',
+      message
     );
+    this.errorSubject.next(message);
+    this.recurringTransactionsSubject.next([]);
+    this.loadingSubject.next(false);
   }
+}
+
 
   setRecurringTransactions(
     recurringTransactions: RecurringTransaction[]
   ): void {
-    const validRecurringTransactions = recurringTransactions.filter((t) =>
-      this.isValidRecurringTransaction(t)
-    );
-    this.recurringTransactionsSubject.next(validRecurringTransactions);
+    this.recurringTransactionsSubject.next(recurringTransactions);
     this.errorSubject.next(null);
   }
 

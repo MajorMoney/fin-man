@@ -1,0 +1,83 @@
+<form [formGroup]="form" class="filter-box">
+  <h4>Filter Recurring Transactions</h4>
+
+  <div class="top-bar">
+    <input type="text" placeholder="🔍 Search transactions (merchant, category, tags)" formControlName="searchQuery"
+      class="search-input" />
+
+    <div class="actions">
+      <button type="button" class="clear-btn" (click)="handleClearFilters()">
+        Clear Filters
+      </button>
+    </div>
+    <button class="add-transaction-btn" (click)="handleAddButtonClick()">
+      <span class="icon">+</span>
+      Add New Transaction
+    </button>
+  </div>
+
+  <div class="filters">
+
+    <div class="filter-field">
+      <label for="category">Category</label>
+      <select id="category" formControlName="category" class="filter-input">
+        <option *ngFor="let cat of categories" [value]="cat">
+          {{ cat }}
+        </option>
+      </select>
+    </div>
+
+
+
+    <div class="filter-field">
+      <label for="frequency">Frequency</label>
+      <select id="frequency" formControlName="recurrenceRule" class="filter-input">
+        <option value="">All</option>
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="type">Type</label>
+      <select id="type" formControlName="type" class="filter-input">
+        <option value="All">All</option>
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="account">Account</label>
+      <select id="account" formControlName="account" class="filter-input">
+        <option *ngFor="let acc of accounts" [value]="acc">
+          {{ acc }}
+        </option>
+      </select>
+    </div>
+
+
+    <div class="filter-field">
+      <label for="fromDate">From Start Date</label>
+      <input id="fromDate" type="date" formControlName="fromDate" class="filter-input" />
+    </div>
+
+    <div class="filter-field">
+      <label for="toDate">To Start Date</label>
+      <input id="toDate" type="date" formControlName="toDate" class="filter-input" />
+    </div>
+
+    <div class="filter-field">
+      <label for="minAmount">Min Amount</label>
+      <input id="minAmount" type="number" formControlName="minAmount" class="filter-input" />
+    </div>
+
+    <div class="filter-field">
+      <label for="maxAmount">Max Amount</label>
+      <input id="maxAmount" type="number" formControlName="maxAmount" class="filter-input" />
+    </div>
+
+  </div>
+</form>

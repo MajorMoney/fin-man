@@ -17,18 +17,14 @@ import {
   Transaction,
   TransactionDocument,
 } from 'src/models/schemas/transactions.schema';
+import { RecurringTransactionMediatorService } from './recurring-transaction-mediator.service';
 @Injectable()
 export class RecurringTransactionsService {
   constructor(
     @InjectModel(RecurringTransaction.name)
     private readonly recurringModel: Model<RecurringTransactionDocument>,
-
-    @InjectModel(Transaction.name)
-    private readonly transactionModel: Model<TransactionDocument>,
-
-    private readonly processingService: RecurringTransactionsProcessingService,
     private readonly validationService: ValidationService,
-  ) {}
+  ) { }
 
   // ───────────────────────────────
   // CREATE
@@ -45,7 +41,6 @@ export class RecurringTransactionsService {
       ...dto,
       id: generateId(),
     });
-    await this.processingService.processRule(created);
     return created.save();
   }
 
@@ -105,11 +100,7 @@ export class RecurringTransactionsService {
       .exec();
     if (!updated)
       throw new NotFoundException(`Recurring transaction ${id} not found`);
-    // 2️⃣ Delete all existing child transactions
-    await this.transactionModel.deleteMany({ parentRecurringId: id }).exec();
 
-    // 3️⃣ Reprocess recurring transaction
-    await this.processingService.processRule(updated);
     return updated;
   }
 
@@ -117,10 +108,7 @@ export class RecurringTransactionsService {
   // DELETE
   // ───────────────────────────────
   async remove(id: number): Promise<{ message: string }> {
-    // 1️⃣ Delete all child transactions
-    await this.transactionModel.deleteMany({ parentRecurringId: id }).exec();
-
-    // 2️⃣ Delete the recurring template
+    // 1️⃣  Delete the recurring template
     const deleted = await this.recurringModel.deleteOne({ id }).exec();
     if (deleted.deletedCount === 0) {
       throw new NotFoundException(`Recurring transaction ${id} not found`);

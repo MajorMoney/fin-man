@@ -8,6 +8,11 @@ body {
   padding: 0;
 }
 
+.subtitle {
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
 .view {
   padding: 1.5rem;
   background-color: #f8fafc;

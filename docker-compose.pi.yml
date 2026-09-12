@@ -1,0 +1,29 @@
+# Always-on stack for the Raspberry Pi.
+# Mongo data lives on the host, outside the repo, so it survives rebuilds and re-clones.
+services:
+  mongo:
+    image: mongo:7
+    container_name: fin-man-mongo
+    restart: unless-stopped
+    volumes:
+      - ${MONGO_DATA_PATH:-/home/majormoney/fin-man-data/mongo}:/data/db
+
+  backend:
+    build: ./server
+    container_name: fin-man-backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://mongo:27017/fin-man
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build: ./fin-man-web
+    container_name: fin-man-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"

@@ -28,7 +28,7 @@ export class TransactionsService {
     private readonly accountModel: Model<AccountDocument>,
     private readonly accountHoldingsService: AccountHoldingsService,
     private readonly validationService: ValidationService,
-  ) {}
+  ) { }
 
   async create(dto: CreateTransactionDto) {
     // 1 Validate user exists
@@ -148,12 +148,6 @@ export class TransactionsService {
       newHoldings += existing.amount;
     }
 
-    if (newHoldings < 0) {
-      throw new BadRequestException(
-        'Cannot delete transaction: insufficient funds after undoing',
-      );
-    }
-
     account.holdings = newHoldings;
     await account.save();
 
@@ -164,5 +158,44 @@ export class TransactionsService {
     }
 
     return { message: 'Transaction deleted' };
+  }
+
+  async removeByParentRecurringId(
+    parentRecurringId: number,
+  ): Promise<{ deleted: number }> {
+    // 1️⃣ Find all child transactions
+    const transactions = await this.transactionModel
+      .find({ parentRecurringId })
+      .exec();
+
+    if (transactions.length === 0) {
+      return { deleted: 0 };
+    }
+
+    // 2️⃣ Reverse holdings for each transaction
+    for (const tx of transactions) {
+      const account = await this.accountModel
+        .findOne({ name: tx.account })
+        .exec();
+
+      if (!account) {
+        throw new NotFoundException(`Account ${tx.account} not found`);
+      }
+
+      if (tx.type === 'income') {
+        account.holdings -= tx.amount;
+      } else {
+        account.holdings += tx.amount;
+      }
+
+      await account.save();
+    }
+
+    // 3️⃣ Delete all child transactions
+    const result = await this.transactionModel
+      .deleteMany({ parentRecurringId })
+      .exec();
+
+    return { deleted: result.deletedCount ?? 0 };
   }
 }

@@ -5,8 +5,7 @@ import { SavingsGoalsComponent } from './savings/savings-goals.component';
 import { SpendingAnalysisComponent } from './spending-analysis/spending-analysis.component';
 import { UserListViewComponent } from './users/user-list-view/user-list-view.component';
 import { AccountListViewComponent } from './accounts/account-list-view/account-list-view.component';
-import { RecurringTransactionsFormComponent } from './recurring-transactions.ts/recurring-treansactions-form/recurring-transactions-form.component';
-import { RecurringTransactionsComponent } from './recurring-transactions.ts/recurring-transactions.component';
+import { RecurringTransactionsComponent } from './recurring-transactions/recurring-transactions.component';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },

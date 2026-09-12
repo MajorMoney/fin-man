@@ -36,7 +36,6 @@
           <th class="sortable" (click)="onSort('amount')">
             Amount <span>{{ getSortIcon('amount') }}</span>
           </th>
-          <th>Recurring</th>
           <th class="sortable" (click)="onSort('account')">
             Account <span>{{ getSortIcon('account') }}</span>
           </th>
@@ -80,13 +79,7 @@
             {{ tx.amount | number : '1.2-2' }} {{ tx.currency }}
           </td>
 
-          <!-- RECURRING -->
-          <td>
-            <span *ngIf="tx.recurring" class="recurring-badge"
-              >♻ Recurring</span
-            >
-            <span *ngIf="!tx.recurring" class="non-recurring">—</span>
-          </td>
+         
 
           <!-- ACCOUNT -->
           <td>{{ tx.account }}</td>

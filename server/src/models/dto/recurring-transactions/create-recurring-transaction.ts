@@ -13,6 +13,7 @@ export const CreateRecurringTransactionSchema = z.object({
   user: z.string().nonempty(),
   recurrenceRule: z.string().nonempty(), // RRULE string required for recurring
   endDate: z.string().optional(), // optional cutoff
+  lastProcessedAt: z.string().optional(),
 });
 
 export type CreateRecurringTransactionDto = z.infer<

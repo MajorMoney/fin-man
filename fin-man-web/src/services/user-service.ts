@@ -14,8 +14,6 @@ import { UsersApi } from 'src/api/users.api';
   providedIn: 'root',
 })
 export class UserService implements OnDestroy {
-  private apiUrl = 'http://localhost:3000/users';
-
   constructor(private usersApi: UsersApi) {
     this.initializeUsers();
   }

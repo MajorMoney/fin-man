@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { Account } from 'src/libs/core/models/accounts';
+import { getApiBaseUrl } from 'src/libs/core/utils/api-base-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountsApi {
-  private readonly apiUrl = 'http://localhost:3000/accounts';
+  private readonly apiUrl = `${getApiBaseUrl()}/accounts`;
 
   constructor(private http: HttpClient) {}
 

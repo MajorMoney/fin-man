@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { Income } from 'src/libs/core/models/incomes';
+import { getApiBaseUrl } from 'src/libs/core/utils/api-base-url';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IncomesApi {
-  private readonly apiUrl = 'http://localhost:3000/income';
+  private readonly apiUrl = `${getApiBaseUrl()}/income`;
 
   constructor(private http: HttpClient) {}
 

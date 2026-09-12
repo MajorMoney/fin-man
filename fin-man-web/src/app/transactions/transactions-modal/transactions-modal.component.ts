@@ -10,12 +10,10 @@ import {
 import { combineLatest, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Category } from 'src/libs/core/models/category';
-import { RecurringTransaction } from 'src/libs/core/models/recurring-transaction';
 import { Transaction } from 'src/libs/core/models/transactions';
 import { UserHelpers } from 'src/libs/core/models/users';
 import { AccountsService } from 'src/services/account-service';
 import { CategoryService } from 'src/services/categories-service';
-import { RecurringTransactionsService } from 'src/services/recurring-transaction-service';
 import { TransactionsService } from 'src/services/transactions-service';
 import { UserService } from 'src/services/user-service';
 
@@ -27,7 +25,6 @@ import { UserService } from 'src/services/user-service';
 export class TransactionModalComponent implements OnChanges, OnInit {
   constructor(
     private transactionsService: TransactionsService,
-    private recurringService: RecurringTransactionsService,
     private userService: UserService,
     private accountService: AccountsService,
     private categoryService: CategoryService

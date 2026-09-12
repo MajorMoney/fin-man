@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
 import { CommonModule, JsonPipe } from '@angular/common';
@@ -33,8 +32,10 @@ import { UserCardComponent } from './users/user-card/user-card.component';
 import { TransactionsListComponent } from './transactions/transactions-list/transactions-list.component';
 import { TransactionModalComponent } from './transactions/transactions-modal/transactions-modal.component';
 import { TransactionsComponent } from './transactions/transactions.component';
-import { RecurringTransactionsFormComponent } from './recurring-transactions.ts/recurring-treansactions-form/recurring-transactions-form.component';
-import { RecurringTransactionsComponent } from './recurring-transactions.ts/recurring-transactions.component';
+import { RecurringTransactionsComponent } from './recurring-transactions/recurring-transactions.component';
+import { RecurringTransactionsFiltersComponent } from './recurring-transactions/recurring-transactions-filters/recurring-transactions-filters.component';
+import { RecurringTransactionsModalComponent } from './recurring-transactions/recurring-transactions-modal/recurring-transactions-modal.component';
+import { RecurringTransactionsListComponent } from './recurring-transactions/recurring-transactions-list/recurring-transactions-list.component';
 
 @NgModule({
   declarations: [
@@ -65,8 +66,12 @@ import { RecurringTransactionsComponent } from './recurring-transactions.ts/recu
     AccountCardComponent,
     UserCardComponent,
     TransactionsComponent,
-    RecurringTransactionsFormComponent,
+    AccountModalComponent,
+    AccountListViewComponent,
     RecurringTransactionsComponent,
+    RecurringTransactionsFiltersComponent,
+    RecurringTransactionsListComponent,
+    RecurringTransactionsModalComponent
   ],
   imports: [
     BrowserModule,

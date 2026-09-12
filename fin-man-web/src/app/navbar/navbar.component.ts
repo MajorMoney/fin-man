@@ -9,13 +9,13 @@ import { NavItem } from 'src/libs/core/ui-models/nav-items';
 export class NavbarComponent {
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard' },
-    { label: 'Spending Analysis', route: '/analysis' },
+    //{ label: 'Spending Analysis', route: '/analysis' },
     { label: 'Transactions', route: '/transactions' },
     { label: 'Recurring Transactions', route: '/recurrent-transanctions' },
-    { label: 'Saving Goals', route: '/savings' },
+    //{ label: 'Saving Goals', route: '/savings' },
     { label: 'Users', route: '/users' },
     { label: 'Accounts', route: '/accounts' },
-    { label: 'Reports', route: '/reports' },
+    //{ label: 'Reports', route: '/reports' },
     // add more entries here
   ];
 }

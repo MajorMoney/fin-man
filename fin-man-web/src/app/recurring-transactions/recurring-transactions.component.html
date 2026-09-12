@@ -1,0 +1,23 @@
+<div class="view">
+  <h2>Recurring Transactions Overview</h2>
+  <p class="subtitle">    Manage and schedule recurring income and expenses.
+</p>
+
+
+    <app-recurring-transactions-filters
+      (filtersChange)="handleFiltersChange($event)"
+      (addButtonClick)="openCreate()"
+    ></app-recurring-transactions-filters>
+      <!-- List -->
+  <app-recurring-transactions-list
+    [filters$]="filters$"
+    (openEditModal)="openEdit($event)"
+  ></app-recurring-transactions-list>
+   <app-recurring-transactions-modal
+    [isOpen]="isModalOpen"
+    [mode]="modalMode"
+    [transaction]="selected"
+    (closeModal)="closeModal()"
+    (save)="save($event)"
+  ></app-recurring-transactions-modal>
+</div>

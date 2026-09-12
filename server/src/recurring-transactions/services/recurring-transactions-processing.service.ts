@@ -2,7 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { RecurringTransactionDocument } from 'src/models/schemas/recurring-transaction.schema';
 import { TransactionsService } from 'src/transactions/transactions.service';
 import { CreateTransactionDto } from 'src/models/dto/transactions/create-transaction.dto';
-import { generateId } from '../utils/id-generator';
+import { generateId } from '../../utils/id-generator';
+import { StringUtils } from 'src/utils/string.utils';
+import { RecurringTransactionsService } from './recurring-transaction.service';
+import { RecurringTransactionMediatorService } from './recurring-transaction-mediator.service';
 
 type Frequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 
@@ -12,7 +15,6 @@ export class RecurringTransactionsProcessingService {
     RecurringTransactionsProcessingService.name,
   );
 
-  constructor(private readonly transactionsService: TransactionsService) {}
 
   /* ------------------------------------------------------------ */
   /* Public API                                                    */
@@ -21,29 +23,32 @@ export class RecurringTransactionsProcessingService {
   async processRules(
     recurringTransactions: RecurringTransactionDocument[],
     upTo = new Date(),
-  ): Promise<{ processedRules: number; createdInstances: number }> {
+  ): Promise<CreateTransactionDto[]> {
     let processedRules = 0;
     let createdInstances = 0;
+    let transactions: CreateTransactionDto[] = [];
 
     for (const recur of recurringTransactions) {
-      const created = await this.processRule(recur, upTo);
-      if (created > 0) {
-        processedRules++;
-        createdInstances += created;
-      }
+      const newTransactions = await this.processRule(recur, upTo);
+      transactions.push(...newTransactions);
     }
 
-    return { processedRules, createdInstances };
+    return transactions;
   }
 
   async processRule(
     recur: RecurringTransactionDocument,
     upTo = new Date(),
-  ): Promise<number> {
+  ): Promise<CreateTransactionDto[]> {
     const occurrences = this.getOccurrences(recur, upTo);
     let created = 0;
+    let transactions: CreateTransactionDto[] = [];
 
     for (const occ of occurrences) {
+
+      if (recur.lastProcessedAt && StringUtils.parseDate(recur.lastProcessedAt) >= occ) {
+        continue;
+      }
       const txDto: CreateTransactionDto = {
         id: generateId(),
         type: recur.type,
@@ -59,18 +64,10 @@ export class RecurringTransactionsProcessingService {
         recurring: false,
       };
 
-      try {
-        await this.transactionsService.create(txDto);
-        created++;
-      } catch (err) {
-        this.logger.error(
-          `Failed creating transaction for recurring id=${recur.id} at ${occ.toISOString()}`,
-          err as any,
-        );
-      }
+      transactions.push(txDto);
     }
 
-    return created;
+    return transactions;
   }
 
   /* ------------------------------------------------------------ */

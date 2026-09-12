@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { RecurringTransaction } from 'src/libs/core/models/recurring-transaction';
+import { getApiBaseUrl } from 'src/libs/core/utils/api-base-url';
 @Injectable({
   providedIn: 'root',
 })
 export class RecurringTransactionsApi {
-  private readonly apiUrl = 'http://localhost:3000/recurring-transactions';
+  private readonly apiUrl = `${getApiBaseUrl()}/recurring-transactions`;
 
   constructor(private http: HttpClient) {}
 

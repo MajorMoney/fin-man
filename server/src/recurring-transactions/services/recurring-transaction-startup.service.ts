@@ -23,7 +23,7 @@ export class RecurringStartupService implements OnModuleInit {
         .processRules(allRules)
         .then((res) =>
           this.logger.log(
-            `Startup: processed ${res.processedRules} rules, created ${res.createdInstances} transactions`,
+            `Startup: processed ${allRules.length} rules, created ${res.length} transactions`,
           ),
         );
     } catch (err) {
