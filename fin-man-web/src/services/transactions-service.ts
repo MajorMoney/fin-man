@@ -47,7 +47,6 @@ async initializeTransactions(): Promise<void> {
     this.errorSubject.next(null);
 
     const data = await this.transactionsApi.findAll();
-    console.log('[DEBUG] transactionsApi.findAll() returned:', data);
 
     if (!Array.isArray(data)) {
       throw new Error('Invalid transaction data: expected an array');

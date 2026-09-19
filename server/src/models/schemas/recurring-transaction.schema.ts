@@ -43,9 +43,9 @@ export class RecurringTransaction {
   @Prop()
   endDate?: string; // optional ISO date string to end the recurrence
 
-  // When we last processed/generating instances up to this date (inclusive)
+  /** Next occurrence that should generate a transaction (YYYY-MM-DD). */
   @Prop()
-  lastProcessedAt?: string; // ISO date string
+  nextDueDate?: string;
 }
 
 export const RecurringTransactionSchema =

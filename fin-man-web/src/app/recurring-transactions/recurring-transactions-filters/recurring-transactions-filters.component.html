@@ -21,9 +21,9 @@
     <div class="filter-field">
       <label for="category">Category</label>
       <select id="category" formControlName="category" class="filter-input">
-        <option *ngFor="let cat of categories" [value]="cat">
-          {{ cat }}
-        </option>
+        @for (cat of categories; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
       </select>
     </div>
 
@@ -52,9 +52,9 @@
     <div class="filter-field">
       <label for="account">Account</label>
       <select id="account" formControlName="account" class="filter-input">
-        <option *ngFor="let acc of accounts" [value]="acc">
-          {{ acc }}
-        </option>
+        @for (acc of accounts; track acc) {
+          <option [value]="acc">{{ acc }}</option>
+        }
       </select>
     </div>
 

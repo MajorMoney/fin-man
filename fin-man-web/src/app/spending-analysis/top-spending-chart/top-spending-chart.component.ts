@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 interface SpendingData {
   category: string;
@@ -7,9 +7,10 @@ interface SpendingData {
 }
 
 @Component({
-  selector: 'app-top-spending-chart',
-  templateUrl: './top-spending-chart.component.html',
-  styleUrls: ['./top-spending-chart.component.css']
+    selector: 'app-top-spending-chart',
+    templateUrl: './top-spending-chart.component.html',
+    styleUrls: ['./top-spending-chart.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TopSpendingChartComponent {
   @Input() data: SpendingData[] = [];

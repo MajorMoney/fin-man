@@ -24,6 +24,7 @@ export class RecurringTransactionsService {
     @InjectModel(RecurringTransaction.name)
     private readonly recurringModel: Model<RecurringTransactionDocument>,
     private readonly validationService: ValidationService,
+    private readonly processingService: RecurringTransactionsProcessingService,
   ) { }
 
   // ───────────────────────────────
@@ -40,6 +41,7 @@ export class RecurringTransactionsService {
     const created = new this.recurringModel({
       ...dto,
       id: generateId(),
+      nextDueDate: dto.startDate
     });
     return created.save();
   }
@@ -95,7 +97,6 @@ export class RecurringTransactionsService {
         );
     }
 
-    console.log("Updating ",dto)
     const updated = await this.recurringModel
       .findOneAndUpdate({ id }, dto, { new: true })
       .exec();

@@ -3,7 +3,8 @@
   <p class="subtitle">Overview</p>
 
   <div class="goals-grid">
-    <div *ngFor="let goal of goals" class="goal-card">
+    @for (goal of goals; track goal.title) {
+      <div class="goal-card">
       <div class="goal-header">
         <div class="goal-title">
           <span class="icon">🏦</span>
@@ -45,5 +46,6 @@
 
       <button class="details-btn">View Details</button>
     </div>
+    }
   </div>
 </div>

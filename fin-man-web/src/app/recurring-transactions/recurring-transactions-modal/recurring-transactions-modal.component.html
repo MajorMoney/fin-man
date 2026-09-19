@@ -1,116 +1,133 @@
 <!-- Modal Overlay -->
-<div class="modal-overlay" *ngIf="isOpen">
-  <div class="modal-content">
-    <!-- Modal Header -->
-    <div class="modal-header">
-      <h3>{{ mode === 'create' ? 'Add Recurring Transaction' : 'Edit Recurring Transaction' }}</h3>
-      <button class="close-btn" (click)="closeModal.emit()">×</button>
-    </div>
+@if (isOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h3>{{ mode === 'create' ? 'Add Recurring Transaction' : 'Edit Recurring Transaction' }}</h3>
+        <button class="close-btn" (click)="closeModal.emit()">×</button>
+      </div>
 
-    <!-- Modal Body -->
-    <div class="modal-scrollable">
-      <div class="modal-body">
-        <!-- Date -->
-        <div class="form-group">
-          <label for="date">Start Date *</label>
-          <input id="date" type="date" [(ngModel)]="recurringForm.startDate" name="startDate"
-            class="form-input" (change)="calculateNextDueDate()" />
-        </div>
-
-        <div class="form-group">
-          <label for="date">End Date *</label>
-          <input id="endDate" type="date" [(ngModel)]="recurringForm.endDate" name="endDate" class="form-input" />
-        </div>
-
-        <!-- Description -->
-        <div class="form-group">
-          <label for="description">Description *</label>
-          <input id="description" type="text" [(ngModel)]="recurringForm.description" name="description"
-            class="form-input" />
-        </div>
-
-        <!-- Amount & Currency -->
-        <div class="form-row">
+      <!-- Modal Body -->
+      <div class="modal-scrollable">
+        <div class="modal-body">
+          <!-- Date -->
           <div class="form-group">
-            <label for="amount">Amount *</label>
-            <input id="amount" type="number" [(ngModel)]="recurringForm.amount" name="amount" class="form-input"
-              step="0.01" min="0" />
+            <label for="date">Start Date *</label>
+            <input id="date" type="date" [(ngModel)]="recurringForm.startDate" name="startDate"
+              class="form-input" (change)="calculateNextDueDate()" />
           </div>
+
           <div class="form-group">
-            <label for="currency">Currency *</label>
-            <input id="currency" type="text" [(ngModel)]="recurringForm.currency" name="currency" class="form-input" />
+            <label for="date">End Date *</label>
+            <input id="endDate" type="date" [(ngModel)]="recurringForm.endDate" name="endDate" class="form-input" />
           </div>
-        </div>
 
-        <!-- Account -->
-        <div class="form-group">
-          <label for="account">Account *</label>
-          <select id="account" [(ngModel)]="recurringForm.account" name="account" class="form-input">
-            <option value="" disabled selected>Select account</option>
-            <option *ngFor="let a of filteredAccounts$ | async" [value]="a.name">
-              {{ a.name }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Category -->
-        <div class="form-group">
-          <label for="category">Category *</label>
-          <div class="custom-select-wrapper">
-            <input id="edit-category" type="text" [(ngModel)]="recurringForm.category" (input)="filterCategories()"
-              (blur)="onCategoryBlur()" placeholder="e.g., Food" class="form-input" required autocomplete="off" />
-
-            <ul class="custom-select-dropdown" *ngIf="filteredCategoryOptions.length > 0">
-              <li *ngFor="let cat of filteredCategoryOptions" (mousedown)="selectCategory(cat.name)">
-                {{ cat.name }}
-              </li>
-            </ul>
+          <!-- Description -->
+          <div class="form-group">
+            <label for="description">Description *</label>
+            <input id="description" type="text" [(ngModel)]="recurringForm.description" name="description"
+              class="form-input" />
           </div>
-        </div>
 
-        <!-- User -->
-        <div class="form-group">
-          <label for="user">User *</label>
-          <select id="user" [(ngModel)]="recurringForm.user" name="user" class="form-input">
-            <option value="" disabled selected>Select user</option>
-            <option *ngFor="let u of users$ | async" [value]="u.name">
-              {{ u.name }}
-            </option>
-          </select>
-        </div>
+          <div class="form-group">
+            <label for="type">Type *</label>
+            <select id="type" [(ngModel)]="recurringForm.type" name="type" class="form-input">
+              <option value="expense">Expense</option>
+              <option value="income">Income</option>
+            </select>
+          </div>
 
-        <!-- Notes -->
-        <div class="form-group">
-          <label for="notes">Notes</label>
-          <textarea id="notes" [(ngModel)]="recurringForm.notes" name="notes" rows="3" class="form-input"></textarea>
-        </div>
+          <!-- Amount & Currency -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="amount">Amount *</label>
+              <input id="amount" type="number" [(ngModel)]="recurringForm.amount" name="amount" class="form-input"
+                step="0.01" min="0" />
+            </div>
+            <div class="form-group">
+              <label for="currency">Currency *</label>
+              <input id="currency" type="text" [(ngModel)]="recurringForm.currency" name="currency" class="form-input" />
+            </div>
+          </div>
 
-        <!-- Recurrence Rule + Next Due Date -->
-        <div class="form-group">
-          <label for="recurrenceRule">Recurrence Rule *</label>
-          <select id="recurrenceRule" [(ngModel)]="recurringForm.recurrenceRule" name="recurrenceRule"
-            class="form-input" (change)="calculateNextDueDate()">
-            <option *ngFor="let f of frequencies" [value]="f.value">
-              {{ f.label }}
-            </option>
-          </select>
-        </div>
+          <!-- Account -->
+          <div class="form-group">
+            <label for="account">Account *</label>
+            <select id="account" [(ngModel)]="recurringForm.account" name="account" class="form-input">
+              <option value="" disabled selected>Select account</option>
+              @for (a of (filteredAccounts$ | async) ?? []; track a.name) {
+                <option [value]="a.name">{{ a.name }}</option>
+              }
+            </select>
+          </div>
 
-        <div class="form-group">
-          <label>Next Due Date</label>
-          <input type="text" [value]="nextDueDate" readonly class="form-input" />
+          <!-- Category -->
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <div class="custom-select-wrapper">
+              <input id="edit-category" type="text" [(ngModel)]="recurringForm.category" (input)="filterCategories()"
+                (blur)="onCategoryBlur()" placeholder="e.g., Food" class="form-input" required autocomplete="off" />
+
+              @if (filteredCategoryOptions.length > 0) {
+                <ul class="custom-select-dropdown">
+                  @for (cat of filteredCategoryOptions; track cat.name) {
+                    <li (mousedown)="selectCategory(cat.name)">
+                      {{ cat.name }}
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+          </div>
+
+          <!-- User -->
+          <div class="form-group">
+            <label for="user">User *</label>
+            <select id="user" [(ngModel)]="recurringForm.user" name="user" class="form-input">
+              <option value="" disabled selected>Select user</option>
+              @for (u of (users$ | async) ?? []; track u.name) {
+                <option [value]="u.name">{{ u.name }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group">
+            <label for="notes">Notes</label>
+            <textarea id="notes" [(ngModel)]="recurringForm.notes" name="notes" rows="3" class="form-input"></textarea>
+          </div>
+
+          <!-- Recurrence Rule + Next Due Date -->
+          <div class="form-group">
+            <label for="recurrenceRule">Recurrence Rule *</label>
+            <select id="recurrenceRule" [(ngModel)]="recurringForm.recurrenceRule" name="recurrenceRule"
+              class="form-input" (change)="calculateNextDueDate()">
+              @for (f of frequencies; track f.value) {
+                <option [value]="f.value">{{ f.label }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Next Due Date</label>
+            <input type="text" [value]="nextDueDate" readonly class="form-input" />
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Modal Footer -->
-    <div class="modal-footer">
-      <div class="footer-right">
-        <button class="btn btn-secondary" (click)="closeModal.emit()">Cancel</button>
-        <button class="btn btn-primary" (click)="onSave()">
-          {{ mode === 'create' ? 'Add' : 'Save' }}
-        </button>
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        @if (mode === 'edit') {
+          <button class="btn btn-danger" (click)="onDelete()">Delete</button>
+        }
+        <div class="footer-right">
+          <button class="btn btn-secondary" (click)="closeModal.emit()">Cancel</button>
+          <button class="btn btn-primary" (click)="onSave()">
+            {{ mode === 'create' ? 'Add' : 'Save' }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+}

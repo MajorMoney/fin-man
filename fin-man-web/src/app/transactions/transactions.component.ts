@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   BehaviorSubject,
   combineLatest,
@@ -17,11 +17,15 @@ import {
 import { TransactionUtils } from 'src/libs/core/utils/transactions.utils';
 import { AccountsService } from 'src/services/account-service';
 import { TransactionsService } from 'src/services/transactions-service';
+import { TransactionsListComponent } from './transactions-list/transactions-list.component';
+import { TransactionModalComponent } from './transactions-modal/transactions-modal.component';
 
 @Component({
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule, ReactiveFormsModule, TransactionsListComponent, TransactionModalComponent]
 })
 export class TransactionsComponent implements OnInit, OnDestroy {
   constructor(
@@ -62,7 +66,6 @@ export class TransactionsComponent implements OnInit, OnDestroy {
         map(([transactions, accounts]) => {
           const uniqueCategories =
             TransactionUtils.getAllCategories(transactions);
-            console.log(uniqueCategories)
           const uniqueAccounts = accounts.map((a) => a.name);
           return {
             categories: ['All', ...Array.from(uniqueCategories).sort()],

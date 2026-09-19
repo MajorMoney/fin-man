@@ -9,9 +9,9 @@
         [value]="selectedYear$ | async"
         (change)="onYearChange(+$any($event.target).value)"
       >
-        <option *ngFor="let year of availableYears" [value]="year">
-          {{ year }}
-        </option>
+        @for (year of availableYears; track year) {
+          <option [value]="year">{{ year }}</option>
+        }
       </select>
     </div>
   </div>

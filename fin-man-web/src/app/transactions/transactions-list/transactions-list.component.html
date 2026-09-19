@@ -11,9 +11,9 @@
           (change)="onItemsPerPageChange($event)"
           class="items-select"
         >
-          <option *ngFor="let option of itemsPerPageOptions" [value]="option">
-            {{ option }}
-          </option>
+          @for (option of itemsPerPageOptions; track option) {
+            <option [value]="option">{{ option }}</option>
+          }
         </select>
         <span>per page</span>
       </div>
@@ -52,121 +52,118 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let tx of paginatedExpenses; trackBy: trackById">
-          <!-- DATE -->
-          <td>{{ tx.date | date : 'shortDate' }}</td>
+        @for (tx of paginatedExpenses; track tx.id) {
+          <tr>
+            <!-- DATE -->
+            <td>{{ tx.date | date : 'shortDate' }}</td>
 
-          <!-- TYPE (Income / Expense) -->
-          <td>
-            <span
-              class="type-badge"
+            <!-- TYPE (Income / Expense) -->
+            <td>
+              <span
+                class="type-badge"
+                [class.income]="tx.type === 'income'"
+                [class.expense]="tx.type === 'expense'"
+              >
+                {{ tx.type === 'income' ? '↑ Income' : '↓ Expense' }}
+              </span>
+            </td>
+
+            <!-- DESCRIPTION -->
+            <td>{{ tx.description }}</td>
+
+            <!-- AMOUNT with Currency -->
+            <td
+              class="amount"
               [class.income]="tx.type === 'income'"
               [class.expense]="tx.type === 'expense'"
             >
-              {{ tx.type === 'income' ? '↑ Income' : '↓ Expense' }}
-            </span>
-          </td>
+              {{ tx.amount | number : '1.2-2' }} {{ tx.currency }}
+            </td>
 
-          <!-- DESCRIPTION -->
-          <td>{{ tx.description }}</td>
+            <!-- ACCOUNT -->
+            <td>{{ tx.account }}</td>
 
-          <!-- AMOUNT with Currency -->
-          <td
-            class="amount"
-            [class.income]="tx.type === 'income'"
-            [class.expense]="tx.type === 'expense'"
-          >
-            {{ tx.amount | number : '1.2-2' }} {{ tx.currency }}
-          </td>
+            <!-- CATEGORY -->
+            <td>
+              <span class="category-badge">{{ tx.category }}</span>
+            </td>
 
-         
+            <!-- NOTES -->
+            <td class="notes">{{ tx.notes || '-' }}</td>
 
-          <!-- ACCOUNT -->
-          <td>{{ tx.account }}</td>
+            <!-- USER -->
+            <td>{{ tx.user }}</td>
 
-          <!-- CATEGORY -->
-          <td>
-            <span class="category-badge">{{ tx.category }}</span>
-          </td>
-
-          <!-- NOTES -->
-          <td class="notes">{{ tx.notes || '-' }}</td>
-
-          <!-- USER -->
-          <td>{{ tx.user }}</td>
-
-          <!-- EDIT -->
-          <td>
-            <span
-              class="category-badge"
-              style="cursor: pointer"
-              (click)="openEditModal(tx)"
-            >
-              Edit
-            </span>
-          </td>
-        </tr>
-
-        <tr *ngIf="paginatedExpenses.length === 0">
-          <td colspan="10" class="no-data">No transactions found</td>
-        </tr>
+            <!-- EDIT -->
+            <td>
+              <span
+                class="category-badge"
+                style="cursor: pointer"
+                (click)="openEditModal(tx)"
+              >
+                Edit
+              </span>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="10" class="no-data">No transactions found</td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
 
   <!-- Pagination Controls -->
-  <div class="pagination" *ngIf="totalPages > 1">
-    <button
-      class="page-btn"
-      [disabled]="currentPage === 1"
-      (click)="previousPage()"
-    >
-      « Previous
-    </button>
+  @if (totalPages > 1) {
+    <div class="pagination">
+      <button
+        class="page-btn"
+        [disabled]="currentPage === 1"
+        (click)="previousPage()"
+      >
+        « Previous
+      </button>
 
-    <button
-      *ngIf="getPageNumbers()[0] > 1"
-      class="page-btn"
-      (click)="goToPage(1)"
-    >
-      1
-    </button>
+      @if (getPageNumbers()[0] > 1) {
+        <button class="page-btn" (click)="goToPage(1)">1</button>
+      }
 
-    <span *ngIf="getPageNumbers()[0] > 2" class="ellipsis">...</span>
+      @if (getPageNumbers()[0] > 2) {
+        <span class="ellipsis">...</span>
+      }
 
-    <button
-      *ngFor="let page of getPageNumbers()"
-      class="page-btn"
-      [class.active]="page === currentPage"
-      (click)="goToPage(page)"
-    >
-      {{ page }}
-    </button>
+      @for (page of getPageNumbers(); track page) {
+        <button
+          class="page-btn"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      }
 
-    <span
-      *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1"
-      class="ellipsis"
-      >...</span
-    >
+      @if (getPageNumbers()[getPageNumbers().length - 1] < totalPages - 1) {
+        <span class="ellipsis">...</span>
+      }
 
-    <button
-      *ngIf="getPageNumbers()[getPageNumbers().length - 1] < totalPages"
-      class="page-btn"
-      (click)="goToPage(totalPages)"
-    >
-      {{ totalPages }}
-    </button>
+      @if (getPageNumbers()[getPageNumbers().length - 1] < totalPages) {
+        <button class="page-btn" (click)="goToPage(totalPages)">
+          {{ totalPages }}
+        </button>
+      }
 
-    <button
-      class="page-btn"
-      [disabled]="currentPage === totalPages"
-      (click)="nextPage()"
-    >
-      Next »
-    </button>
+      <button
+        class="page-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        Next »
+      </button>
 
-    <span class="page-info"> Page {{ currentPage }} of {{ totalPages }} </span>
-  </div>
+      <span class="page-info"> Page {{ currentPage }} of {{ totalPages }} </span>
+    </div>
+  }
 </div>
 <!-- Edit Modal Component -->
 <app-transactions-modal

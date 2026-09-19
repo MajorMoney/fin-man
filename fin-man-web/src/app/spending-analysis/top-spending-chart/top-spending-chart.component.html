@@ -4,7 +4,8 @@
     <button class="more-options">⋮</button>
   </div>
   <div class="chart-content">
-    <div *ngFor="let item of data" class="chart-row">
+    @for (item of data; track item.category) {
+      <div class="chart-row">
       <span class="category-label">{{ item.category }}</span>
       <div class="bar-container">
         <div 
@@ -14,5 +15,6 @@
         </div>
       </div>
     </div>
+    }
   </div>
 </div>

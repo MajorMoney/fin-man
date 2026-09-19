@@ -8,7 +8,9 @@
     <canvas #chartCanvas></canvas>
   </div>
   
-  <div *ngIf="loading" class="loading-overlay">
-    <span>Loading...</span>
-  </div>
+  @if (loading) {
+    <div class="loading-overlay">
+      <span>Loading...</span>
+    </div>
+  }
 </div>

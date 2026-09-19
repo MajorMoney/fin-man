@@ -51,18 +51,6 @@ export class DashboardSummaryService {
           year
         );
         const topCategory = this.getTopCategory(expenseFiltered);
-        console.log(
-          '%c[Dashboard Summary Updated]',
-          'color: #4CAF50; font-weight: bold;',
-          {
-            totalIncome,
-            totalExpenses,
-            netSavings,
-            savingsRate,
-            averageMonthlyExpense,
-            topCategory,
-          }
-        );
 
         return {
           totalIncome: this.formatCurrency(totalIncome),

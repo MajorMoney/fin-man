@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 
 interface SavingsGoal {
   title: string;
@@ -12,9 +13,11 @@ interface SavingsGoal {
 }
 
 @Component({
-  selector: 'app-savings-goals',
-  templateUrl: './savings-goals.component.html',
-  styleUrls: ['./savings-goals.component.css']
+    selector: 'app-savings-goals',
+    templateUrl: './savings-goals.component.html',
+    styleUrls: ['./savings-goals.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [DecimalPipe]
 })
 export class SavingsGoalsComponent {
   goals: SavingsGoal[] = [

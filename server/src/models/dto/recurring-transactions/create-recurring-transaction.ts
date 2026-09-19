@@ -4,6 +4,7 @@ import { z } from 'zod';
 export const CreateRecurringTransactionSchema = z.object({
   id: z.number().optional(), // optional, can be generated automatically
   startDate: z.string().nonempty(), // first occurrence
+  type: z.enum(['income', 'expense']),
   description: z.string().nonempty(),
   amount: z.number(),
   currency: z.string().optional(),
@@ -13,7 +14,7 @@ export const CreateRecurringTransactionSchema = z.object({
   user: z.string().nonempty(),
   recurrenceRule: z.string().nonempty(), // RRULE string required for recurring
   endDate: z.string().optional(), // optional cutoff
-  lastProcessedAt: z.string().optional(),
+  nextDueDate: z.string().optional(),
 });
 
 export type CreateRecurringTransactionDto = z.infer<

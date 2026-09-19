@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'app-detailed-transactions-placeholder',
-  template: `<div class="transactions-card">
+    selector: 'app-detailed-transactions-placeholder',
+    template: `<div class="transactions-card">
     <div class="card-header">
       <h2>Detailed Transactions</h2>
       <button class="more-options">⋮</button>
@@ -12,8 +12,8 @@ import { Component } from '@angular/core';
       <p class="placeholder-text">app-transaction-list component placeholder</p>
     </div>
   </div>`,
-  styles: [
-    `
+    styles: [
+        `
       .transactions-card {
         background: white;
         border-radius: 12px;
@@ -36,6 +36,7 @@ import { Component } from '@angular/core';
         font-style: italic;
       }
     `,
-  ],
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class DetailedTransactionsPlaceholderComponent {}

@@ -6,6 +6,7 @@ import {
   OnChanges,
   SimpleChanges,
   OnInit,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -16,11 +17,15 @@ import { AccountsService } from 'src/services/account-service';
 import { CategoryService } from 'src/services/categories-service';
 import { TransactionsService } from 'src/services/transactions-service';
 import { UserService } from 'src/services/user-service';
+import { FormsModule } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-transactions-modal',
-  templateUrl: './transactions-modal.component.html',
-  styleUrls: ['./transactions-modal.component.css'],
+    selector: 'app-transactions-modal',
+    templateUrl: './transactions-modal.component.html',
+    styleUrls: ['./transactions-modal.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule, AsyncPipe]
 })
 export class TransactionModalComponent implements OnChanges, OnInit {
   constructor(

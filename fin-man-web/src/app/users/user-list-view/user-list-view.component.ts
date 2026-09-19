@@ -1,12 +1,16 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { User, UserHelpers } from 'src/libs/core/models/users';
 import { UserService } from 'src/services/user-service';
+import { UserCardComponent } from '../user-card/user-card.component';
+import { UserModalComponent } from '../user-modal/user-modal.component';
 
 @Component({
-  selector: 'app-user-list-view',
-  templateUrl: './user-list-view.component.html',
-  styleUrls: ['./user-list-view.component.css'],
+    selector: 'app-user-list-view',
+    templateUrl: './user-list-view.component.html',
+    styleUrls: ['./user-list-view.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [UserCardComponent, UserModalComponent]
 })
 export class UserListViewComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService) {}

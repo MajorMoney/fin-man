@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, Subject, Observable } from 'rxjs';
 import { takeUntil, map } from 'rxjs/operators';
 import { RecurringTransaction } from 'src/libs/core/models/recurring-transaction';
@@ -6,14 +6,18 @@ import { RecurringTransactionFiltersForm } from 'src/libs/core/ui-models/recurri
 import { RecurringTransactionsService } from 'src/services/recurring-transaction-service';
 import { UserService } from 'src/services/user-service';
 import { RecurringTransactionUtils } from 'src/libs/core/utils/recurring-transactions.utils';
+import { FormsModule } from '@angular/forms';
+import { DecimalPipe, DatePipe } from '@angular/common';
 
 type SortColumn = 'date' | 'description' | 'amount' | 'account' | 'category' | 'notes' | 'user' | 'type';
 type SortDirection = 'asc' | 'desc' | null;
 
 @Component({
-  selector: 'app-recurring-transactions-list',
-  templateUrl: './recurring-transactions-list.component.html',
-  styleUrls: ['./recurring-transactions-list.component.css'],
+    selector: 'app-recurring-transactions-list',
+    templateUrl: './recurring-transactions-list.component.html',
+    styleUrls: ['./recurring-transactions-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule, DecimalPipe, DatePipe]
 })
 export class RecurringTransactionsListComponent implements OnInit, OnDestroy {
   transactions: RecurringTransaction[] = [];
@@ -144,6 +148,32 @@ export class RecurringTransactionsListComponent implements OnInit, OnDestroy {
       this.calculateTotalPages();
       this.updatePaginatedTransactions();
     }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+
+    if (this.totalPages <= maxPagesToShow) {
+      for (let i = 1; i <= this.totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      let startPage = Math.max(1, this.currentPage - 2);
+      let endPage = Math.min(this.totalPages, this.currentPage + 2);
+
+      if (this.currentPage <= 3) {
+        endPage = maxPagesToShow;
+      } else if (this.currentPage >= this.totalPages - 2) {
+        startPage = this.totalPages - maxPagesToShow + 1;
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+    }
+
+    return pages;
   }
 
   trackById(index: number, item: RecurringTransaction): number {

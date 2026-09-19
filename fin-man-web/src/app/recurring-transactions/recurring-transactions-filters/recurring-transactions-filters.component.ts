@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, map } from 'rxjs';
 import { RecurringTransactionFiltersForm, DEFAULT_RECURRING_TRANSACTION_FILTERS } from 'src/libs/core/ui-models/recurring-transactions-list-filters';
 import { RecurringTransactionUtils } from 'src/libs/core/utils/recurring-transactions.utils';
@@ -7,10 +7,11 @@ import { AccountsService } from 'src/services/account-service';
 import { RecurringTransactionsService } from 'src/services/recurring-transaction-service';
 
 @Component({
-  selector: 'app-recurring-transactions-filters',
-  templateUrl: './recurring-transactions-filters.component.html',
-  styleUrls: ['./recurring-transactions-filters.component.css'],
-
+    selector: 'app-recurring-transactions-filters',
+    templateUrl: './recurring-transactions-filters.component.html',
+    styleUrls: ['./recurring-transactions-filters.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule, ReactiveFormsModule]
 })
 export class RecurringTransactionsFiltersComponent {
   @Output() filtersChange = new EventEmitter<RecurringTransactionFiltersForm>();

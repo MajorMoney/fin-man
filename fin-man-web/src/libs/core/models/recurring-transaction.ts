@@ -8,6 +8,6 @@ export interface RecurringTransaction extends Transaction {
   recurrenceRule: string; // RRULE string
   endDate?: string; // optional stop date
 
-  /** System fields */
-  lastProcessedAt?: string; // managed by backend
+  /** System fields (managed by backend) */
+  nextDueDate?: string; // next occurrence to generate
 }

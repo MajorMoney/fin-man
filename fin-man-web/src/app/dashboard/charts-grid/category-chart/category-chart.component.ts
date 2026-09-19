@@ -4,6 +4,7 @@ import {
   OnInit,
   OnDestroy,
   Input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
@@ -14,9 +15,10 @@ import { TransactionsService } from 'src/services/transactions-service';
 import { UserService } from 'src/services/user-service';
 
 @Component({
-  selector: 'app-category-chart',
-  templateUrl: './category-chart.component.html',
-  styleUrls: ['./category-chart.component.css'],
+    selector: 'app-category-chart',
+    templateUrl: './category-chart.component.html',
+    styleUrls: ['./category-chart.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class CategoryChartComponent implements OnInit, OnDestroy {
   constructor(

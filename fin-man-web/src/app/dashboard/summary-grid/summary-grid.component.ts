@@ -1,13 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import summaryCardsData from 'src/assets/summaryCardsData.json';
 import { DashboardSummaryService } from 'src/services/dashboard-summary.service';
 import { SummaryCard } from 'src/libs/core/ui-models/dashboard-summary-cards';
 import { Observable } from 'rxjs';
+import { DashboardCardComponent } from './dashboard-card/dashboard-card.component';
 
 @Component({
-  selector: 'app-summary-grid',
-  templateUrl: './summary-grid.component.html',
-  styleUrls: ['./summary-grid.component.css'],
+    selector: 'app-summary-grid',
+    templateUrl: './summary-grid.component.html',
+    styleUrls: ['./summary-grid.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [DashboardCardComponent]
 })
 export class SummaryGridComponent implements OnInit {
   @Input() selectedYear$!: Observable<number>;

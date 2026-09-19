@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'app-monthly-analysis',
-  templateUrl: './monthly-analysis.component.html',
-  styleUrls: ['./monthly-analysis.component.css'],
+    selector: 'app-monthly-analysis',
+    templateUrl: './monthly-analysis.component.html',
+    styleUrls: ['./monthly-analysis.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class MonthlyAnalysisComponent implements OnInit {
   selectedPeriod: string = 'Monthly';

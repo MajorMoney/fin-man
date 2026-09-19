@@ -46,17 +46,20 @@ export class RecurringTransactionMediatorService {
 
     async create(dto: CreateRecurringTransactionDto) {
         const recur = await this.recurringService.create(dto);
-        await this.processingService.processRule(recur);
-        return recur;
+        await this.persistGenerated(recur);
+        return this.recurringService.findOne(recur.id);
     }
 
     async update(id: number, dto: UpdateRecurringTransactionDto) {
+        const existing = await this.recurringService.findOne(id);
+        dto.nextDueDate = dto.startDate ?? existing.startDate;
+
         const updated = await this.recurringService.update(id, dto);
 
         await this.transactionService.removeByParentRecurringId(id);
 
-        await this.processingService.processRule(updated);
-        return updated;
+        await this.persistGenerated(updated);
+        return this.recurringService.findOne(id);
     }
 
     async remove(id: number) {
@@ -71,17 +74,26 @@ export class RecurringTransactionMediatorService {
 
     async processAll(upTo = new Date()) {
         const rules = await this.recurringService.findAll();
-        let transactions: CreateTransactionDto[] = await this.processingService.processRules(rules, upTo);
-        let date=new Date().toISOString().split('T')[0];
-        transactions.forEach(t=>this.markProcessed(t.parentRecurringId!,date))
+        for (const rule of rules) {
+            await this.persistGenerated(rule, upTo);
+        }
     }
 
-    async markProcessed(recurId: number, date: string) {
-        if(!recurId){
+    private async persistGenerated(
+        rule: RecurringTransactionDocument,
+        upTo = new Date(),
+    ) {
+        const { transactions, nextDueDate } =
+            await this.processingService.processRule(rule, upTo);
+
+        for (const tx of transactions) {
+            await this.transactionService.create(tx);
+        }
+
+        if (nextDueDate === rule.nextDueDate && transactions.length === 0) {
             return;
         }
-        await this.recurringService.update(recurId, {
-            lastProcessedAt: date,
-        });
+
+        await this.recurringService.update(rule.id, { nextDueDate });
     }
 }

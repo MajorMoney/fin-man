@@ -5,6 +5,7 @@ import {
   ViewChild,
   ElementRef,
   Input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Subject, combineLatest, BehaviorSubject, Observable } from 'rxjs';
 import { takeUntil, map, take } from 'rxjs/operators';
@@ -14,9 +15,10 @@ import { MonthlyData } from 'src/libs/core/ui-models/monthly-data';
 import { TransactionsService } from 'src/services/transactions-service';
 import { TransactionUtils } from 'src/libs/core/utils/transactions.utils';
 @Component({
-  selector: 'app-trend-chart',
-  templateUrl: './trend-chart.component.html',
-  styleUrls: ['./trend-chart.component.css'],
+    selector: 'app-trend-chart',
+    templateUrl: './trend-chart.component.html',
+    styleUrls: ['./trend-chart.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TrendChartComponent implements OnInit, OnDestroy {
   @Input() selectedYear$!: Observable<number>;

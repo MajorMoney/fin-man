@@ -5,11 +5,12 @@
   </div>
 
   <div class="list">
-    <app-account-card
-      *ngFor="let account of accounts"
-      [account]="account"
-      (edit)="openEditAccount(account)"
-    ></app-account-card>
+    @for (account of accounts; track account.id) {
+      <app-account-card
+        [account]="account"
+        (edit)="openEditAccount(account)"
+      ></app-account-card>
+    }
   </div>
 </div>
 <!-- Modal outside the list -->

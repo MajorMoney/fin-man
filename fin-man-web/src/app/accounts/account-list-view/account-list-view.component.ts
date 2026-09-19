@@ -1,14 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { Account } from 'src/libs/core/models/accounts';
 import { User, UserHelpers } from 'src/libs/core/models/users';
 import { AccountsService } from 'src/services/account-service';
 import { UserService } from 'src/services/user-service';
+import { AccountCardComponent } from '../account-card/account-card.component';
+import { AccountModalComponent } from '../account-modal/account-modal.component';
 
 @Component({
-  selector: 'app-account-list-view',
-  templateUrl: './account-list-view.component.html',
-  styleUrls: ['./account-list-view.component.css'],
+    selector: 'app-account-list-view',
+    templateUrl: './account-list-view.component.html',
+    styleUrls: ['./account-list-view.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [AccountCardComponent, AccountModalComponent]
 })
 export class AccountListViewComponent implements OnInit, OnDestroy {
   constructor(

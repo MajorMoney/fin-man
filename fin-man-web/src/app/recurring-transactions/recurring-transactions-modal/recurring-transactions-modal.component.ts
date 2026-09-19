@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RecurringTransaction } from 'src/libs/core/models/recurring-transaction';
 import { Category } from 'src/libs/core/models/category';
 import { CategoryService } from 'src/services/categories-service';
@@ -7,9 +9,10 @@ import { UserService } from 'src/services/user-service';
 import { map } from 'rxjs';
 
 @Component({
-  selector: 'app-recurring-transactions-modal',
-  templateUrl: './recurring-transactions-modal.component.html',
-  styleUrls: ['./recurring-transactions-modal.component.css'],
+    selector: 'app-recurring-transactions-modal',
+    templateUrl: './recurring-transactions-modal.component.html',
+    styleUrls: ['./recurring-transactions-modal.component.css'],
+    imports: [FormsModule, AsyncPipe],
 })
 export class RecurringTransactionsModalComponent implements OnInit {
   @Input() isOpen = false;
@@ -18,6 +21,7 @@ export class RecurringTransactionsModalComponent implements OnInit {
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() save = new EventEmitter<RecurringTransaction>();
+  @Output() delete = new EventEmitter<number>();
   constructor(
     private categoryService: CategoryService,
     private accountsService: AccountsService,
@@ -113,6 +117,7 @@ export class RecurringTransactionsModalComponent implements OnInit {
       category,
       startDate,
       recurrenceRule,
+      type,
     } = this.recurringForm;
 
     if (
@@ -122,7 +127,8 @@ export class RecurringTransactionsModalComponent implements OnInit {
       !account ||
       !category ||
       !startDate ||
-      !recurrenceRule
+      !recurrenceRule ||
+      !type
     ) {
       alert('Please fill in all required fields');
       return;
@@ -135,7 +141,20 @@ export class RecurringTransactionsModalComponent implements OnInit {
     }
 
     // Emit save event
-    this.save.emit(this.recurringForm as RecurringTransaction);
+    const { nextDueDate: _nextDueDate, ...payload } = this.recurringForm;
+    this.save.emit(payload as RecurringTransaction);
+  }
+
+  onDelete(): void {
+    if (!this.recurringForm?.id) return;
+
+    if (
+      confirm(
+        `Are you sure you want to delete "${this.recurringForm.description}"?`,
+      )
+    ) {
+      this.delete.emit(this.recurringForm.id);
+    }
   }
 
 
@@ -147,7 +166,6 @@ export class RecurringTransactionsModalComponent implements OnInit {
   }
 
   selectCategory(name: string): void {
-    console.log(name)
     if (this.recurringForm) {
       this.recurringForm.category = name;
       this.filteredCategoryOptions = [];

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, map, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Transaction } from 'src/libs/core/models/transactions';
@@ -7,6 +7,9 @@ import { TransactionFiltersForm } from 'src/libs/core/ui-models/transactions-lis
 import { TransactionUtils } from 'src/libs/core/utils/transactions.utils';
 import { TransactionsService } from 'src/services/transactions-service';
 import { UserService } from 'src/services/user-service';
+import { FormsModule } from '@angular/forms';
+import { TransactionModalComponent } from '../transactions-modal/transactions-modal.component';
+import { DecimalPipe, DatePipe } from '@angular/common';
 
 // Add these type definitions here
 type SortColumn =
@@ -21,9 +24,11 @@ type SortColumn =
 type SortDirection = 'asc' | 'desc' | null;
 
 @Component({
-  selector: 'app-transactions-list',
-  templateUrl: './transactions-list.component.html',
-  styleUrls: ['./transactions-list.component.css'],
+    selector: 'app-transactions-list',
+    templateUrl: './transactions-list.component.html',
+    styleUrls: ['./transactions-list.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule, TransactionModalComponent, DecimalPipe, DatePipe]
 })
 export class TransactionsListComponent implements OnInit, OnDestroy {
   expenses: Transaction[] = [];

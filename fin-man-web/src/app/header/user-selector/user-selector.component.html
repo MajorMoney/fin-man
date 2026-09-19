@@ -4,13 +4,16 @@
     <span class="arrow">{{ dropdownOpen ? '▲' : '▼' }}</span>
   </div>
 
-  <ul class="dropdown" *ngIf="dropdownOpen">
-    <li
-      *ngFor="let user of userService.users$ | async"
-      (click)="selectUser(user)"
-      [class.selected]="user === currentUser"
-    >
-      {{ user.name }}
-    </li>
-  </ul>
+  @if (dropdownOpen) {
+    <ul class="dropdown">
+      @for (user of (userService.users$ | async) ?? []; track user.id ?? user.name) {
+        <li
+          (click)="selectUser(user)"
+          [class.selected]="user === currentUser"
+        >
+          {{ user.name }}
+        </li>
+      }
+    </ul>
+  }
 </div>

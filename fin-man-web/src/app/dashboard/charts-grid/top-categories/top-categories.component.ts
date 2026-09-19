@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, map, Observable } from 'rxjs';
 import { CategoryTotal } from 'src/libs/core/ui-models/category-total';
 import { TransactionUtils } from 'src/libs/core/utils/transactions.utils';
@@ -6,9 +6,10 @@ import { TransactionsService } from 'src/services/transactions-service';
 import { UserService } from 'src/services/user-service';
 
 @Component({
-  selector: 'app-top-categories',
-  templateUrl: './top-categories.component.html',
-  styleUrls: ['./top-categories.component.css'],
+    selector: 'app-top-categories',
+    templateUrl: './top-categories.component.html',
+    styleUrls: ['./top-categories.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TopCategoriesComponent implements OnInit {
   constructor(

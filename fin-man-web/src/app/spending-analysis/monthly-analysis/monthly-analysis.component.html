@@ -2,13 +2,14 @@
   <div class="card-header">
     <h2>Monthly analysis</h2>
     <div class="period-selector">
-      <button
-        *ngFor="let period of periods"
-        [class.active]="selectedPeriod === period"
-        (click)="onPeriodChange(period)"
-      >
-        {{ period }}
-      </button>
+      @for (period of periods; track period) {
+        <button
+          [class.active]="selectedPeriod === period"
+          (click)="onPeriodChange(period)"
+        >
+          {{ period }}
+        </button>
+      }
       <button class="compare-btn">⚖ Compare Periods</button>
     </div>
   </div>
@@ -31,18 +32,21 @@
           stroke-width="2"
           vector-effect="non-scaling-stroke"
         />
-        <circle
-          *ngFor="let point of chartData; let i = index"
-          [attr.cx]="i * 100"
-          [attr.cy]="getPointPosition(point.amount)"
-          r="4"
-          fill="#4A90E2"
-          vector-effect="non-scaling-stroke"
-        />
+        @for (point of chartData; track point.date; let i = $index) {
+          <circle
+            [attr.cx]="i * 100"
+            [attr.cy]="getPointPosition(point.amount)"
+            r="4"
+            fill="#4A90E2"
+            vector-effect="non-scaling-stroke"
+          />
+        }
       </svg>
 
       <div class="x-axis">
-        <span *ngFor="let point of chartData">{{ point.date }}</span>
+        @for (point of chartData; track point.date) {
+          <span>{{ point.date }}</span>
+        }
       </div>
     </div>
   </div>

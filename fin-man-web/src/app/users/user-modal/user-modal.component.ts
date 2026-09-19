@@ -5,14 +5,18 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { User } from 'src/libs/core/models/users';
 import { UserService } from 'src/services/user-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-user-modal',
-  templateUrl: './user-modal.component.html',
-  styleUrls: ['./user-modal.component.css'],
+    selector: 'app-user-modal',
+    templateUrl: './user-modal.component.html',
+    styleUrls: ['./user-modal.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule]
 })
 export class UserModalComponent implements OnChanges {
   constructor(private userService: UserService) {}

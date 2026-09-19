@@ -5,15 +5,19 @@ import {
   EventEmitter,
   SimpleChanges,
   OnChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { Account } from 'src/libs/core/models/accounts';
 import { User } from 'src/libs/core/models/users';
 import { AccountsService } from 'src/services/account-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-account-modal',
-  templateUrl: './account-modal.component.html',
-  styleUrls: ['./account-modal.component.css'],
+    selector: 'app-account-modal',
+    templateUrl: './account-modal.component.html',
+    styleUrls: ['./account-modal.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [FormsModule]
 })
 export class AccountModalComponent implements OnChanges {
   constructor(private accountService: AccountsService) {}

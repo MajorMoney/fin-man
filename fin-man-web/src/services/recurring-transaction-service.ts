@@ -48,7 +48,6 @@ export class RecurringTransactionsService implements OnDestroy {
     this.errorSubject.next(null);
 
     const data = await this.recurringTransactionsApi.findAll();
-    console.log('[DEBUG] API returned:', data);
 
     if (!Array.isArray(data)) {
       throw new Error('Invalid recurring transaction data: expected an array');

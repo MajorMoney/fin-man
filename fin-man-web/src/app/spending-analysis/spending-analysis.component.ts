@@ -1,9 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CategoryFilterComponent } from './category-filter/category-filter.component';
+import { TopSpendingChartComponent } from './top-spending-chart/top-spending-chart.component';
+import { MonthlyAnalysisComponent } from './monthly-analysis/monthly-analysis.component';
+import { DetailedTransactionsPlaceholderComponent } from './placeholder/placeholder.component';
 
 @Component({
-  selector: 'app-spending-analysis',
-  templateUrl: './spending-analysis.component.html',
-  styleUrls: ['./spending-analysis.component.css'],
+    selector: 'app-spending-analysis',
+    templateUrl: './spending-analysis.component.html',
+    styleUrls: ['./spending-analysis.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [CategoryFilterComponent, TopSpendingChartComponent, MonthlyAnalysisComponent, DetailedTransactionsPlaceholderComponent]
 })
 export class SpendingAnalysisComponent {
   selectedCategory: string = 'All';

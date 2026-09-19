@@ -1,8 +1,9 @@
 <div class="summary-grid">
-  <app-dashboard-card
-    *ngFor="let card of cards"
-    [title]="card.title"
-    [value]="card.value"
-    [subtitle]="card.subtitle"
-  ></app-dashboard-card>
+  @for (card of cards; track card.metric) {
+    <app-dashboard-card
+      [title]="card.title"
+      [value]="card.value"
+      [subtitle]="card.subtitle"
+    ></app-dashboard-card>
+  }
 </div>
