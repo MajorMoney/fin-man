@@ -154,27 +154,60 @@ docker compose -f docker-compose.pi.yml logs -f
 - UI: http://MajorMoneyPi.local (port 80)
 - API: http://MajorMoneyPi.local:3000
 
-Mongo is **not** published on the LAN. Only the backend container can reach it. Containers restart after a reboot (`restart: unless-stopped`).
+Mongo is **not** published on the LAN. Only the backend container can reach it.
+
+**Leave the Pi on** if you want the house server available. Docker is enabled on boot, and each service has `restart: unless-stopped`, so UI, API, and Mongo start again after a reboot or power loss. Data stays in `~/fin-man-data/mongo`.
+
+You can still shut it down whenever you want (power, travel). After the next boot the stack comes back by itself, as long as you did not `docker compose stop` / `down` before shutting down (`unless-stopped` will not restart containers you stopped on purpose).
 
 ### Deploy a new version to the Pi
 
-On the laptop: commit and `git push origin main`.
+When the laptop build looks good and you want it on the house server:
 
-On the Pi:
+**On the laptop**
 
 ```bash
+git add -A   # or add specific files
+git commit -m "..."
+git push origin main
+```
+
+**On the Pi**
+
+```bash
+ssh majormoney@MajorMoneyPi.local
 cd ~/fin-man
 git pull
 docker compose -f docker-compose.pi.yml up -d --build
 ```
 
-Mongo keeps using `~/fin-man-data/mongo`. Do not run `docker compose down -v` on the Pi.
+`--build` rebuilds frontend/backend images from the new code, then replaces those containers. Mongo is not wiped: it keeps using `~/fin-man-data/mongo`.
 
-Useful:
+That is the whole deploy. Code moves via git. Data stays on the Pi.
+
+### What you do not do
+
+| Don’t | Why |
+|---|---|
+| `docker compose down -v` on the Pi | Not needed. Bind-mounted data usually survives anyway, but do not make a habit of volume wipes. |
+| Point the laptop app at Pi Mongo | Two DBs on purpose. Dev stays local. |
+| Copy `~/fin-man-data` into the repo | Data is not source. |
+| Install Node/Mongo/nginx on the Pi | Docker already provides them. |
+
+### Useful Pi commands
 
 ```bash
+# status
+docker compose -f docker-compose.pi.yml ps
+
+# logs
 docker compose -f docker-compose.pi.yml logs -f backend
+docker compose -f docker-compose.pi.yml logs -f frontend
+
+# stop without deleting data
 docker compose -f docker-compose.pi.yml stop
+
+# start again
 docker compose -f docker-compose.pi.yml start
 ```
 

@@ -16,8 +16,7 @@ export class CategoriesService {
   async create(dto: CreateCategoryDto) {
     const category = new this.categoryModel({
       ...dto,
-      name: StringUtils.toCamelCase(dto.name),
-      id: generateId(), // auto-generate ID like expenses
+      id: generateId(), 
     });
 
     return category.save();

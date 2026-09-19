@@ -1,8 +1,9 @@
 // src/app/api/transactions.api.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { Transaction } from 'src/libs/core/models/transactions';
+import { TransactionQuery } from 'src/libs/core/models/transaction-query';
 import { getApiBaseUrl } from 'src/libs/core/utils/api-base-url';
 
 @Injectable({
@@ -19,28 +20,25 @@ export class TransactionsApi {
   }
 
   // GET /transactions
-  async findAll(): Promise<Transaction[]> {
-    return await firstValueFrom(this.http.get<Transaction[]>(this.apiUrl));
+  async findAll(query?: TransactionQuery): Promise<Transaction[]> {
+    let params = new HttpParams();
+    if (query) {
+      for (const [key, value] of Object.entries(query)) {
+        if (value !== undefined && value !== null && value !== '') {
+          params = params.set(key, String(value));
+        }
+      }
+    }
+
+    return await firstValueFrom(
+      this.http.get<Transaction[]>(this.apiUrl, { params })
+    );
   }
 
   // GET /transactions/:id
   async findOne(id: number): Promise<Transaction> {
     return await firstValueFrom(
       this.http.get<Transaction>(`${this.apiUrl}/${id}`)
-    );
-  }
-
-  // GET /transactions/user/:user
-  async findByUser(user: string): Promise<Transaction[]> {
-    return await firstValueFrom(
-      this.http.get<Transaction[]>(`${this.apiUrl}/user/${user}`)
-    );
-  }
-
-  // GET /transactions/type/:type
-  async findByType(type: 'income' | 'expense'): Promise<Transaction[]> {
-    return await firstValueFrom(
-      this.http.get<Transaction[]>(`${this.apiUrl}/type/${type}`)
     );
   }
 

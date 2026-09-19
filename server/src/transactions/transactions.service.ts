@@ -12,6 +12,7 @@ import {
 } from 'src/models/schemas/transactions.schema';
 import { CreateTransactionDto } from 'src/models/dto/transactions/create-transaction.dto';
 import { UpdateTransactionDto } from 'src/models/dto/transactions/update-transaction.dto';
+import { QueryTransactionDto } from 'src/models/dto/transactions/query-transaction.dto';
 import { User, UserDocument } from 'src/models/schemas/user.schema';
 import { Account, AccountDocument } from 'src/models/schemas/account.schema';
 import { AccountHoldingsService } from 'src/accounts/accounts-holdings.service';
@@ -55,7 +56,10 @@ export class TransactionsService {
     return transaction.save();
   }
 
-  async findAll(): Promise<TransactionDocument[]> {
+  async findAll(
+    _query: QueryTransactionDto = {},
+  ): Promise<TransactionDocument[]> {
+    // TODO: apply filters, pagination, and sort from _query
     return this.transactionModel.find().exec();
   }
 
@@ -65,14 +69,6 @@ export class TransactionsService {
       throw new NotFoundException('Transaction not found');
     }
     return transaction;
-  }
-
-  async findByUser(user: string): Promise<TransactionDocument[]> {
-    return this.transactionModel.find({ user }).exec();
-  }
-
-  async findByType(type: 'income' | 'expense'): Promise<TransactionDocument[]> {
-    return this.transactionModel.find({ type }).exec();
   }
 
   async update(

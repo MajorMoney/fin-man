@@ -95,6 +95,7 @@ export class RecurringTransactionsService {
         );
     }
 
+    console.log("Updating ",dto)
     const updated = await this.recurringModel
       .findOneAndUpdate({ id }, dto, { new: true })
       .exec();

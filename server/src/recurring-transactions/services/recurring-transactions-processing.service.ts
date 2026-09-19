@@ -6,6 +6,7 @@ import { generateId } from '../../utils/id-generator';
 import { StringUtils } from 'src/utils/string.utils';
 import { RecurringTransactionsService } from './recurring-transaction.service';
 import { RecurringTransactionMediatorService } from './recurring-transaction-mediator.service';
+import en from 'zod/v4/locales/en.js';
 
 type Frequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 
@@ -32,7 +33,6 @@ export class RecurringTransactionsProcessingService {
       const newTransactions = await this.processRule(recur, upTo);
       transactions.push(...newTransactions);
     }
-
     return transactions;
   }
 
@@ -40,13 +40,18 @@ export class RecurringTransactionsProcessingService {
     recur: RecurringTransactionDocument,
     upTo = new Date(),
   ): Promise<CreateTransactionDto[]> {
+    console.debug("processing Recurring ",recur.description)
+
     const occurrences = this.getOccurrences(recur, upTo);
     let created = 0;
     let transactions: CreateTransactionDto[] = [];
+      console.log("Got ",occurrences.length, " occurrences")
 
     for (const occ of occurrences) {
+      console.debug("processing occurence",occ)
 
       if (recur.lastProcessedAt && StringUtils.parseDate(recur.lastProcessedAt) >= occ) {
+        console.debug("last processed at %s >= occ date %s will not process",new Date(recur.lastProcessedAt),occ)
         continue;
       }
       const txDto: CreateTransactionDto = {
@@ -65,6 +70,7 @@ export class RecurringTransactionsProcessingService {
       };
 
       transactions.push(txDto);
+      console.log("transaction pushed, transactions size = %d",transactions.length)
     }
 
     return transactions;
@@ -84,17 +90,23 @@ export class RecurringTransactionsProcessingService {
       ? new Date(recur.lastProcessedAt)
       : null;
 
-    const from = lastProcessed ? new Date(lastProcessed.getTime() + 1) : start;
+    console.debug("start: %s end: %s lastProcessed: %s",new Date(start),end?new Date(end):null,lastProcessed?new Date(lastProcessed):null)
 
+    let from = lastProcessed ? new Date(lastProcessed.getTime() + 1) : start;
+
+    console.debug("From: %s",from)
     const occurrences: Date[] = [];
-    let cursor = new Date(start);
 
-    while (cursor <= upTo) {
-      if (cursor >= from && (!end || cursor <= end)) {
-        occurrences.push(new Date(cursor));
+    upTo.setUTCHours(0, 0, 0, 0);
+    
+    while (from < upTo) {
+      console.debug("Cursor: %s , upTo: %s",from,upTo)
+      if (!end || from <= end) {
+        occurrences.push(new Date(from));
       }
+      from = this.step(new Date(from), recur.recurrenceRule);
+      console.debug("Cursor is now %s, after %s",from,recur.recurrenceRule)
 
-      cursor = this.step(cursor, recur.recurrenceRule);
     }
 
     return occurrences;
@@ -147,8 +159,7 @@ export class RecurringTransactionsProcessingService {
 
   private step(date: Date, frequency: string): Date {
     const d = new Date(date);
-
-    switch (frequency) {
+    switch (frequency.toUpperCase()) {
       case 'DAILY':
         d.setUTCDate(d.getUTCDate() + 1);
         break;

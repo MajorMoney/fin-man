@@ -161,7 +161,7 @@ export class RecurringTransactionsModalComponent implements OnInit {
     // Case-insensitive check if category exists
     const exists = CategoryService.exists(
       this.categories,
-      input.toLocaleLowerCase()
+      input
     );
 
     if (!exists) {

@@ -6,11 +6,12 @@ import {
   Param,
   Put,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import type { CreateTransactionDto } from 'src/models/dto/transactions/create-transaction.dto';
 import type { UpdateTransactionDto } from 'src/models/dto/transactions/update-transaction.dto';
-import { TransactionDocument } from 'src/models/schemas/transactions.schema';
+import type { QueryTransactionDto } from 'src/models/dto/transactions/query-transaction.dto';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -22,25 +23,13 @@ export class TransactionsController {
   }
 
   @Get()
-  findAll() {
-    return this.transactionsService.findAll();
+  findAll(@Query() query: QueryTransactionDto) {
+    return this.transactionsService.findAll(query);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.transactionsService.findOne(Number(id));
-  }
-
-  @Get('user/:user')
-  findByUser(@Param('user') user: string) {
-    return this.transactionsService.findByUser(user);
-  }
-
-  @Get('type/:type')
-  async getByType(
-    @Param('type') type: 'income' | 'expense',
-  ): Promise<TransactionDocument[]> {
-    return this.transactionsService.findByType(type);
   }
 
   @Put(':id')

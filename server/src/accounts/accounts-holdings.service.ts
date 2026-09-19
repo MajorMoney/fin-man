@@ -33,12 +33,6 @@ export class AccountHoldingsService {
     const newHoldings =
       type === 'income' ? account.holdings + amount : account.holdings - amount;
 
-    if (newHoldings < 0) {
-      throw new BadRequestException(
-        `Insufficient funds in account ${accountName} for ${type} of ${amount}`,
-      );
-    }
-
     account.holdings = newHoldings;
     await account.save();
 

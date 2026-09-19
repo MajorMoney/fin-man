@@ -13,7 +13,8 @@
         <!-- Date -->
         <div class="form-group">
           <label for="date">Start Date *</label>
-          <input id="date" type="date" [(ngModel)]="recurringForm.startDate" name="startDate" class="form-input" />
+          <input id="date" type="date" [(ngModel)]="recurringForm.startDate" name="startDate"
+            class="form-input" (change)="calculateNextDueDate()" />
         </div>
 
         <div class="form-group">

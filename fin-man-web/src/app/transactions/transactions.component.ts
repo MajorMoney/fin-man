@@ -62,6 +62,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
         map(([transactions, accounts]) => {
           const uniqueCategories =
             TransactionUtils.getAllCategories(transactions);
+            console.log(uniqueCategories)
           const uniqueAccounts = accounts.map((a) => a.name);
           return {
             categories: ['All', ...Array.from(uniqueCategories).sort()],
