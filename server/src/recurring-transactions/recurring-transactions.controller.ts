@@ -7,7 +7,6 @@ import {
   Put,
   Delete,
 } from '@nestjs/common';
-import { RecurringTransactionsService } from './services/recurring-transaction.service';
 
 import type { CreateRecurringTransactionDto } from 'src/models/dto/recurring-transactions/create-recurring-transaction';
 import type { UpdateRecurringTransactionDto } from 'src/models/dto/recurring-transactions/update-recurring-transaction';

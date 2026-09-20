@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { combineLatest, map, Observable, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Transaction } from 'src/libs/core/models/transactions';
 
@@ -65,21 +65,20 @@ export class TransactionsListComponent implements OnInit, OnDestroy {
       this.userService.currentUser$,
       this.filters$,
     ])
-      .pipe(
-        map(([transactions, user, filters]) => {
-          const filteredByUser = TransactionUtils.filterByUser(
-            transactions,
-            user.name
-          );
-          return TransactionUtils.applyFilters(filteredByUser, filters);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((filteredExpenses) => {
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([transactions, user, filters]) => {
+        const filteredByUser = TransactionUtils.filterByUser(
+          transactions,
+          user.name
+        );
+        const filteredExpenses = TransactionUtils.applyFilters(
+          filteredByUser,
+          filters
+        );
         this.expenses = filteredExpenses;
         this.totalItems = filteredExpenses.length;
         this.calculateTotalPages();
-        this.currentPage = 1; // Reset to first page when filters change
+        this.currentPage = 1;
         this.applySorting();
         this.updatePaginatedExpenses();
       });
@@ -113,7 +112,7 @@ export class TransactionsListComponent implements OnInit, OnDestroy {
     }
 
     this.applySorting();
-    this.currentPage = 1; // Reset to first page when sorting
+    this.currentPage = 1;
     this.updatePaginatedExpenses();
   }
 
@@ -204,26 +203,22 @@ export class TransactionsListComponent implements OnInit, OnDestroy {
     const newValue = +target.value;
 
     if (newValue && newValue > 0) {
-      // Validate the value
       this.itemsPerPage = newValue;
-      this.currentPage = 1; // Reset to first page
+      this.currentPage = 1;
       this.calculateTotalPages();
       this.updatePaginatedExpenses();
     }
   }
 
-  // Helper to generate page numbers for pagination UI
   getPageNumbers(): number[] {
     const pages: number[] = [];
     const maxPagesToShow = 5;
 
     if (this.totalPages <= maxPagesToShow) {
-      // Show all pages
       for (let i = 1; i <= this.totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Show current page with context
       let startPage = Math.max(1, this.currentPage - 2);
       let endPage = Math.min(this.totalPages, this.currentPage + 2);
 

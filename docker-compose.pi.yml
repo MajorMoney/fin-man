@@ -1,5 +1,8 @@
 # Always-on stack for the Raspberry Pi.
 # Mongo data lives on the host, outside the repo, so it survives rebuilds and re-clones.
+#
+# CI publishes linux/arm64 images to GHCR. The Pi runner pulls those tags.
+# `build:` stays as a fallback so `docker compose up --build` still works by hand.
 services:
   mongo:
     image: mongo:7
@@ -9,6 +12,7 @@ services:
       - ${MONGO_DATA_PATH:-/home/majormoney/fin-man-data/mongo}:/data/db
 
   backend:
+    image: ghcr.io/majormoney/fin-man-backend:${IMAGE_TAG:-main}
     build: ./server
     container_name: fin-man-backend
     restart: unless-stopped
@@ -20,6 +24,7 @@ services:
       - "3000:3000"
 
   frontend:
+    image: ghcr.io/majormoney/fin-man-web:${IMAGE_TAG:-main}
     build: ./fin-man-web
     container_name: fin-man-frontend
     restart: unless-stopped

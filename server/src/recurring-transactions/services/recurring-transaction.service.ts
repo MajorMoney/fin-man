@@ -13,11 +13,6 @@ import type { UpdateRecurringTransactionDto } from 'src/models/dto/recurring-tra
 import { RecurringTransactionsProcessingService } from './recurring-transactions-processing.service';
 import { generateId } from 'src/utils/id-generator';
 import { ValidationService } from 'src/validation/validation.service';
-import {
-  Transaction,
-  TransactionDocument,
-} from 'src/models/schemas/transactions.schema';
-import { RecurringTransactionMediatorService } from './recurring-transaction-mediator.service';
 @Injectable()
 export class RecurringTransactionsService {
   constructor(

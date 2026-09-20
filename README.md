@@ -162,7 +162,7 @@ You can still shut it down whenever you want (power, travel). After the next boo
 
 ### Deploy a new version to the Pi
 
-When the laptop build looks good and you want it on the house server:
+Until the Pi runner is online (see CI/CD below), deploy by hand:
 
 **On the laptop**
 
@@ -183,7 +183,7 @@ docker compose -f docker-compose.pi.yml up -d --build
 
 `--build` rebuilds frontend/backend images from the new code, then replaces those containers. Mongo is not wiped: it keeps using `~/fin-man-data/mongo`.
 
-That is the whole deploy. Code moves via git. Data stays on the Pi.
+After CI publishes images and `ENABLE_PI_DEPLOY` is on, a merge to `main` pulls `ghcr.io` tags instead of building on the Pi.
 
 ### What you do not do
 
@@ -213,6 +213,42 @@ docker compose -f docker-compose.pi.yml start
 
 ---
 
+## CI/CD
+
+GitHub Actions runs on GitHub-hosted VMs so the Pi does not compile. Target:
+
+1. **PR / every push** — unit tests and `npm run build` for `server/` and `fin-man-web/`.
+2. **Push to `main` after tests pass** — build `linux/arm64` images and push to GHCR:
+   - `ghcr.io/majormoney/fin-man-backend:<git-sha>` and `:main`
+   - `ghcr.io/majormoney/fin-man-web:<git-sha>` and `:main`
+3. **Deploy (off until you enable it)** — Pi self-hosted runner pulls those images and runs `docker compose up -d`. No `--build` on the Pi.
+
+Lint is not gated yet (existing ESLint noise in both apps). Tests and compile are.
+
+### First time on GitHub
+
+1. Push this branch / `main` so `.github/workflows/ci.yml` exists.
+2. Repo **Settings → Actions → General**: allow Actions, and set workflow permissions to **Read and write** (needed to push GHCR packages).
+3. After the first green `main` run, confirm packages under the GitHub **Packages** tab.
+
+The `deploy` job stays skipped until you set a repository variable. Do that only after a runner is installed on the Pi.
+
+### Enable auto-deploy (after CI is green)
+
+On the Pi (Docker user, not root):
+
+1. Install a GitHub Actions runner (official Linux ARM64 tarball) in e.g. `~/actions-runner`.
+2. Configure it for this repo, leave the default labels (`self-hosted`, `Linux`, `ARM64`).
+3. Install and start the runner as a service so it survives reboot.
+
+In the GitHub repo: **Settings → Secrets and variables → Actions → Variables** → create `ENABLE_PI_DEPLOY` = `true`.
+
+The next successful `main` publish will SSH-less deploy: pull + `up -d`. Mongo data is unchanged.
+
+Until that variable exists, keep using `git pull` and `docker compose -f docker-compose.pi.yml up -d --build` on the Pi.
+
+---
+
 ## Project structure
 
 ```
@@ -222,6 +258,7 @@ postman/                 Postman collection
 docker-compose.yml       Laptop full stack
 docker-compose.dev.yml   Laptop Mongo only
 docker-compose.pi.yml    Pi full stack
+.github/workflows/ci.yml GitHub Actions CI + GHCR publish
 ```
 
 Import `postman/` into Postman for API calls against the local backend.

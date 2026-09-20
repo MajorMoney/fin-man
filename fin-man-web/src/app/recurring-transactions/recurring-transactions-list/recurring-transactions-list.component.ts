@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { combineLatest, Subject, Observable } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { RecurringTransaction } from 'src/libs/core/models/recurring-transaction';
 import { RecurringTransactionFiltersForm } from 'src/libs/core/ui-models/recurring-transactions-list-filters';
 import { RecurringTransactionsService } from 'src/services/recurring-transaction-service';
@@ -50,14 +50,10 @@ export class RecurringTransactionsListComponent implements OnInit, OnDestroy {
       this.userService.currentUser$,
       this.filters$,
     ])
-      .pipe(
-        map(([transactions, user, filters]) => {
-          const filteredByUser = RecurringTransactionUtils.filterByUser(transactions, user.name);
-          return RecurringTransactionUtils.applyFilters(filteredByUser, filters);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((filteredTransactions) => {
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([transactions, user, filters]) => {
+        const filteredByUser = RecurringTransactionUtils.filterByUser(transactions, user.name);
+        const filteredTransactions = RecurringTransactionUtils.applyFilters(filteredByUser, filters);
         this.transactions = filteredTransactions;
         this.totalItems = filteredTransactions.length;
         this.calculateTotalPages();

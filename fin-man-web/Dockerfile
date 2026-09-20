@@ -1,13 +1,11 @@
-# Build
-FROM node:18 AS build
+FROM node:22-bookworm-slim AS build
 WORKDIR /app
 COPY package*.json nx.json ./
 COPY tsconfig*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 
-# Run
 FROM nginx:alpine
 COPY --from=build /app/dist/fin-man-web /usr/share/nginx/html
 EXPOSE 80

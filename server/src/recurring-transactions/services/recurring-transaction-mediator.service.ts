@@ -7,9 +7,8 @@ import { TransactionDocument } from "src/models/schemas/transactions.schema";
 import { Transaction } from "typeorm";
 import { RecurringTransactionsService } from "./recurring-transaction.service";
 import { RecurringTransactionsProcessingService } from "./recurring-transactions-processing.service";
-import { RecurringTransaction, RecurringTransactionDocument } from "src/models/schemas/recurring-transaction.schema";
+import { RecurringTransactionDocument } from "src/models/schemas/recurring-transaction.schema";
 import { TransactionsService } from "src/transactions/transactions.service";
-import { CreateTransactionDto } from "src/models/dto/transactions/create-transaction.dto";
 
 @Injectable()
 export class RecurringTransactionMediatorService {
