@@ -7,6 +7,8 @@ import {
 } from 'rxjs';
 import { RecurringTransaction } from 'src/libs/core/models/recurring-transaction';
 import { RecurringTransactionsApi } from 'src/api/recurring-transactions.api';
+import { TransactionsService } from './transactions-service';
+import { AccountsService } from './account-service';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +30,11 @@ export class RecurringTransactionsService implements OnDestroy {
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private recurringTransactionsApi: RecurringTransactionsApi) {
+  constructor(
+    private recurringTransactionsApi: RecurringTransactionsApi,
+    private transactionsService: TransactionsService,
+    private accountsService: AccountsService
+  ) {
     this.initializeRecurringTransactions();
   }
 
@@ -90,6 +96,12 @@ export class RecurringTransactionsService implements OnDestroy {
     this.initializeRecurringTransactions();
   }
 
+  private invalidateRelatedStores(): void {
+    this.refreshRecurringTransactions();
+    this.transactionsService.refreshTransactions();
+    this.accountsService.refreshAccounts();
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -101,14 +113,14 @@ export class RecurringTransactionsService implements OnDestroy {
   // CRUD
   async addRecurringTransaction(t: RecurringTransaction): Promise<void> {
     await this.recurringTransactionsApi.create(t);
-    this.refreshRecurringTransactions();
+    this.invalidateRelatedStores();
   }
   async updateRecurringTransaction(t: RecurringTransaction): Promise<void> {
     await this.recurringTransactionsApi.update(t);
-    this.refreshRecurringTransactions();
+    this.invalidateRelatedStores();
   }
   async deleteRecurringTransaction(id: number): Promise<void> {
     await this.recurringTransactionsApi.remove(id);
-    this.refreshRecurringTransactions();
+    this.invalidateRelatedStores();
   }
 }

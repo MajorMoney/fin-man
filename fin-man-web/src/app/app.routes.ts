@@ -6,6 +6,7 @@ import { SpendingAnalysisComponent } from './spending-analysis/spending-analysis
 import { UserListViewComponent } from './users/user-list-view/user-list-view.component';
 import { AccountListViewComponent } from './accounts/account-list-view/account-list-view.component';
 import { RecurringTransactionsComponent } from './recurring-transactions/recurring-transactions.component';
+import { ReportsComponent } from './reports/reports.component';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -19,4 +20,5 @@ export const appRoutes: Route[] = [
   { path: 'analysis', component: SpendingAnalysisComponent },
   { path: 'accounts', component: AccountListViewComponent },
   { path: 'users', component: UserListViewComponent },
+  { path: 'reports', component: ReportsComponent },
 ];
