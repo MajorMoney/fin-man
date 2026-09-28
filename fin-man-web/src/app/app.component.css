@@ -19,6 +19,11 @@
   flex: 1;
   background-color: #f4f4f4;
   overflow: auto; /* scroll if content is long */
+  scrollbar-width: none;
   padding: 1rem;
   box-sizing: border-box;
+}
+
+.app-main::-webkit-scrollbar {
+  display: none;
 }

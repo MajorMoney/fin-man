@@ -6,6 +6,8 @@ import { Category } from 'src/libs/core/models/category';
 import { CategoryService } from 'src/services/categories-service';
 import { AccountsService } from 'src/services/account-service';
 import { UserService } from 'src/services/user-service';
+import { ToastService } from 'src/services/toast.service';
+import { ConfirmService } from 'src/services/confirm.service';
 import { map } from 'rxjs';
 
 @Component({
@@ -25,7 +27,9 @@ export class RecurringTransactionsModalComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private accountsService: AccountsService,
-    private userService: UserService
+    private userService: UserService,
+    private confirmService: ConfirmService,
+    private toast: ToastService
   ) { }
 
 
@@ -130,13 +134,13 @@ export class RecurringTransactionsModalComponent implements OnInit {
       !recurrenceRule ||
       !type
     ) {
-      alert('Please fill in all required fields');
+      this.toast.warning('Please fill in all required fields');
       return;
     }
 
     // Optional: validate amount > 0
     if (amount <= 0) {
-      alert('Amount must be greater than 0');
+      this.toast.warning('Amount must be greater than 0');
       return;
     }
 
@@ -145,16 +149,15 @@ export class RecurringTransactionsModalComponent implements OnInit {
     this.save.emit(payload as RecurringTransaction);
   }
 
-  onDelete(): void {
+  async onDelete(): Promise<void> {
     if (!this.recurringForm?.id) return;
-
-    if (
-      confirm(
-        `Are you sure you want to delete "${this.recurringForm.description}"?`,
-      )
-    ) {
-      this.delete.emit(this.recurringForm.id);
-    }
+    const accepted = await this.confirmService.confirm({
+      title: 'Delete recurring transaction',
+      message: `Are you sure you want to delete "${this.recurringForm.description}"?`,
+      confirmLabel: 'Delete',
+      danger: true,
+    });
+    if (accepted) this.delete.emit(this.recurringForm.id);
   }
 
 
@@ -183,9 +186,12 @@ export class RecurringTransactionsModalComponent implements OnInit {
     );
 
     if (!exists) {
-      const create = confirm(
-        `You selected a category that doesn't exist. Do you want to create category '${input}'?`
-      );
+      const create = await this.confirmService.confirm({
+        title: 'Create category',
+        message: `You selected a category that doesn't exist. Do you want to create category '${input}'?`,
+        confirmLabel: 'Create',
+        danger: false,
+      });
       if (create) {
         // Decide default type or ask user
         const newCategory: Category = {
@@ -196,12 +202,8 @@ export class RecurringTransactionsModalComponent implements OnInit {
 
         try {
           await this.categoryService.addCategory(newCategory);
-          alert(`Category '${input}' created successfully!`);
-        } catch (err) {
-          // Clear input if creation fails
+        } catch {
           this.recurringForm!.category = '';
-          console.error('Error creating category', err);
-          alert('Failed to create category');
         }
       } else {
         // Clear input if user declines

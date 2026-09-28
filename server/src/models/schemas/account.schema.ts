@@ -16,6 +16,9 @@ export class Account {
 
   @Prop({ required: true })
   holders!: string[];
+
+  @Prop()
+  background?: string;
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);

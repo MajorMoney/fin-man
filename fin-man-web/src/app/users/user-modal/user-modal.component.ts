@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import { User } from 'src/libs/core/models/users';
 import { UserService } from 'src/services/user-service';
+import { ConfirmService } from 'src/services/confirm.service';
+import { ToastService } from 'src/services/toast.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -19,7 +21,11 @@ import { FormsModule } from '@angular/forms';
     imports: [FormsModule]
 })
 export class UserModalComponent implements OnChanges {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private confirmService: ConfirmService,
+    private toast: ToastService
+  ) {}
 
   @Input() mode: 'create' | 'edit' = 'create';
   @Input() isOpen = false;
@@ -56,7 +62,7 @@ export class UserModalComponent implements OnChanges {
     }
 
     if (errors.length > 0) {
-      alert(errors.join('\n'));
+      this.toast.warning(errors.join('\n'));
       return;
     }
 
@@ -67,13 +73,17 @@ export class UserModalComponent implements OnChanges {
     this.onClose();
   }
 
-  onDelete(): void {
+  async onDelete(): Promise<void> {
     if (!this.editForm) return;
-
-    if (confirm(`Delete user "${this.editForm.name}"?`)) {
-      this.userService.deleteUser(this.editForm.id ?? 0);
-      this.onClose();
-    }
+    const accepted = await this.confirmService.confirm({
+      title: 'Delete user',
+      message: `Delete user "${this.editForm.name}"?`,
+      confirmLabel: 'Delete',
+      danger: true,
+    });
+    if (!accepted) return;
+    this.userService.deleteUser(this.editForm.id ?? 0);
+    this.onClose();
   }
 
   onContentClick(event: Event): void {

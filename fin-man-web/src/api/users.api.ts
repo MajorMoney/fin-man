@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, firstValueFrom, throwError } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import type { User } from 'src/libs/core/models/users';
 import { getApiBaseUrl } from 'src/libs/core/utils/api-base-url';
 
@@ -14,24 +14,7 @@ export class UsersApi {
 
   // POST /users
   async create(dto: User): Promise<User> {
-    return await firstValueFrom(
-      this.http.post<User>(this.apiUrl, dto).pipe(
-        catchError((err) => {
-          // Optional: parse Mongoose validation errors
-          let msg = 'An unknown error occurred';
-          if (err.status === 400 && err.error?.message) {
-            msg = err.error.message; // usually Mongoose validation message
-          } else if (err.error?.errors) {
-            // Build readable string from Mongoose errors
-            msg = Object.values(err.error.errors)
-              .map((e: any) => e.message)
-              .join('\n');
-          }
-          alert(msg); // Or show in a toast / snackbar
-          return throwError(() => err);
-        })
-      )
-    );
+    return await firstValueFrom(this.http.post<User>(this.apiUrl, dto));
   }
 
   // GET /users

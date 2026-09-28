@@ -1,6 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Category } from 'src/libs/core/models/category';
 import { CategoryApi } from 'src/api/category.api';
+import { reportCaughtError } from 'src/libs/core/http/report-caught-error';
+import { ToastService } from 'src/services/toast.service';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -10,7 +12,10 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class CategoryService implements OnDestroy {
-  constructor(private categoryApi: CategoryApi) {
+  constructor(
+    private categoryApi: CategoryApi,
+    private toast: ToastService
+  ) {
     this.initializeCategories();
   }
 
@@ -62,8 +67,11 @@ export class CategoryService implements OnDestroy {
       this.categoriesSubject.next(validCategories);
       this.loadingSubject.next(false);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to load categories';
+      const errorMessage = reportCaughtError(
+        this.toast,
+        error,
+        'Failed to load categories'
+      );
       console.error('[CategoryService] Initialization error:', errorMessage);
       this.errorSubject.next(errorMessage);
       this.categoriesSubject.next([]);

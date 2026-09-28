@@ -9,12 +9,17 @@ import {
 } from 'rxjs';
 import { User, UserHelpers } from 'src/libs/core/models/users';
 import { UsersApi } from 'src/api/users.api';
+import { reportCaughtError } from 'src/libs/core/http/report-caught-error';
+import { ToastService } from 'src/services/toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService implements OnDestroy {
-  constructor(private usersApi: UsersApi) {
+  constructor(
+    private usersApi: UsersApi,
+    private toast: ToastService
+  ) {
     this.initializeUsers();
   }
 
@@ -100,8 +105,11 @@ export class UserService implements OnDestroy {
       }
       this.loadingSubject.next(false);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to load users';
+      const errorMessage = reportCaughtError(
+        this.toast,
+        error,
+        'Failed to load users'
+      );
       console.error('[UserService] Initialization error:', errorMessage);
       this.errorSubject.next(errorMessage);
       this.loadingSubject.next(false);

@@ -1,0 +1,27 @@
+<section class="panel">
+  <header>
+    <div>
+      <h3>Transaction Templates</h3>
+      <p>Reuse frequent transactions to save time</p>
+    </div>
+    <button type="button" (click)="modalOpen = true">+ New Template</button>
+  </header>
+  <div class="grid">
+    @for (template of templates; track template.id) {
+      <app-transaction-template-card
+        [template]="template"
+        (useTemplate)="useTemplate.emit($event)"
+      ></app-transaction-template-card>
+    } @empty {
+      <p class="empty">No templates yet.</p>
+    }
+  </div>
+</section>
+
+<app-transaction-template-modal
+  [isOpen]="modalOpen"
+  [categories]="categories"
+  [accounts]="accounts"
+  (closeModal)="modalOpen = false"
+  (save)="onSave($event)"
+></app-transaction-template-modal>

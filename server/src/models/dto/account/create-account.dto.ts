@@ -5,6 +5,7 @@ export const CreateAccountSchema = z.object({
   name: z.string().nonempty(),
   holdings: z.number(),
   holders: z.array(z.string()).min(1, 'Accounts must have at least one holder'),
+  background: z.string().optional(),
 });
 
 export type CreateAccountDto = z.infer<typeof CreateAccountSchema>;

@@ -1,0 +1,83 @@
+@if (isOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content" (click)="onContentClick($event)">
+      <div class="modal-header">
+        <h3>New account Transfer</h3>
+        <button class="close-btn" type="button" (click)="onClose()">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="transfer-from">From *</label>
+          <select
+            id="transfer-from"
+            class="form-input"
+            [(ngModel)]="fromAccountId"
+          >
+            <option [ngValue]="null">Select an account</option>
+            @for (account of fromOptions; track account.id) {
+              <option [ngValue]="account.id">{{ account.name }}</option>
+            }
+          </select>
+          @if (fromAccount) {
+            <p class="hint">
+              Available: {{ fromAccount.holdings | number: '1.2-2' }} €
+            </p>
+          }
+        </div>
+
+        <button class="swap" type="button" (click)="swapAccounts()">
+          Swap accounts
+        </button>
+
+        <div class="form-group">
+          <label for="transfer-to">To *</label>
+          <select id="transfer-to" class="form-input" [(ngModel)]="toAccountId">
+            <option [ngValue]="null">Select an account</option>
+            @for (account of toOptions; track account.id) {
+              <option [ngValue]="account.id">{{ account.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="transfer-amount">Amount *</label>
+          <input
+            id="transfer-amount"
+            class="form-input"
+            type="number"
+            min="0.01"
+            step="0.01"
+            [(ngModel)]="amount"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="transfer-notes">Notes</label>
+          <textarea
+            id="transfer-notes"
+            class="form-input"
+            rows="3"
+            [(ngModel)]="notes"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="footer-right">
+          <button class="btn btn-secondary" type="button" (click)="onClose()">
+            Cancel
+          </button>
+          <button
+            class="btn btn-primary"
+            type="button"
+            [disabled]="saving"
+            (click)="onSave()"
+          >
+            Transfer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

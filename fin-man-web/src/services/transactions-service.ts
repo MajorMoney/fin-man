@@ -7,6 +7,8 @@ import {
 } from 'rxjs';
 import { Transaction } from 'src/libs/core/models/transactions';
 import { TransactionsApi } from 'src/api/transactions.api';
+import { reportCaughtError } from 'src/libs/core/http/report-caught-error';
+import { ToastService } from 'src/services/toast.service';
 import { TransactionUtils } from 'src/libs/core/utils/transactions.utils';
 
 @Injectable({
@@ -27,7 +29,10 @@ export class TransactionsService implements OnDestroy {
   private readonly errorSubject = new BehaviorSubject<string | null>(null);
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private transactionsApi: TransactionsApi) {
+  constructor(
+    private transactionsApi: TransactionsApi,
+    private toast: ToastService
+  ) {
     this.initializeTransactions();
   }
 
@@ -64,8 +69,11 @@ async initializeTransactions(): Promise<void> {
     }
 
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : 'Failed to load transactions';
+    const message = reportCaughtError(
+      this.toast,
+      error,
+      'Failed to load transactions'
+    );
     console.error('[TransactionsService] Initialization error:', message);
     this.errorSubject.next(message);
     this.transactionsSubject.next([]);

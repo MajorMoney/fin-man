@@ -1,0 +1,70 @@
+:host {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto auto;
+  gap: 0.65rem;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #f1f1f1;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  padding: 0.85rem 0.9rem;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.icon.income {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.body {
+  min-width: 0;
+}
+
+strong,
+span {
+  display: block;
+}
+
+strong {
+  color: #1f2937;
+  font-size: 0.92rem;
+}
+
+.body span {
+  color: #6b7280;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.amount {
+  color: #dc2626;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.amount.income {
+  color: #16a34a;
+}
+
+button {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+  border-radius: 8px;
+  padding: 0.3rem 0.55rem;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}

@@ -1,0 +1,12 @@
+<div class="icon">
+  <app-budget-icon [name]="category.icon"></app-budget-icon>
+</div>
+<span class="name">{{ category.name }}</span>
+<div class="bar">
+  <div class="fill" [style.width.%]="barWidth" [style.background]="color"></div>
+</div>
+<span class="figures">
+  <span [class.over]="over">{{ category.spent | currency: 'EUR' : 'symbol' : '1.0-0' }}</span>
+  <span class="limit">/ {{ category.limit | currency: 'EUR' : 'symbol' : '1.0-0' }}</span>
+</span>
+<span class="pct">{{ percent }}%</span>

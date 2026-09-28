@@ -1,0 +1,45 @@
+@if (isOpen) {
+  <div class="overlay" (click)="onClose()">
+    <div class="modal" (click)="onContentClick($event)">
+      <header>
+        <h3>New Transaction Template / Quick Apply</h3>
+        <button type="button" class="close" (click)="onClose()">×</button>
+      </header>
+      <label>
+        Title *
+        <input class="field" [(ngModel)]="title" />
+      </label>
+      <label>
+        Category *
+        <select class="field" [(ngModel)]="category">
+          @for (item of categories; track item.id) {
+            <option [value]="item.name">{{ item.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Recurring Interval *
+        <select class="field" [(ngModel)]="interval">
+          @for (item of intervals; track item) {
+            <option [value]="item">{{ item }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Default Account *
+        <select class="field" [(ngModel)]="account">
+          @for (item of accounts; track item.id) {
+            <option [value]="item.name">{{ item.name }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        Amount *
+        <input class="field" type="number" min="0" step="0.01" [(ngModel)]="amount" />
+      </label>
+      <footer>
+        <button type="button" (click)="onSave()">Save Template</button>
+      </footer>
+    </div>
+  </div>
+}

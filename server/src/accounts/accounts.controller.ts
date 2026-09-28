@@ -10,6 +10,7 @@ import {
 import { AccountsService } from './accounts.service';
 import { type CreateAccountDto } from 'src/models/dto/account/create-account.dto';
 import { type UpdateAccountDto } from 'src/models/dto/account/update-account.dto';
+import { type AccountTransferDto } from 'src/models/dto/account/account-transfer.dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -18,6 +19,16 @@ export class AccountsController {
   @Post()
   create(@Body() dto: CreateAccountDto) {
     return this.accountsService.create(dto);
+  }
+
+  @Post('transfer')
+  transfer(@Body() dto: AccountTransferDto) {
+    return this.accountsService.transfer(dto);
+  }
+
+  @Delete('transfer/:id/revert')
+  revert(@Param('id') id: string) {
+    return this.accountsService.revert(Number(id));
   }
 
   @Get()

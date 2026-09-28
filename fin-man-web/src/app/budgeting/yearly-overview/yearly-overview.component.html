@@ -1,0 +1,23 @@
+<section class="panel">
+  <h3>{{ label }} Overview</h3>
+  <div class="row">
+    <span>{{ label }} Income</span>
+    <strong>{{ income | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+  </div>
+  <div class="row">
+    <span>{{ label }} Budget</span>
+    <strong>{{ budget | currency: 'EUR' : 'symbol' : '1.0-0' }}</strong>
+  </div>
+  <div class="row">
+    <span>Projected Savings</span>
+    <strong [class.good]="savings >= 0" [class.bad]="savings < 0">{{
+      savings | currency: 'EUR' : 'symbol' : '1.0-0'
+    }}</strong>
+  </div>
+  <div class="row">
+    <span>Actual Savings</span>
+    <strong [class.good]="actual >= 0" [class.bad]="actual < 0">{{
+      actual | currency: 'EUR' : 'symbol' : '1.0-0'
+    }}</strong>
+  </div>
+</section>

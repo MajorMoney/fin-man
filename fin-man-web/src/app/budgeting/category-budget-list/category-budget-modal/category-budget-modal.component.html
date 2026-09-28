@@ -1,0 +1,52 @@
+@if (isOpen) {
+  <div class="overlay" (click)="onClose()">
+    <div class="modal" (click)="onContentClick($event)">
+      <header>
+        <h3>{{ isOthers ? 'Others' : editing ? 'Edit budget' : 'Add Category' }}</h3>
+        <button type="button" class="close" (click)="onClose()">×</button>
+      </header>
+      @if (!isOthers) {
+        <label>
+          Name *
+          <div class="suggest">
+            <input
+              class="field"
+              [(ngModel)]="name"
+              (input)="filterCategories()"
+              (focus)="filterCategories()"
+              (blur)="onCategoryBlur()"
+              autocomplete="off"
+            />
+            @if (filteredCategoryOptions.length > 0) {
+              <ul>
+                @for (category of filteredCategoryOptions; track category.name) {
+                  <li (mousedown)="selectCategory(category.name)">{{ category.name }}</li>
+                }
+              </ul>
+            }
+          </div>
+        </label>
+        <label>
+          Icon
+          <select class="field" [(ngModel)]="icon">
+            @for (icon of icons; track icon) {
+              <option [value]="icon">{{ icon }}</option>
+            }
+          </select>
+        </label>
+      }
+      <label>
+        Monthly limit *
+        <input class="field" type="number" min="0" step="0.01" [(ngModel)]="limit" />
+      </label>
+      <footer>
+        @if (editing && !isOthers) {
+          <button type="button" class="delete" (click)="onDelete()">Delete</button>
+        }
+        <button type="button" class="save" (click)="onSave()">
+          {{ editing ? 'Save Changes' : 'Save Category' }}
+        </button>
+      </footer>
+    </div>
+  </div>
+}

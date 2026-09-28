@@ -16,6 +16,8 @@ import { UserHelpers } from 'src/libs/core/models/users';
 import { AccountsService } from 'src/services/account-service';
 import { CategoryService } from 'src/services/categories-service';
 import { TransactionsService } from 'src/services/transactions-service';
+import { ToastService } from 'src/services/toast.service';
+import { ConfirmService } from 'src/services/confirm.service';
 import { UserService } from 'src/services/user-service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
@@ -32,7 +34,9 @@ export class TransactionModalComponent implements OnChanges, OnInit {
     private transactionsService: TransactionsService,
     private userService: UserService,
     private accountService: AccountsService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private confirmService: ConfirmService,
+    private toast: ToastService
   ) {}
 
   @Input() mode: 'create' | 'edit' = 'edit';
@@ -133,7 +137,7 @@ export class TransactionModalComponent implements OnChanges, OnInit {
       errors.push('A valid date is required.');
 
     if (errors.length) {
-      alert(errors.join('\n'));
+      this.toast.warning(errors.join('\n'));
       return;
     }
 
@@ -153,7 +157,7 @@ export class TransactionModalComponent implements OnChanges, OnInit {
       !this.editForm.account ||
       !this.editForm.category
     ) {
-      alert('Please fill in all required fields');
+      this.toast.warning('Please fill in all required fields');
       return;
     }
 
@@ -161,16 +165,17 @@ export class TransactionModalComponent implements OnChanges, OnInit {
     this.onClose();
   }
 
-  /** Delete expense */
-  onDelete(): void {
+  async onDelete(): Promise<void> {
     if (!this.editForm) return;
-
-    if (
-      confirm(`Are you sure you want to delete "${this.editForm.description}"?`)
-    ) {
-      this.transactionsService.deleteTransaction(this.editForm.id);
-      this.onClose();
-    }
+    const accepted = await this.confirmService.confirm({
+      title: 'Delete transaction',
+      message: `Are you sure you want to delete "${this.editForm.description}"?`,
+      confirmLabel: 'Delete',
+      danger: true,
+    });
+    if (!accepted) return;
+    this.transactionsService.deleteTransaction(this.editForm.id);
+    this.onClose();
   }
 
   /** Called whenever user changes */
@@ -205,9 +210,12 @@ export class TransactionModalComponent implements OnChanges, OnInit {
     );
 
     if (!exists) {
-      const create = confirm(
-        `You selected a category that doesn't exist. Do you want to create category '${input}'?`
-      );
+    const create = await this.confirmService.confirm({
+      title: 'Create category',
+      message: `You selected a category that doesn't exist. Do you want to create category '${input}'?`,
+      confirmLabel: 'Create',
+      danger: false,
+    });
       if (create) {
         // Decide default type or ask user
         const newCategory: Category = {
@@ -218,12 +226,8 @@ export class TransactionModalComponent implements OnChanges, OnInit {
 
         try {
           await this.categoryService.addCategory(newCategory);
-          alert(`Category '${input}' created successfully!`);
-        } catch (err) {
-          // Clear input if creation fails
+        } catch {
           this.editForm!.category = '';
-          console.error('Error creating category', err);
-          alert('Failed to create category');
         }
       } else {
         // Clear input if user declines

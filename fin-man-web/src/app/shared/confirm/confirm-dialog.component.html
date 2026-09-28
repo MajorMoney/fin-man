@@ -1,0 +1,14 @@
+@if (request(); as request) {
+  <div class="overlay" (click)="cancel()">
+    <div class="dialog" role="alertdialog" aria-modal="true" [attr.aria-label]="request.title" (click)="$event.stopPropagation()">
+      <h3>{{ request.title }}</h3>
+      <p>{{ request.message }}</p>
+      <footer>
+        <button type="button" class="cancel" (click)="cancel()">Cancel</button>
+        <button type="button" class="confirm" [class.danger]="request.danger" (click)="accept()">
+          {{ request.confirmLabel }}
+        </button>
+      </footer>
+    </div>
+  </div>
+}

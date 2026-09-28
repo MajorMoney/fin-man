@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { Account } from 'src/libs/core/models/accounts';
+import { AccountTransferRequest } from 'src/libs/core/models/account-transfers';
 import { getApiBaseUrl } from 'src/libs/core/utils/api-base-url';
 
 @Injectable({
@@ -37,6 +38,18 @@ export class AccountsApi {
   async update(dto: Account): Promise<Account> {
     return await firstValueFrom(
       this.http.put<Account>(`${this.apiUrl}/${dto.id}`, dto)
+    );
+  }
+
+  // POST /accounts/transfer
+  async transfer(dto: AccountTransferRequest): Promise<void> {
+    await firstValueFrom(this.http.post(`${this.apiUrl}/transfer`, dto));
+  }
+
+  // DELETE /accounts/transfer/:id/revert
+  async revertAccountTransfer(id: number): Promise<void> {
+    await firstValueFrom(
+      this.http.delete(`${this.apiUrl}/transfer/${id}/revert`)
     );
   }
 

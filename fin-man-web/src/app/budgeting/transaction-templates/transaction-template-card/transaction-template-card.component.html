@@ -1,0 +1,16 @@
+<div class="icon" [class.income]="template.kind === 'income'">
+  <app-budget-icon [name]="template.icon"></app-budget-icon>
+</div>
+<div class="body">
+  <strong>{{ template.title }}</strong>
+  <span>
+    {{ template.category }} · {{ template.account }}
+    @if (template.holder) {
+      · {{ template.holder }}
+    }
+  </span>
+</div>
+<span class="amount" [class.income]="template.kind === 'income'">
+  +{{ template.amount | currency: 'EUR' : 'symbol' : '1.0-0' }}
+</span>
+<button type="button" (click)="useTemplate.emit(template)">Use</button>

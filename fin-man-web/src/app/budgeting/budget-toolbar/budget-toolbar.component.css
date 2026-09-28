@@ -1,0 +1,109 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.toggle {
+  display: flex;
+  padding: 0.2rem;
+  border-radius: 10px;
+  background: #e8eef7;
+}
+
+.toggle button,
+.month-trigger {
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.toggle button.active {
+  background: var(--blue);
+  color: white;
+}
+
+.month {
+  position: relative;
+}
+
+.month-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #e8eef7;
+  color: #1f2937;
+}
+
+.month-trigger svg {
+  width: 0.95rem;
+  height: 0.95rem;
+  color: var(--blue);
+}
+
+.picker {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  z-index: 20;
+  width: 216px;
+  padding: 0.7rem;
+  background: #fff;
+  border: 1px solid #f1f1f1;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.picker-year {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.picker-year button {
+  width: 1.7rem;
+  height: 1.7rem;
+  border: none;
+  border-radius: 8px;
+  background: #f3f4f6;
+  color: #374151;
+  font: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.picker-months {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+}
+
+.picker-months button {
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #374151;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0;
+  cursor: pointer;
+}
+
+.picker-months button:hover:not(.active) {
+  background: #eff6ff;
+}
+
+.picker-months button.active {
+  background: var(--blue);
+  color: white;
+}

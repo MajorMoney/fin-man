@@ -8,9 +8,9 @@ import { UserService } from 'src/services/user-service';
 import { RecurringTransactionUtils } from 'src/libs/core/utils/recurring-transactions.utils';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe, DatePipe } from '@angular/common';
+import { ListViewUtils, SortDirection } from 'src/libs/core/utils/list-view.utils';
 
 type SortColumn = 'date' | 'description' | 'amount' | 'account' | 'category' | 'notes' | 'user' | 'type';
-type SortDirection = 'asc' | 'desc' | null;
 
 @Component({
     selector: 'app-recurring-transactions-list',
@@ -65,67 +65,57 @@ export class RecurringTransactionsListComponent implements OnInit, OnDestroy {
 
   // Sorting
   onSort(column: SortColumn): void {
-    if (this.sortColumn === column) {
-      this.sortDirection =
-        this.sortDirection === 'asc' ? 'desc' : this.sortDirection === 'desc' ? null : 'asc';
-      if (!this.sortDirection) this.sortColumn = null;
-    } else {
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
-    }
+    const next = ListViewUtils.nextSortState(
+      { column: this.sortColumn, direction: this.sortDirection },
+      column
+    );
+    this.sortColumn = next.column;
+    this.sortDirection = next.direction;
     this.applySorting();
     this.currentPage = 1;
     this.updatePaginatedTransactions();
   }
 
   private applySorting(): void {
-    if (!this.sortColumn || !this.sortDirection) return;
-
-    this.transactions.sort((a: any, b: any) => {
-      let aValue = a[this.sortColumn!];
-      let bValue = b[this.sortColumn!];
-
-      if (aValue == null) aValue = '';
-      if (bValue == null) bValue = '';
-
-      if (this.sortColumn === 'date') {
-        aValue = new Date(aValue).getTime();
-        bValue = new Date(bValue).getTime();
-      }
-      if (this.sortColumn === 'amount') {
-        aValue = Number(aValue);
-        bValue = Number(bValue);
-      }
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-
-      let comparison = aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-      return this.sortDirection === 'asc' ? comparison : -comparison;
-    });
+    ListViewUtils.sortByColumn(
+      this.transactions,
+      this.sortColumn,
+      this.sortDirection,
+      (item, column) =>
+        column === 'date'
+          ? item.startDate
+          : item[column as keyof RecurringTransaction]
+    );
   }
 
   getSortIcon(column: SortColumn): string {
-    if (this.sortColumn !== column) return '⇅';
-    return this.sortDirection === 'asc' ? '↑' : '↓';
+    return ListViewUtils.sortIcon(
+      { column: this.sortColumn, direction: this.sortDirection },
+      column
+    );
   }
 
   private calculateTotalPages(): void {
-    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage) || 1;
+    this.totalPages = ListViewUtils.totalPages(
+      this.totalItems,
+      this.itemsPerPage
+    );
   }
 
   private updatePaginatedTransactions(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedTransactions = this.transactions.slice(startIndex, endIndex);
+    this.paginatedTransactions = ListViewUtils.pageSlice(
+      this.transactions,
+      this.currentPage,
+      this.itemsPerPage
+    );
   }
 
   goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.updatePaginatedTransactions();
+    if (!ListViewUtils.canGoToPage(page, this.totalPages)) {
+      return;
     }
+    this.currentPage = page;
+    this.updatePaginatedTransactions();
   }
 
   nextPage(): void {
@@ -137,39 +127,18 @@ export class RecurringTransactionsListComponent implements OnInit, OnDestroy {
   }
 
   onItemsPerPageChange(event: Event): void {
-    const value = +(event.target as HTMLSelectElement).value;
-    if (value > 0) {
-      this.itemsPerPage = value;
-      this.currentPage = 1;
-      this.calculateTotalPages();
-      this.updatePaginatedTransactions();
+    const value = ListViewUtils.itemsPerPageFromChange(event);
+    if (value == null) {
+      return;
     }
+    this.itemsPerPage = value;
+    this.currentPage = 1;
+    this.calculateTotalPages();
+    this.updatePaginatedTransactions();
   }
 
   getPageNumbers(): number[] {
-    const pages: number[] = [];
-    const maxPagesToShow = 5;
-
-    if (this.totalPages <= maxPagesToShow) {
-      for (let i = 1; i <= this.totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      let startPage = Math.max(1, this.currentPage - 2);
-      let endPage = Math.min(this.totalPages, this.currentPage + 2);
-
-      if (this.currentPage <= 3) {
-        endPage = maxPagesToShow;
-      } else if (this.currentPage >= this.totalPages - 2) {
-        startPage = this.totalPages - maxPagesToShow + 1;
-      }
-
-      for (let i = startPage; i <= endPage; i++) {
-        pages.push(i);
-      }
-    }
-
-    return pages;
+    return ListViewUtils.pageNumbers(this.currentPage, this.totalPages);
   }
 
   trackById(index: number, item: RecurringTransaction): number {

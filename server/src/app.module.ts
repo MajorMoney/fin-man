@@ -8,6 +8,7 @@ import { AccountsModule } from './accounts/accounts.module';
 import { AccountsController } from './accounts/accounts.controller';
 import { CategoriesController } from './categories/categories.controller';
 import { CategoriesModule } from './categories/categories.module';
+import { BudgetsModule } from './budgets/budgets.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { TransactionsController } from './transactions/transactions.controller';
 import { RecurringTransactionsModule } from './recurring-transactions/recurring-transactions.module';
@@ -25,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     AccountsModule,
     CategoriesModule,
+    BudgetsModule,
     TransactionsModule,
     RecurringTransactionsModule,
     ValidationModule,

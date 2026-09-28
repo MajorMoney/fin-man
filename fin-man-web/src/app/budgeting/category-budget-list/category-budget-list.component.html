@@ -1,0 +1,22 @@
+<section class="panel">
+  <header>
+    <h3>Category Budgets</h3>
+    <button type="button" (click)="openCreate()">+ Add Category</button>
+  </header>
+  @for (category of categories; track category.id) {
+    <app-category-budget-row
+      [category]="category"
+      (select)="openEdit(category)"
+    ></app-category-budget-row>
+  } @empty {
+    <p class="empty">No category budgets yet.</p>
+  }
+</section>
+
+<app-category-budget-modal
+  [isOpen]="modalOpen"
+  [budget]="editing"
+  (closeModal)="close()"
+  (save)="onSave($event)"
+  (delete)="onDelete($event)"
+></app-category-budget-modal>

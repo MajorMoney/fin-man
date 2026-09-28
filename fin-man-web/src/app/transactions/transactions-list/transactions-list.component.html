@@ -55,7 +55,7 @@
         @for (tx of paginatedExpenses; track tx.id) {
           <tr>
             <!-- DATE -->
-            <td>{{ tx.date | date : 'shortDate' }}</td>
+            <td>{{ tx.date | date: 'mediumDate' }}</td>
 
             <!-- TYPE (Income / Expense) -->
             <td>

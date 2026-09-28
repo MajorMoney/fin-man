@@ -1,17 +1,49 @@
 <div class="view">
   <div class="view-header">
     <h2>Accounts</h2>
-    <button class="add" (click)="openCreateAccount()">+ Add Account</button>
+    <div class="header-actions">
+      <button class="transfer" type="button" (click)="openAccountTransfer()">
+        <app-transfer-icon></app-transfer-icon>
+        Transfer
+      </button>
+      <button class="add" type="button" (click)="openCreateAccount()">
+        + Add Account
+      </button>
+    </div>
   </div>
 
-  <div class="list">
-    @for (account of accounts; track account.id) {
-      <app-account-card
-        [account]="account"
-        (edit)="openEditAccount(account)"
-      ></app-account-card>
+  <app-accounts-total></app-accounts-total>
+
+  <div class="carousel" #carousel>
+    <div class="carousel-track" #carouselTrack (scroll)="onCarouselScroll()">
+      @for (page of pages; track $index) {
+        <div class="carousel-page">
+          @for (account of page; track account.id) {
+            <app-account-card
+              [account]="account"
+              (edit)="openEditAccount(account)"
+            ></app-account-card>
+          }
+        </div>
+      }
+    </div>
+    @if (pages.length > 1) {
+      <div class="carousel-dots">
+        @for (page of pages; track $index) {
+          <button
+            type="button"
+            class="carousel-dot"
+            [class.active]="$index === activePage"
+            [attr.aria-label]="'Page ' + ($index + 1)"
+            [attr.aria-current]="$index === activePage ? 'true' : null"
+            (click)="goToPage($index)"
+          ></button>
+        }
+      </div>
     }
   </div>
+
+  <app-account-transfers-history></app-account-transfers-history>
 </div>
 <!-- Modal outside the list -->
 <app-account-modal
@@ -21,3 +53,8 @@
   [users]="users"
   (closeModal)="closeAccountModal()"
 ></app-account-modal>
+<app-account-transfer-modal
+  [isOpen]="isAccountTransferModalOpen"
+  [accounts]="accounts"
+  (closeModal)="closeAccountTransfer()"
+></app-account-transfer-modal>

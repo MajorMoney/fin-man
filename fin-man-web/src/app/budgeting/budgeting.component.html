@@ -1,0 +1,44 @@
+<div class="view">
+  <header class="budget-header">
+    <div>
+      <h2>Budgeting</h2>
+      <p class="subtitle">Monthly & yearly budget tracking</p>
+    </div>
+    <app-budget-toolbar
+      [period]="period()"
+      [month]="month()"
+      (periodChange)="period.set($event)"
+      (monthChange)="month.set($event)"
+    ></app-budget-toolbar>
+  </header>
+
+  <div class="layout">
+    <app-category-budget-list
+      [categories]="visibleCategories"
+      (saveCategory)="onSaveBudget($event)"
+      (deleteCategory)="deleteCategory($event)"
+    ></app-category-budget-list>
+    <div class="side">
+      <app-budget-gauge
+        [spent]="summary.totalSpent"
+        [budget]="summary.totalBudget"
+        [percent]="summary.percentUsed"
+      ></app-budget-gauge>
+      <app-yearly-overview
+        [period]="period()"
+        [income]="overviewIncome"
+        [budget]="overviewBudget"
+        [savings]="projectedSavings"
+        [actual]="actualSavings"
+      ></app-yearly-overview>
+    </div>
+  </div>
+
+  <app-transaction-templates
+    [templates]="templates"
+    [categories]="visibleCategories"
+    [accounts]="accountOptions"
+    (saveTemplate)="saveTemplate($event)"
+    (useTemplate)="applyTemplate($event)"
+  ></app-transaction-templates>
+</div>

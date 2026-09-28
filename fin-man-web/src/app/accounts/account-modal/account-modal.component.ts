@@ -10,17 +10,24 @@ import {
 import { Account } from 'src/libs/core/models/accounts';
 import { User } from 'src/libs/core/models/users';
 import { AccountsService } from 'src/services/account-service';
+import { ConfirmService } from 'src/services/confirm.service';
+import { ToastService } from 'src/services/toast.service';
 import { FormsModule } from '@angular/forms';
+import { AccountBackgroundPickerComponent } from '../account-background-picker/account-background-picker.component';
 
 @Component({
     selector: 'app-account-modal',
     templateUrl: './account-modal.component.html',
     styleUrls: ['./account-modal.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormsModule]
+    imports: [FormsModule, AccountBackgroundPickerComponent]
 })
 export class AccountModalComponent implements OnChanges {
-  constructor(private accountService: AccountsService) {}
+  constructor(
+    private accountService: AccountsService,
+    private confirmService: ConfirmService,
+    private toast: ToastService
+  ) {}
   @Input() mode: 'create' | 'edit' = 'create';
   @Input() isOpen = false;
   @Input() account?: Account | null = null;
@@ -31,6 +38,7 @@ export class AccountModalComponent implements OnChanges {
   accounts: Account[] = [];
 
   editForm: Account | null = null;
+  isBackgroundPickerOpen = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     // Edit mode
@@ -53,7 +61,22 @@ export class AccountModalComponent implements OnChanges {
     }
   }
   onClose(): void {
+    this.isBackgroundPickerOpen = false;
     this.closeModal.emit();
+  }
+
+  openBackgroundPicker(): void {
+    this.isBackgroundPickerOpen = true;
+  }
+
+  closeBackgroundPicker(): void {
+    this.isBackgroundPickerOpen = false;
+  }
+
+  selectBackground(src: string): void {
+    if (!this.editForm) return;
+    this.editForm = { ...this.editForm, background: src };
+    this.isBackgroundPickerOpen = false;
   }
 
   // --- Holder helpers ---
@@ -80,23 +103,37 @@ export class AccountModalComponent implements OnChanges {
     if (this.editForm.holdings == null || isNaN(this.editForm.holdings)) {
       errors.push('Holdings must be a valid number.');
     }
+    if (!this.editForm.holders?.length) {
+      errors.push('At least one holder is required.');
+    }
     if (errors.length) {
-      alert(errors.join('\n'));
+      this.toast.warning(errors.join('\n'));
       return;
     }
 
+    if (this.mode === 'edit' && this.editForm.background) {
+      this.accountService.rememberBackground(
+        this.editForm.id,
+        this.editForm.background
+      );
+    }
     this.mode === 'create'
       ? this.accountService.addAccount(this.editForm)
       : this.accountService.updateAccount(this.editForm);
     this.onClose();
   }
 
-  onDelete(): void {
+  async onDelete(): Promise<void> {
     if (!this.editForm) return;
-    if (confirm(`Delete account "${this.editForm.name}"?`)) {
-      this.accountService.deleteAccount(this.editForm.id);
-      this.onClose();
-    }
+    const accepted = await this.confirmService.confirm({
+      title: 'Delete account',
+      message: `Delete account "${this.editForm.name}"?`,
+      confirmLabel: 'Delete',
+      danger: true,
+    });
+    if (!accepted) return;
+    this.accountService.deleteAccount(this.editForm.id);
+    this.onClose();
   }
 
   onContentClick(event: Event) {

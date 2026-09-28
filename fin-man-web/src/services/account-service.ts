@@ -1,6 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Account } from 'src/libs/core/models/accounts';
+import { AccountTransferRequest } from 'src/libs/core/models/account-transfers';
 import { AccountsApi } from 'src/api/accounts.api';
+import { AccountTransfersService } from 'src/services/account-transfers.service';
+import { reportCaughtError } from 'src/libs/core/http/report-caught-error';
+import { ToastService } from 'src/services/toast.service';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -11,7 +15,11 @@ import {
 @Injectable({ providedIn: 'root' })
 export class AccountsService implements OnDestroy {
 
-  constructor(private accountsApi: AccountsApi) {
+  constructor(
+    private accountsApi: AccountsApi,
+    private accountTransfersService: AccountTransfersService,
+    private toast: ToastService
+  ) {
     this.initializeAccounts();
   }
 
@@ -67,13 +75,15 @@ export class AccountsService implements OnDestroy {
         throw new Error('No valid accounts found in data');
       }
 
-      // Emit valid accounts
-      this.accountsSubject.next(validAccounts);
+      this.accountsSubject.next(this.withBackgrounds(validAccounts));
 
       this.loadingSubject.next(false);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to load accounts';
+      const errorMessage = reportCaughtError(
+        this.toast,
+        error,
+        'Failed to load accounts'
+      );
       console.error('[AccountsService] Initialization error:', errorMessage);
       this.errorSubject.next(errorMessage);
       this.loadingSubject.next(false);
@@ -122,13 +132,41 @@ export class AccountsService implements OnDestroy {
       return;
     }
 
-    console.log('[AccountsService] Accounts updated:', validAccounts);
-    this.accountsSubject.next(validAccounts);
+    const accountsWithBackgrounds = this.withBackgrounds(validAccounts);
+    console.log('[AccountsService] Accounts updated:', accountsWithBackgrounds);
+    this.accountsSubject.next(accountsWithBackgrounds);
     this.errorSubject.next(null);
   }
 
-  refreshAccounts(): void {
-    this.initializeAccounts();
+  rememberBackground(accountId: number, background: string): void {
+    const stored = this.readStoredBackgrounds();
+    stored[String(accountId)] = background;
+    localStorage.setItem(this.backgroundStorageKey, JSON.stringify(stored));
+    this.accountsSubject.next(this.withBackgrounds(this.accounts));
+  }
+
+  private readonly backgroundStorageKey = 'finman.accountBackgrounds';
+
+  private readStoredBackgrounds(): Record<string, string> {
+    try {
+      const raw = localStorage.getItem(this.backgroundStorageKey);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+
+  private withBackgrounds(accounts: Account[]): Account[] {
+    const stored = this.readStoredBackgrounds();
+    return accounts.map((account) => ({
+      ...account,
+      background: account.background || stored[String(account.id)],
+    }));
+  }
+
+  refreshAccounts(): Promise<void> {
+    return this.initializeAccounts();
   }
 
   /**
@@ -151,6 +189,18 @@ export class AccountsService implements OnDestroy {
   async updateAccount(account: Account): Promise<void> {
     await this.accountsApi.update(account);
     this.refreshAccounts();
+  }
+
+  async transfer(request: AccountTransferRequest): Promise<void> {
+    await this.accountsApi.transfer(request);
+    await this.refreshAccounts();
+    await this.accountTransfersService.refresh();
+  }
+
+  async revertAccountTransfer(id: number): Promise<void> {
+    await this.accountsApi.revertAccountTransfer(id);
+    await this.refreshAccounts();
+    await this.accountTransfersService.refresh();
   }
 
   async deleteAccount(id: number): Promise<void> {

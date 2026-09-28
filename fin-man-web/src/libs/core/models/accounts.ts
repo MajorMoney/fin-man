@@ -5,4 +5,5 @@ export interface Account {
   name: string;
   holdings: number;
   holders: string[];
+  background?: string;
 }

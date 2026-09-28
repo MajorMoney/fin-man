@@ -2,7 +2,7 @@
   <ul>
     @for (item of navItems; track item.route ?? item.label) {
       <li>
-        <a [routerLink]="item.route || '#'">
+        <a [routerLink]="item.route || '#'" routerLinkActive="active">
           @if (item.icon) {
             <span class="{{ item.icon }}"></span>
           }

@@ -7,6 +7,7 @@ import { UserListViewComponent } from './users/user-list-view/user-list-view.com
 import { AccountListViewComponent } from './accounts/account-list-view/account-list-view.component';
 import { RecurringTransactionsComponent } from './recurring-transactions/recurring-transactions.component';
 import { ReportsComponent } from './reports/reports.component';
+import { BudgetingComponent } from './budgeting/budgeting.component';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -17,6 +18,7 @@ export const appRoutes: Route[] = [
     component: RecurringTransactionsComponent,
   },
   { path: 'savings', component: SavingsGoalsComponent },
+  { path: 'budgeting', component: BudgetingComponent },
   { path: 'analysis', component: SpendingAnalysisComponent },
   { path: 'accounts', component: AccountListViewComponent },
   { path: 'users', component: UserListViewComponent },

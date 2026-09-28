@@ -1,0 +1,42 @@
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  @switch (name) {
+    @case ('cart') {
+      <circle cx="9" cy="20" r="1" />
+      <circle cx="18" cy="20" r="1" />
+      <path d="M3 4h2l2.2 11h11.3l2-7H7" />
+    }
+    @case ('car') {
+      <path d="M4 16h16" />
+      <path d="M6 16 8 10h8l2 6" />
+      <circle cx="7.5" cy="16.5" r="1.2" />
+      <circle cx="16.5" cy="16.5" r="1.2" />
+    }
+    @case ('utensils') {
+      <path d="M6 3v8a2 2 0 0 0 2 2V3" />
+      <path d="M6 3v18" />
+      <path d="M16 3c-1.5 2-2 4-2 7h4V3" />
+      <path d="M18 10v11" />
+    }
+    @case ('heart') {
+      <path d="M12 20s-7-4.4-7-9a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 4.6-7 9-7 9z" />
+    }
+    @case ('film') {
+      <rect x="4" y="5" width="16" height="14" rx="2" />
+      <path d="M8 5v14M16 5v14M4 9h4M4 15h4M16 9h4M16 15h4" />
+    }
+    @case ('refresh') {
+      <path d="M20 12a8 8 0 1 1-2.3-5.7" />
+      <path d="M20 4v5h-5" />
+    }
+    @case ('shirt') {
+      <path d="M8 5 4 8l2 3 2-1v9h8v-9l2 1 2-3-4-3-2 2h-4L8 5z" />
+    }
+    @case ('bag') {
+      <path d="M6 8h12l-1 12H7L6 8z" />
+      <path d="M9 8V7a3 3 0 0 1 6 0v1" />
+    }
+    @default {
+      <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1z" />
+    }
+  }
+</svg>

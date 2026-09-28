@@ -5,11 +5,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Account, AccountSchema } from 'src/models/schemas/account.schema';
 import { UsersModule } from 'src/users/users.module';
 import { AccountHoldingsService } from './accounts-holdings.service';
+import { AccountTransfersModule } from 'src/account-transfers/account-transfers.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Account.name, schema: AccountSchema }]),
     UsersModule,
+    AccountTransfersModule,
   ],
   providers: [AccountsService, AccountHoldingsService],
   controllers: [AccountsController],

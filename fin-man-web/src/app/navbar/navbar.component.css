@@ -33,3 +33,7 @@
   background-color: #34495e;
   cursor: pointer;
 }
+
+.side-navbar a.active {
+  background-color: #3b82f6;
+}

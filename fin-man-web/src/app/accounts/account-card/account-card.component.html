@@ -1,15 +1,21 @@
-<div class="card">
-  <div class="title">{{ account.name }}</div>
-
-  <div class="subtitle">
-    Holdings: <strong>{{ account.holdings }} €</strong>
+<button
+  type="button"
+  class="bank-card"
+  [class.has-art]="!!account.background"
+  [style.background-image]="cardArt"
+  [style.color]="art?.textColor"
+  [style.--card-accent]="art?.accentColor"
+  (click)="edit.emit(account)"
+>
+  <div class="bank-card-name">{{ account.name }}</div>
+  <app-card-chip></app-card-chip>
+  <div class="bank-card-bottom">
+    <div class="bank-card-balance">
+      {{ account.holdings | number: '1.2-2' }} €
+    </div>
+    <div class="bank-card-holders">
+      <span class="holders-label">Holders</span>
+      <span>{{ account.holders.join(', ') }}</span>
+    </div>
   </div>
-
-  <div class="subtitle">
-    Holders: <strong>{{ account.holders.join(', ') }}</strong>
-  </div>
-
-  <div class="actions">
-    <button class="edit" (click)="edit.emit(account)">Edit</button>
-  </div>
-</div>
+</button>

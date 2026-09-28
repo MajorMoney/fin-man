@@ -7,6 +7,8 @@ import {
 } from 'rxjs';
 import { RecurringTransaction } from 'src/libs/core/models/recurring-transaction';
 import { RecurringTransactionsApi } from 'src/api/recurring-transactions.api';
+import { reportCaughtError } from 'src/libs/core/http/report-caught-error';
+import { ToastService } from 'src/services/toast.service';
 import { TransactionsService } from './transactions-service';
 import { AccountsService } from './account-service';
 
@@ -33,7 +35,8 @@ export class RecurringTransactionsService implements OnDestroy {
   constructor(
     private recurringTransactionsApi: RecurringTransactionsApi,
     private transactionsService: TransactionsService,
-    private accountsService: AccountsService
+    private accountsService: AccountsService,
+    private toast: ToastService
   ) {
     this.initializeRecurringTransactions();
   }
@@ -70,10 +73,11 @@ export class RecurringTransactionsService implements OnDestroy {
     }
 
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : 'Failed to load recurring transactions';
+    const message = reportCaughtError(
+      this.toast,
+      error,
+      'Failed to load recurring transactions'
+    );
     console.error(
       '[RecurringTransactionsService] Initialization error:',
       message

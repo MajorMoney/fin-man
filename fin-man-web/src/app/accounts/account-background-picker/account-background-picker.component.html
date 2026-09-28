@@ -1,0 +1,23 @@
+@if (isOpen) {
+  <div class="picker-overlay" (click)="onOverlayClick()">
+    <div class="picker" (click)="onContentClick($event)">
+      <div class="picker-header">
+        <h3>Choose a background</h3>
+        <button type="button" class="close-btn" (click)="onOverlayClick()">×</button>
+      </div>
+      <div class="background-grid">
+        @for (background of backgrounds; track background.src) {
+          <button
+            type="button"
+            class="background-option"
+            [class.selected]="selected === background.src"
+            (click)="choose(background.src)"
+          >
+            <img [src]="background.src" [alt]="background.label" />
+            <span>{{ background.label }}</span>
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}

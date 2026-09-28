@@ -1,0 +1,48 @@
+<div class="toolbar">
+  <div class="toggle">
+    <button
+      type="button"
+      [class.active]="period === 'monthly'"
+      (click)="periodChange.emit('monthly')"
+    >
+      Monthly
+    </button>
+    <button
+      type="button"
+      [class.active]="period === 'yearly'"
+      (click)="periodChange.emit('yearly')"
+    >
+      Yearly
+    </button>
+  </div>
+
+  <div class="month">
+    <button type="button" class="month-trigger" (click)="togglePicker($event)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <rect x="4" y="5" width="16" height="15" rx="2" />
+        <path d="M8 3v4M16 3v4M4 10h16" />
+      </svg>
+      {{ monthLabel }}
+    </button>
+    @if (pickerOpen) {
+      <div class="picker" (click)="$event.stopPropagation()">
+        <div class="picker-year">
+          <button type="button" (click)="shiftYear($event, -1)" aria-label="Previous year">‹</button>
+          <span>{{ viewYear }}</span>
+          <button type="button" (click)="shiftYear($event, 1)" aria-label="Next year">›</button>
+        </div>
+        <div class="picker-months">
+          @for (name of monthNames; track name; let index = $index) {
+            <button
+              type="button"
+              [class.active]="isSelected(index)"
+              (click)="selectMonth($event, index)"
+            >
+              {{ name }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

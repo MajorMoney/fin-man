@@ -10,6 +10,7 @@ import { UserService } from 'src/services/user-service';
 import { FormsModule } from '@angular/forms';
 import { TransactionModalComponent } from '../transactions-modal/transactions-modal.component';
 import { DecimalPipe, DatePipe } from '@angular/common';
+import { ListViewUtils, SortDirection } from 'src/libs/core/utils/list-view.utils';
 
 // Add these type definitions here
 type SortColumn =
@@ -21,7 +22,6 @@ type SortColumn =
   | 'notes'
   | 'user'
   | 'type';
-type SortDirection = 'asc' | 'desc' | null;
 
 @Component({
     selector: 'app-transactions-list',
@@ -97,75 +97,30 @@ export class TransactionsListComponent implements OnInit, OnDestroy {
 
   // Sorting methods
   onSort(column: SortColumn): void {
-    if (this.sortColumn === column) {
-      // Toggle through: asc -> desc -> null
-      if (this.sortDirection === 'asc') {
-        this.sortDirection = 'desc';
-      } else if (this.sortDirection === 'desc') {
-        this.sortDirection = null;
-        this.sortColumn = null;
-      }
-    } else {
-      // New column: start with ascending
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
-    }
-
+    const next = ListViewUtils.nextSortState(
+      { column: this.sortColumn, direction: this.sortDirection },
+      column
+    );
+    this.sortColumn = next.column;
+    this.sortDirection = next.direction;
     this.applySorting();
     this.currentPage = 1;
     this.updatePaginatedExpenses();
   }
 
   private applySorting(): void {
-    if (!this.sortColumn || !this.sortDirection) {
-      return; // No sorting applied
-    }
-
-    this.expenses.sort((a, b) => {
-      const column = this.sortColumn!;
-      let aValue: any = a[column];
-      let bValue: any = b[column];
-
-      // Handle null/undefined values
-      if (aValue == null) aValue = '';
-      if (bValue == null) bValue = '';
-
-      // Special handling for dates
-      if (column === 'date') {
-        aValue = new Date(aValue).getTime();
-        bValue = new Date(bValue).getTime();
-      }
-
-      // Special handling for numbers
-      if (column === 'amount') {
-        aValue = Number(aValue);
-        bValue = Number(bValue);
-      }
-
-      // String comparison (case-insensitive)
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        aValue = aValue.toLowerCase();
-        bValue = bValue.toLowerCase();
-      }
-
-      // Compare
-      let comparison = 0;
-      if (aValue > bValue) {
-        comparison = 1;
-      } else if (aValue < bValue) {
-        comparison = -1;
-      }
-
-      // Apply direction
-      return this.sortDirection === 'asc' ? comparison : -comparison;
-    });
+    ListViewUtils.sortByColumn(
+      this.expenses,
+      this.sortColumn,
+      this.sortDirection
+    );
   }
 
   getSortIcon(column: SortColumn): string {
-    if (this.sortColumn !== column) {
-      return '⇅'; // Both arrows (unsorted)
-    }
-    return this.sortDirection === 'asc' ? '↑' : '↓';
+    return ListViewUtils.sortIcon(
+      { column: this.sortColumn, direction: this.sortDirection },
+      column
+    );
   }
 
   isSorted(column: SortColumn): boolean {
@@ -173,21 +128,27 @@ export class TransactionsListComponent implements OnInit, OnDestroy {
   }
 
   private calculateTotalPages(): void {
-    this.totalPages = Math.ceil(this.totalItems / this.itemsPerPage) || 1;
+    this.totalPages = ListViewUtils.totalPages(
+      this.totalItems,
+      this.itemsPerPage
+    );
   }
 
   private updatePaginatedExpenses(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedExpenses = this.expenses.slice(startIndex, endIndex);
+    this.paginatedExpenses = ListViewUtils.pageSlice(
+      this.expenses,
+      this.currentPage,
+      this.itemsPerPage
+    );
   }
 
   // Pagination controls
   goToPage(page: number): void {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-      this.updatePaginatedExpenses();
+    if (!ListViewUtils.canGoToPage(page, this.totalPages)) {
+      return;
     }
+    this.currentPage = page;
+    this.updatePaginatedExpenses();
   }
 
   nextPage(): void {
@@ -199,41 +160,18 @@ export class TransactionsListComponent implements OnInit, OnDestroy {
   }
 
   onItemsPerPageChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const newValue = +target.value;
-
-    if (newValue && newValue > 0) {
-      this.itemsPerPage = newValue;
-      this.currentPage = 1;
-      this.calculateTotalPages();
-      this.updatePaginatedExpenses();
+    const newValue = ListViewUtils.itemsPerPageFromChange(event);
+    if (newValue == null) {
+      return;
     }
+    this.itemsPerPage = newValue;
+    this.currentPage = 1;
+    this.calculateTotalPages();
+    this.updatePaginatedExpenses();
   }
 
   getPageNumbers(): number[] {
-    const pages: number[] = [];
-    const maxPagesToShow = 5;
-
-    if (this.totalPages <= maxPagesToShow) {
-      for (let i = 1; i <= this.totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      let startPage = Math.max(1, this.currentPage - 2);
-      let endPage = Math.min(this.totalPages, this.currentPage + 2);
-
-      if (this.currentPage <= 3) {
-        endPage = maxPagesToShow;
-      } else if (this.currentPage >= this.totalPages - 2) {
-        startPage = this.totalPages - maxPagesToShow + 1;
-      }
-
-      for (let i = startPage; i <= endPage; i++) {
-        pages.push(i);
-      }
-    }
-
-    return pages;
+    return ListViewUtils.pageNumbers(this.currentPage, this.totalPages);
   }
 
   trackById(index: number, item: Transaction): number {
