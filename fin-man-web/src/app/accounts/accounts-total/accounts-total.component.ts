@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { Account } from 'src/libs/core/models/accounts';
 
 @Component({
   selector: 'app-accounts-total',
@@ -9,6 +10,13 @@ import { DecimalPipe } from '@angular/common';
   imports: [DecimalPipe],
 })
 export class AccountsTotalComponent {
-  totalHoldings = 86550;
+  @Input() accounts: Account[] = [];
   currency = 'EUR';
+
+  get totalHoldings(): number {
+    return this.accounts.reduce(
+      (sum, account) => sum + account.holdings,
+      0
+    );
+  }
 }

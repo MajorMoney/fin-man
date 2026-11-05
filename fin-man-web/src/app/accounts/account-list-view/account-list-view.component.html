@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <app-accounts-total></app-accounts-total>
+  <app-accounts-total [accounts]="accounts"></app-accounts-total>
 
   <div class="carousel" #carousel>
     <div class="carousel-track" #carouselTrack (scroll)="onCarouselScroll()">
