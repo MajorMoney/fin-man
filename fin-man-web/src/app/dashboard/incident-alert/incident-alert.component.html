@@ -1,0 +1,22 @@
+@if (incidentsService.open().length) {
+  <div class="incident-alert" role="alert">
+    <strong>
+      {{
+        incidentsService.open().length === 1
+          ? '1 incident'
+          : incidentsService.open().length + ' incidents'
+      }}
+    </strong>
+    <ul>
+      @for (incident of incidentsService.open(); track incident.id) {
+        <li>
+          <div>
+            <span class="incident-title">{{ incident.title }}</span>
+            <span class="incident-message">{{ incident.message }}</span>
+          </div>
+          <button type="button" (click)="resolve(incident.id)">Resolve</button>
+        </li>
+      }
+    </ul>
+  </div>
+}

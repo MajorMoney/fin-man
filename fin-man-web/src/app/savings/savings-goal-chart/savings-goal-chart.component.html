@@ -1,0 +1,42 @@
+<svg
+  class="chart"
+  [attr.viewBox]="'0 0 ' + width + ' ' + height"
+  role="img"
+  aria-label="Amount added each month, cumulative amount saved and pace toward the target"
+>
+  @for (tick of ticks; track tick.value) {
+    <line class="grid" [attr.x1]="plotLeft" [attr.x2]="plotRight" [attr.y1]="tick.y" [attr.y2]="tick.y" />
+    <text class="axis" text-anchor="end" [attr.x]="plotLeft - 8" [attr.y]="tick.y + 4">{{
+      tick.value | currency: 'EUR' : 'symbol' : '1.0-2'
+    }}</text>
+  }
+
+  @for (bar of bars; track bar.key) {
+    <rect class="bar" [attr.x]="bar.x" [attr.y]="bar.y" [attr.width]="bar.width" [attr.height]="bar.height">
+      <title>{{ bar.title }}</title>
+    </rect>
+  }
+
+  <polyline class="pace" [attr.points]="paceLine" />
+  <polyline class="saved" [attr.points]="savedLine" />
+  @for (point of savedPoints; track $index) {
+    <circle class="dot" r="3.5" [attr.cx]="point.x" [attr.cy]="point.y" />
+  }
+
+  @for (label of labels; track label.x) {
+    <text class="axis" text-anchor="middle" [attr.x]="label.x" [attr.y]="baseline + 20">{{ label.text }}</text>
+  }
+</svg>
+
+<div class="legend">
+  <span><i class="swatch bar-swatch"></i>Added in the month</span>
+  <span><i class="swatch saved-swatch"></i>Saved so far</span>
+  <span><i class="swatch pace-swatch"></i>Pace to the original target</span>
+</div>
+
+@if (analysis.savedBefore > 0) {
+  <p class="note">
+    Includes {{ analysis.savedBefore | currency: 'EUR' : 'symbol' : '1.2-2' }}
+    dated before this goal was created.
+  </p>
+}

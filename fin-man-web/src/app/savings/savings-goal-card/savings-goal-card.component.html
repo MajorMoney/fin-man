@@ -1,0 +1,20 @@
+<div class="goal-card">
+  <div class="goal-title">{{ goal.name }}</div>
+  @if (goal.description) {
+    <p class="goal-description">{{ goal.description }}</p>
+  }
+
+  <app-savings-goal-summary [goal]="goal"></app-savings-goal-summary>
+
+  <div class="actions">
+    <button type="button" class="details-btn" (click)="details.emit(goal)">
+      View Details
+    </button>
+    <button type="button" class="secondary" (click)="edit.emit(goal)">
+      Edit
+    </button>
+    <button type="button" class="secondary danger" (click)="remove.emit(goal)">
+      Delete
+    </button>
+  </div>
+</div>

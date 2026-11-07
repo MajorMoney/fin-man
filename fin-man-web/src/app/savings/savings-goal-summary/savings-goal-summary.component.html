@@ -1,0 +1,49 @@
+<div class="amounts">
+  <strong class="saved">{{
+    goal.savedAmount | currency: 'EUR' : 'symbol' : '1.2-2'
+  }}</strong>
+  <span class="target"
+    >/ {{ goal.targetAmount | currency: 'EUR' : 'symbol' : '1.2-2' }}</span
+  >
+</div>
+
+<div
+  class="progress-bar"
+  role="progressbar"
+  aria-label="Progress"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  [attr.aria-valuenow]="percentLabel"
+>
+  <div
+    class="progress-fill"
+    [class.done]="percent >= 100"
+    [style.width.%]="percent"
+  ></div>
+</div>
+<div class="percent">{{ percentLabel }}%</div>
+
+@if (showExcess && excess > 0) {
+  <div class="excess">
+    +{{ excess | currency: 'EUR' : 'symbol' : '1.2-2' }} over the target
+  </div>
+}
+
+<div class="facts">
+  <div>
+    <span class="label">{{ daysLeft < 0 ? 'Overdue' : 'Days left' }}</span>
+    <span class="value" data-test="days-left">
+      @if (daysLeft === 0) {
+        Due today
+      } @else {
+        {{ daysLeft < 0 ? -daysLeft : daysLeft }}
+      }
+    </span>
+  </div>
+  <div>
+    <span class="label">Monthly contribution</span>
+    <span class="value contribution" data-test="contribution">{{
+      contribution | currency: 'EUR' : 'symbol' : '1.2-2'
+    }}</span>
+  </div>
+</div>

@@ -15,13 +15,17 @@ import { RecurringTransactionsModule } from './recurring-transactions/recurring-
 import { ValidationModule } from './validation/validation.module';
 import { RecurringTransactionsController } from './recurring-transactions/recurring-transactions.controller';
 import { ConfigModule } from '@nestjs/config';
+import { SavingsModule } from './savings/savings.module';
+import { IncidentsModule } from './incidents/incidents.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://localhost:27017/fin-man-dev'),
+    MongooseModule.forRoot(
+      process.env.MONGO_URI || 'mongodb://localhost:27017/fin-man-dev',
+    ),
     ExpensesModule,
     UsersModule,
     AccountsModule,
@@ -30,6 +34,8 @@ import { ConfigModule } from '@nestjs/config';
     TransactionsModule,
     RecurringTransactionsModule,
     ValidationModule,
+    SavingsModule,
+    IncidentsModule,
   ],
   controllers: [
     ExpensesController,
@@ -42,4 +48,4 @@ import { ConfigModule } from '@nestjs/config';
   providers: [],
   exports: [],
 })
-export class AppModule { }
+export class AppModule {}

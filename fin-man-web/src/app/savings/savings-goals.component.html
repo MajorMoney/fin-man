@@ -1,51 +1,31 @@
 <div class="view">
-  <h2>Your Savings Goals</h2>
-  <p class="subtitle">Temporary mock data — not wired to the backend yet.</p>
-
-  <div class="goals-grid">
-    @for (goal of goals; track goal.title) {
-      <div class="goal-card">
-      <div class="goal-header">
-        <div class="goal-title">
-          <span class="icon">🏦</span>
-          {{ goal.title }}
-        </div>
-      </div>
-
-      <div class="goal-progress">
-        <div class="goal-amount">
-          <strong>\${{ goal.current | number:'1.0-0' }}</strong>
-          <span class="target">/ \${{ goal.target | number:'1.0-0' }}</span>
-        </div>
-
-        <div class="progress-bar">
-          <div
-            class="progress-fill"
-            [style.width.%]="(goal.current / goal.target) * 100"
-            [style.background]="goal.color"
-          ></div>
-        </div>
-      </div>
-
-      <div class="goal-details">
-        <div>
-          <span class="label">Needed</span><br />
-          \${{ goal.needed | number:'1.0-0' }}
-        </div>
-        <div>
-          <span class="label">Days Left</span><br />
-          {{ goal.daysLeft }}
-        </div>
-        <div>
-          <span class="label">Monthly Contribution</span><br />
-          <span class="contribution" [style.color]="goal.color">
-            \${{ goal.monthlyContribution | number:'1.0-0' }}
-          </span>
-        </div>
-      </div>
-
-      <button class="details-btn">View Details</button>
-    </div>
-    }
+  <div class="view-header">
+    <h2>Your Savings Goals</h2>
+    <button class="add" type="button" (click)="openCreate()">+ Add Goal</button>
   </div>
+
+  @if (savingsService.goals().length) {
+    <div class="goals-grid">
+      @for (goal of savingsService.goals(); track goal.id) {
+        <app-savings-goal-card
+          [goal]="goal"
+          (details)="openDetails($event)"
+          (edit)="openEdit($event)"
+          (remove)="remove($event)"
+        ></app-savings-goal-card>
+      }
+    </div>
+  } @else if (savingsService.loading()) {
+    <p class="empty">Loading savings goals…</p>
+  } @else if (savingsService.loadFailed()) {
+    <p class="empty">Could not load your savings goals.</p>
+  } @else {
+    <p class="empty">No savings goals yet. Add one to start tracking.</p>
+  }
 </div>
+
+<app-savings-goal-modal
+  [isOpen]="isModalOpen"
+  [goal]="selectedGoal"
+  (closeModal)="closeModal()"
+></app-savings-goal-modal>

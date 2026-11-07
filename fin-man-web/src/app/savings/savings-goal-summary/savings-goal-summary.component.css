@@ -1,0 +1,68 @@
+:host {
+  display: block;
+}
+
+.amounts .saved {
+  font-size: 1.3rem;
+  color: #1e293b;
+}
+
+.amounts .target {
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 0.4rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 6px;
+  transition: width 0.3s ease-in-out;
+}
+
+.progress-fill.done {
+  background: #10b981;
+}
+
+.percent {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.excess {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #059669;
+}
+
+.facts {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.label {
+  display: block;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.value {
+  font-weight: 600;
+}
+
+.contribution {
+  color: #3b82f6;
+}

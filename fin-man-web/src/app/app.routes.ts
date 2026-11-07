@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { SavingsGoalsComponent } from './savings/savings-goals.component';
+import { SavingsGoalDetailsComponent } from './savings/savings-goal-details/savings-goal-details.component';
 import { SpendingAnalysisComponent } from './spending-analysis/spending-analysis.component';
 import { UserListViewComponent } from './users/user-list-view/user-list-view.component';
 import { AccountListViewComponent } from './accounts/account-list-view/account-list-view.component';
@@ -18,6 +19,7 @@ export const appRoutes: Route[] = [
     component: RecurringTransactionsComponent,
   },
   { path: 'savings', component: SavingsGoalsComponent },
+  { path: 'savings/:id', component: SavingsGoalDetailsComponent },
   { path: 'budgeting', component: BudgetingComponent },
   { path: 'analysis', component: SpendingAnalysisComponent },
   { path: 'accounts', component: AccountListViewComponent },

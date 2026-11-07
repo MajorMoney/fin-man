@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { TransactionUtils } from 'src/libs/core/utils/transactions.utils';
 import { TransactionsService } from 'src/services/transactions-service';
 import { UserService } from 'src/services/user-service';
@@ -8,6 +8,7 @@ import { SummaryGridComponent } from './summary-grid/summary-grid.component';
 import { TrendChartComponent } from './charts-grid/trend-chart/trend-chart.component';
 import { CategoryChartComponent } from './charts-grid/category-chart/category-chart.component';
 import { TopCategoriesComponent } from './charts-grid/top-categories/top-categories.component';
+import { IncidentAlertComponent } from './incident-alert/incident-alert.component';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -15,7 +16,7 @@ import { AsyncPipe } from '@angular/common';
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormsModule, SummaryGridComponent, TrendChartComponent, CategoryChartComponent, TopCategoriesComponent, AsyncPipe]
+    imports: [FormsModule, SummaryGridComponent, TrendChartComponent, CategoryChartComponent, TopCategoriesComponent, IncidentAlertComponent, AsyncPipe]
 })
 export class DashboardComponent implements OnInit {
   constructor(

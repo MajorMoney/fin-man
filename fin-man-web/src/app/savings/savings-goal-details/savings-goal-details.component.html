@@ -1,0 +1,83 @@
+<div class="view">
+  <a class="back" routerLink="/savings">← Savings goals</a>
+
+  @if (goal; as goal) {
+    <div class="view-header">
+      <h2>{{ goal.name }}</h2>
+      <div class="header-actions">
+        <button type="button" class="secondary" (click)="openEditGoal()">Edit</button>
+        <button type="button" class="secondary danger" (click)="deleteGoal()">Delete</button>
+      </div>
+    </div>
+
+    <section class="panel">
+      <app-savings-goal-summary [goal]="goal" [showExcess]="true"></app-savings-goal-summary>
+      <p class="meta">
+        Target date {{ goal.targetDate | date: 'mediumDate' }}
+      </p>
+      @if (goal.description) {
+        <p class="description">{{ goal.description }}</p>
+      }
+    </section>
+
+    <section class="panel">
+      <h3>Monthly analysis</h3>
+      <app-savings-goal-chart [goal]="goal" [transactions]="transactions"></app-savings-goal-chart>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h3>Virtual transactions</h3>
+        <button type="button" class="add" (click)="openAddTransaction()">
+          + Add
+        </button>
+      </div>
+      <p class="hint">
+        Progress on this goal only. These are not real transactions and never
+        change an account balance.
+      </p>
+
+      @if (transactions.length) {
+        <ul class="transactions">
+          @for (transaction of transactions; track transaction.id) {
+            <li>
+              <span class="date">{{ transaction.date | date: 'mediumDate' }}</span>
+              <span class="amount">{{
+                transaction.amount | currency: 'EUR' : 'symbol' : '1.2-2'
+              }}</span>
+              <span class="note">{{ transaction.note }}</span>
+              <span class="row-actions">
+                <button type="button" class="secondary" (click)="openEditTransaction(transaction)">
+                  Edit
+                </button>
+                <button type="button" class="secondary danger" (click)="revert(transaction)">
+                  Revert
+                </button>
+              </span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="empty">Nothing added yet.</p>
+      }
+    </section>
+  } @else if (loading) {
+    <p class="empty">Loading…</p>
+  } @else if (notFound) {
+    <p class="empty">This savings goal does not exist.</p>
+  }
+</div>
+
+<app-savings-goal-modal
+  [isOpen]="isGoalModalOpen"
+  [goal]="goal"
+  (saved)="load()"
+  (closeModal)="isGoalModalOpen = false"
+></app-savings-goal-modal>
+<app-virtual-transaction-modal
+  [isOpen]="isTransactionModalOpen"
+  [goalId]="goal?.id ?? 0"
+  [transaction]="selectedTransaction"
+  (saved)="load()"
+  (closeModal)="isTransactionModalOpen = false"
+></app-virtual-transaction-modal>

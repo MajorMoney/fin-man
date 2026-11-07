@@ -22,6 +22,7 @@ import { RecurringTransactionsController } from './recurring-transactions.contro
 import { RecurringTransactionsService } from './services/recurring-transaction.service';
 import { TransactionsModule } from 'src/transactions/transactions.module';
 import { RecurringTransactionMediatorService } from './services/recurring-transaction-mediator.service';
+import { IncidentsModule } from 'src/incidents/incidents.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { RecurringTransactionMediatorService } from './services/recurring-transa
     ValidationModule,
     AccountsModule,
     TransactionsModule,
+    IncidentsModule,
   ],
   controllers: [RecurringTransactionsController],
   providers: [
@@ -49,7 +51,7 @@ import { RecurringTransactionMediatorService } from './services/recurring-transa
     RecurringTransactionsProcessingService,
     RecurringTransactionsService,
     RecurringTransactionsProcessingService,
-    RecurringTransactionMediatorService
+    RecurringTransactionMediatorService,
   ],
 })
 export class RecurringTransactionsModule {}

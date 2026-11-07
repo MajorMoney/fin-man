@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.incident-alert {
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  border-left: 4px solid #d97706;
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.25rem;
+  color: #9a3412;
+}
+
+.incident-alert ul {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+}
+
+.incident-alert li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.45rem 0;
+}
+
+.incident-title {
+  display: block;
+  font-weight: 600;
+}
+
+.incident-message {
+  display: block;
+  font-size: 0.9rem;
+  color: #7c2d12;
+  margin-top: 0.15rem;
+}
+
+.incident-alert button {
+  flex-shrink: 0;
+  border: 1px solid #fdba74;
+  background: #fff;
+  color: #9a3412;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+.incident-alert button:hover {
+  background: #ffedd5;
+}
