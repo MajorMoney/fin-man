@@ -1,11 +1,17 @@
+:host {
+  display: flex;
+  flex-shrink: 0;
+  height: 100%;
+  min-height: 0;
+}
+
 .side-navbar {
-  width: 180px;          /* fixed width for sidebar */
-  height: 100%;           /* fill height of parent (app-body) */
+  width: 180px;
+  height: 100%;
   background-color: var(--nav-bg);
   color: var(--nav-text);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;       /* scroll if sidebar content is too tall */
   box-sizing: border-box;
   padding-top: 1rem;
 }
@@ -13,8 +19,11 @@
 /* Sidebar list items */
 .side-navbar ul {
   list-style: none;
+  flex: 1;
+  min-height: 0;
   padding: 0;
   margin: 0;
+  overflow-y: auto;
 }
 
 .side-navbar li {

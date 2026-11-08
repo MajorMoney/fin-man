@@ -1,24 +1,27 @@
-/* Full page container */
+/* Full page container. Stays the viewport height so the sidebar does not grow with the page. */
 .app-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 100vh;
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Body below the header */
 .app-body {
   display: flex;
-  flex: 1; /* fills remaining space below header */
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
 /* Main content fills remaining space */
 .app-main {
   flex: 1;
+  min-width: 0;
+  min-height: 0;
   background-color: var(--bg-muted);
-  overflow: auto; /* scroll if content is long */
+  overflow: auto;
   scrollbar-width: none;
   padding: 1rem;
   box-sizing: border-box;
