@@ -1,8 +1,26 @@
+<div class="toggle" role="group" aria-label="Burnup view">
+  <button type="button" [class.active]="mode === 'total'" (click)="setMode('total')">
+    Total
+  </button>
+  <button type="button" [class.active]="mode === 'monthly'" (click)="setMode('monthly')">
+    Monthly
+  </button>
+</div>
+
+<div class="plot">
 <svg
   class="chart"
   [attr.viewBox]="'0 0 ' + width + ' ' + height"
   role="img"
-  aria-label="Amount added each month, cumulative amount saved and pace toward the target"
+  [attr.aria-label]="
+    (mode === 'total' ? 'Burnup against the total goal. ' : 'Burnup against the monthly plan. ') +
+    (analysis.current | currency: 'EUR' : 'symbol' : '1.2-2') +
+    ' saved, ' +
+    (analysis.planned | currency: 'EUR' : 'symbol' : '1.2-2') +
+    ' planned'
+  "
+  (mousemove)="onPlot($event)"
+  (mouseleave)="clearHover()"
 >
   @for (tick of ticks; track tick.value) {
     <line class="grid" [attr.x1]="plotLeft" [attr.x2]="plotRight" [attr.y1]="tick.y" [attr.y2]="tick.y" />
@@ -11,28 +29,88 @@
     }}</text>
   }
 
-  @for (bar of bars; track bar.key) {
-    <rect class="bar" [attr.x]="bar.x" [attr.y]="bar.y" [attr.width]="bar.width" [attr.height]="bar.height">
-      <title>{{ bar.title }}</title>
-    </rect>
+  @if (gapPoints) {
+    <polygon class="gap" [class.over]="analysis.gap < 0" [attr.points]="gapPoints" />
   }
 
-  <polyline class="pace" [attr.points]="paceLine" />
-  <polyline class="saved" [attr.points]="savedLine" />
-  @for (point of savedPoints; track $index) {
-    <circle class="dot" r="3.5" [attr.cx]="point.x" [attr.cy]="point.y" />
+  @if (mode === 'total') {
+    <line class="goal" [attr.x1]="plotLeft" [attr.x2]="plotRight" [attr.y1]="goalY" [attr.y2]="goalY" />
+  } @else {
+    <polyline class="goal" [attr.points]="goalLine" />
   }
+  <polyline class="saved" [attr.points]="stepLine" />
+
+  <line class="cursor" [attr.x1]="cursorX" [attr.x2]="cursorX" [attr.y1]="plotTop" [attr.y2]="baseline" />
+  @if (analysis.gap !== 0) {
+    <line
+      class="difference"
+      [class.over]="analysis.gap < 0"
+      [attr.x1]="cursorX"
+      [attr.x2]="cursorX"
+      [attr.y1]="cursorSavedY"
+      [attr.y2]="plannedY"
+    />
+  }
+  <circle class="dot" r="4.5" [attr.cx]="cursorX" [attr.cy]="cursorSavedY" />
+
+  @if (hover) {
+    <line class="guide" [attr.x1]="hover.x" [attr.x2]="hover.x" [attr.y1]="plotTop" [attr.y2]="baseline" />
+    <circle class="guide-goal" r="4" [attr.cx]="hover.x" [attr.cy]="hover.plannedY" />
+    @if (hover.savedY != null) {
+      <circle class="guide-saved" r="4.5" [attr.cx]="hover.x" [attr.cy]="hover.savedY" />
+    }
+  }
+  <text
+    class="cursor-value"
+    [attr.text-anchor]="cursorLabelAnchor"
+    [attr.x]="cursorLabelX"
+    [attr.y]="cursorLabelY"
+  >
+    {{ analysis.current | currency: 'EUR' : 'symbol' : '1.2-2' }}
+  </text>
 
   @for (label of labels; track label.x) {
     <text class="axis" text-anchor="middle" [attr.x]="label.x" [attr.y]="baseline + 20">{{ label.text }}</text>
   }
 </svg>
 
-<div class="legend">
-  <span><i class="swatch bar-swatch"></i>Added in the month</span>
-  <span><i class="swatch saved-swatch"></i>Saved so far</span>
-  <span><i class="swatch pace-swatch"></i>Pace to the original target</span>
+@if (hover) {
+  <div class="tip" [class.start]="hover.align === 'start'" [class.end]="hover.align === 'end'" [style.left.%]="hover.left">
+    <p class="tip-date">{{ hover.date }}</p>
+    @if (hover.saved != null) {
+      <p><i class="swatch saved-swatch"></i>Saved {{ hover.saved | currency: 'EUR' : 'symbol' : '1.2-2' }}</p>
+    }
+    <p>
+      <i class="swatch goal-swatch"></i>{{ mode === 'total' ? 'Goal' : 'Monthly' }}
+      {{ hover.planned | currency: 'EUR' : 'symbol' : '1.2-2' }}
+    </p>
+  </div>
+}
 </div>
+
+<div class="legend">
+  <span><i class="swatch saved-swatch"></i>Cumulative saved</span>
+  <span><i class="swatch goal-swatch"></i>{{ mode === 'total' ? 'Goal' : 'Monthly goal' }}</span>
+  <span><i class="swatch cursor-swatch"></i>Today</span>
+</div>
+
+<p class="caption">
+  @if (mode === 'total') {
+    @if (analysis.gap > 0) {
+      {{ analysis.gap | currency: 'EUR' : 'symbol' : '1.2-2' }} left to reach the goal
+    } @else if (analysis.gap < 0) {
+      {{ -analysis.gap | currency: 'EUR' : 'symbol' : '1.2-2' }} over the goal
+    } @else {
+      Goal reached
+    }
+  } @else if (analysis.gap > 0) {
+    {{ analysis.gap | currency: 'EUR' : 'symbol' : '1.2-2' }} behind the monthly goal
+  } @else if (analysis.gap < 0) {
+    {{ -analysis.gap | currency: 'EUR' : 'symbol' : '1.2-2' }} ahead of the monthly goal
+  } @else {
+    On the monthly goal
+  }
+</p>
 
 @if (analysis.savedBefore > 0) {
   <p class="note">

@@ -8,9 +8,9 @@ export interface SavingsGoal {
   targetDate: string;
   /** Calendar date the goal was created, YYYY-MM-DD. */
   createdOn: string;
-  /** Target amount when the goal was created. The pace line never changes. */
+  /** Target amount when the goal was created. Editing the goal does not change it. */
   paceTargetAmount: number;
-  /** Target date when the goal was created. The pace line never changes. */
+  /** Target date when the goal was created. Editing the goal does not change it. */
   paceTargetDate: string;
   /** Sum of the virtual transactions still in the history. */
   savedAmount: number;

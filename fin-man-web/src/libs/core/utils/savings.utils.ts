@@ -1,30 +1,13 @@
 import { SavingsGoal, VirtualTransaction } from '../models/savings';
+import { TransactionUtils } from './transactions.utils';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
-const MONTH_NAMES = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
 
 const pad = (value: number): string => String(value).padStart(2, '0');
 
 function parts(iso: string): { year: number; month: number; day: number } {
   const [year, month, day] = iso.split('-').map(Number);
   return { year, month, day };
-}
-
-function daysInMonth(year: number, month: number): number {
-  return new Date(year, month, 0).getDate();
 }
 
 /** Calendar date (YYYY-MM-DD) in the browser's local time zone. */
@@ -58,6 +41,29 @@ export function daysBetween(from: string, to: string): number {
       Date.UTC(a.year, a.month - 1, a.day)) /
       MS_PER_DAY
   );
+}
+
+/** "8 Nov" when `withDay` is set, otherwise "Nov '26". */
+export function formatMonthLabel(iso: string, withDay: boolean): string {
+  const { year, month, day } = parts(iso);
+  const name = TransactionUtils.MONTHS[month - 1];
+  return withDay ? `${day} ${name}` : `${name} '${pad(year % 100)}`;
+}
+
+/** "8 Nov '26". */
+export function formatDayLabel(iso: string): string {
+  const { year } = parts(iso);
+  return `${formatMonthLabel(iso, true)} '${pad(year % 100)}`;
+}
+
+/** Calendar date `days` after `iso`. Negative counts backward. */
+export function addDays(iso: string, days: number): string {
+  const { year, month, day } = parts(iso);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  date.setUTCDate(date.getUTCDate() + days);
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(
+    date.getUTCDate()
+  )}`;
 }
 
 /** Calendar months from the month of `from` to the month of `to`. Same month is 0. */
@@ -108,108 +114,169 @@ export function monthlyContribution(
   return months > 0 ? remaining / months : remaining;
 }
 
-export interface AnalysisMonth {
-  key: string;
-  label: string;
-  /** Sum of the virtual transactions dated in this calendar month. */
-  added: number;
-  /** Amount saved by the end of this month. */
-  saved: number;
-}
-
-/** A point on the chart. `x` counts months from the start of the first month. */
-export interface AnalysisPoint {
+/** A corner of the cumulative step line. `x` is whole days from the chart start. */
+export interface BurnupPoint {
   x: number;
   y: number;
 }
 
-export interface MonthlyAnalysis {
-  months: AnalysisMonth[];
-  saved: AnalysisPoint[];
-  pace: AnalysisPoint[];
-  /** Saved before the first month of the chart (dated before the goal was created). */
+/** `total` keeps the goal flat. `monthly` raises it by one installment each month. */
+export type BurnupGoal = 'total' | 'monthly';
+
+export interface Burnup {
+  start: string;
+  end: string;
+  /** Days from the start to the end. Zero when both fall on the same day. */
+  span: number;
+  goal: number;
+  mode: BurnupGoal;
+  /** Corners of the cumulative amount, from the start through today. */
+  steps: BurnupPoint[];
+  /** Corners of the goal line across the whole chart. */
+  plan: BurnupPoint[];
+  /** Days from the start to today. The cursor sits here. */
+  cursor: number;
+  /** Cumulative amount at the cursor. */
+  current: number;
+  /** Planned amount at the cursor. The flat target, or the monthly total due by today. */
+  planned: number;
+  /** Planned amount minus the cumulative amount. Negative when ahead of the plan. */
+  gap: number;
+  /** Amount dated before the goal was created. Already included in the first step. */
   savedBefore: number;
 }
 
-function monthStart(first: string, offset: number): string {
-  const { year, month } = parts(first);
+interface StepCents {
+  x: number;
+  cents: number;
+}
+
+function pushStep(steps: StepCents[], point: StepCents): void {
+  const last = steps[steps.length - 1];
+  if (last && last.x === point.x && last.cents === point.cents) return;
+  steps.push(point);
+}
+
+function monthStart(iso: string, offset: number): string {
+  const { year, month } = parts(iso);
   const index = year * 12 + (month - 1) + offset;
-  const shifted = String(Math.floor(index / 12)).padStart(4, '0');
-  return `${shifted}-${pad((index % 12) + 1)}-01`;
+  const shiftedYear = Math.floor(index / 12);
+  const shiftedMonth = (index % 12) + 1;
+  return `${String(shiftedYear).padStart(4, '0')}-${pad(shiftedMonth)}-01`;
+}
+
+function centsAt(steps: StepCents[], day: number): number {
+  let cents = steps[0]?.cents ?? 0;
+  for (const step of steps) {
+    if (step.x > day) break;
+    cents = step.cents;
+  }
+  return cents;
 }
 
 /**
- * Monthly analysis from the goal's creation month through the current month.
- * The pace line uses the target the goal had when it was created, so editing
- * the goal never moves it.
+ * Cumulative monthly plan. One installment is added at each month boundary
+ * from creation through the target date. The last installment lands on the
+ * target date and brings the line to the full target.
  */
-export function buildMonthlyAnalysis(
-  goal: Pick<
-    SavingsGoal,
-    'createdOn' | 'paceTargetAmount' | 'paceTargetDate'
-  >,
-  transactions: Pick<VirtualTransaction, 'amount' | 'date'>[],
-  today: string
-): MonthlyAnalysis {
-  const first = monthStart(goal.createdOn, 0);
-  const count = Math.max(monthsBetween(first, today), 0) + 1;
+function buildMonthlyPlan(
+  start: string,
+  targetDate: string,
+  targetCents: number,
+  span: number
+): StepCents[] {
+  const months = Math.max(monthsBetween(start, targetDate), 0);
+  const installments = Math.max(months, 1);
+  const installment = Math.floor(targetCents / installments);
+  const plan: StepCents[] = [];
+  let running = 0;
+  pushStep(plan, { x: 0, cents: 0 });
 
-  const position = (iso: string, endOfDay = false): number => {
-    const { year, month, day } = parts(iso);
-    const offset = monthsBetween(first, iso);
-    return offset + (day - (endOfDay ? 0 : 1)) / daysInMonth(year, month);
-  };
-
-  const addedCents = new Array<number>(count).fill(0);
-  let beforeCents = 0;
-  for (const transaction of transactions) {
-    const offset = monthsBetween(first, transaction.date);
-    if (offset < 0) beforeCents += toCents(transaction.amount);
-    else addedCents[Math.min(offset, count - 1)] += toCents(transaction.amount);
-  }
-
-  let runningCents = beforeCents;
-  const months: AnalysisMonth[] = [];
-  for (let index = 0; index < count; index++) {
-    runningCents += addedCents[index];
-    const { year, month } = parts(monthStart(first, index));
-    months.push({
-      key: `${year}-${pad(month)}`,
-      label: `${MONTH_NAMES[month - 1]} '${pad(year % 100)}`,
-      added: addedCents[index] / 100,
-      saved: runningCents / 100,
-    });
-  }
-
-  const saved = months.map((month, index) => ({
-    x:
-      index === count - 1
-        ? Math.min(position(today, true), count)
-        : index + 1,
-    y: month.saved,
-  }));
-
-  const total = daysBetween(goal.createdOn, goal.paceTargetDate);
-  const pace: AnalysisPoint[] = [{ x: position(goal.createdOn), y: 0 }];
-  if (total <= 0) {
-    pace.push({ x: position(goal.createdOn), y: goal.paceTargetAmount });
+  if (months === 0) {
+    const day = Math.min(Math.max(daysBetween(start, targetDate), 0), span);
+    pushStep(plan, { x: day, cents: 0 });
+    running = targetCents;
+    pushStep(plan, { x: day, cents: running });
   } else {
-    for (let index = 0; index < count; index++) {
-      const boundary = monthStart(first, index + 1);
-      if (boundary >= goal.paceTargetDate) {
-        pace.push({
-          x: position(goal.paceTargetDate),
-          y: goal.paceTargetAmount,
-        });
-        break;
-      }
-      const elapsed = daysBetween(goal.createdOn, boundary);
-      pace.push({
-        x: index + 1,
-        y: (goal.paceTargetAmount * elapsed) / total,
-      });
+    for (let index = 1; index <= months; index++) {
+      const boundary = index === months ? targetDate : monthStart(start, index);
+      const day = Math.min(Math.max(daysBetween(start, boundary), 0), span);
+      const next = index === months ? targetCents : running + installment;
+      pushStep(plan, { x: day, cents: running });
+      running = next;
+      pushStep(plan, { x: day, cents: running });
     }
   }
 
-  return { months, saved, pace, savedBefore: beforeCents / 100 };
+  pushStep(plan, { x: span, cents: running });
+  return plan;
+}
+
+/**
+ * Burnup from the day the goal was created. Each deposit is a step in the
+ * cumulative amount and stops at today. `total` draws the goal as a flat
+ * line. `monthly` draws it as the cumulative monthly installments through
+ * the target date.
+ */
+export function buildBurnup(
+  goal: Pick<SavingsGoal, 'createdOn' | 'targetAmount' | 'targetDate'>,
+  transactions: Pick<VirtualTransaction, 'amount' | 'date'>[],
+  today: string,
+  mode: BurnupGoal = 'total'
+): Burnup {
+  const start = goal.createdOn;
+  const later = mode === 'monthly' && goal.targetDate > today ? goal.targetDate : today;
+  const end = later < start ? start : later;
+  const span = Math.max(daysBetween(start, end), 0);
+  const cursor = Math.min(Math.max(daysBetween(start, today), 0), span);
+
+  const ordered = [...transactions].sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
+  );
+
+  let beforeCents = 0;
+  const inRange: { day: number; cents: number }[] = [];
+  for (const transaction of ordered) {
+    if (transaction.date < start) {
+      beforeCents += toCents(transaction.amount);
+      continue;
+    }
+    const day = daysBetween(start, transaction.date);
+    inRange.push({
+      day: Math.min(Math.max(day, 0), cursor),
+      cents: toCents(transaction.amount),
+    });
+  }
+
+  let running = beforeCents;
+  const steps: StepCents[] = [];
+  pushStep(steps, { x: 0, cents: running });
+  for (const transaction of inRange) {
+    pushStep(steps, { x: transaction.day, cents: running });
+    running += transaction.cents;
+    pushStep(steps, { x: transaction.day, cents: running });
+  }
+  pushStep(steps, { x: cursor, cents: running });
+
+  const targetCents = toCents(goal.targetAmount);
+  const plan =
+    mode === 'monthly'
+      ? buildMonthlyPlan(start, goal.targetDate, targetCents, span)
+      : [{ x: 0, cents: targetCents }, { x: span, cents: targetCents }];
+  const plannedCents = mode === 'monthly' ? centsAt(plan, cursor) : targetCents;
+
+  return {
+    start,
+    end,
+    span,
+    goal: goal.targetAmount,
+    mode,
+    steps: steps.map((step) => ({ x: step.x, y: step.cents / 100 })),
+    plan: plan.map((step) => ({ x: step.x, y: step.cents / 100 })),
+    cursor,
+    current: running / 100,
+    planned: plannedCents / 100,
+    gap: (plannedCents - running) / 100,
+    savedBefore: beforeCents / 100,
+  };
 }

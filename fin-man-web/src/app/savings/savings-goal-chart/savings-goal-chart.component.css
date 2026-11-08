@@ -2,9 +2,99 @@
   display: block;
 }
 
+.toggle {
+  display: flex;
+  width: fit-content;
+  margin-bottom: 0.75rem;
+  padding: 0.2rem;
+  border-radius: 10px;
+  background: var(--surface-accent);
+}
+
+.toggle button {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.toggle button.active {
+  background: var(--blue);
+  color: var(--on-accent);
+}
+
+.plot {
+  position: relative;
+}
+
 .chart {
+  display: block;
   width: 100%;
   height: auto;
+  cursor: crosshair;
+}
+
+.guide,
+.guide-saved,
+.guide-goal {
+  pointer-events: none;
+}
+
+.guide {
+  stroke: var(--text-secondary);
+  stroke-width: 1;
+}
+
+.guide-saved {
+  fill: var(--green);
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+.guide-goal {
+  fill: var(--blue);
+  stroke: var(--surface);
+  stroke-width: 1.5;
+}
+
+.tip {
+  position: absolute;
+  top: 8px;
+  z-index: 2;
+  transform: translateX(-50%);
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tip.start {
+  transform: translateX(0);
+}
+
+.tip.end {
+  transform: translateX(-100%);
+}
+
+.tip p {
+  margin: 0;
+}
+
+.tip-date {
+  margin-bottom: 0.15rem;
+  color: var(--text-heading);
+  font-weight: 600;
 }
 
 .grid {
@@ -12,13 +102,33 @@
   stroke-width: 1;
 }
 
-.axis {
+.axis,
+.cursor-value {
   font-size: 11px;
   fill: var(--text-muted);
 }
 
-.bar {
-  fill: var(--chart-bar);
+.cursor-value {
+  font-weight: 600;
+  fill: var(--text-secondary);
+}
+
+.gap {
+  fill: var(--blue);
+  opacity: 0.14;
+}
+
+.gap.over {
+  fill: var(--green);
+}
+
+.goal {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 
 .saved {
@@ -26,17 +136,29 @@
   stroke: var(--green);
   stroke-width: 2.5;
   stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.cursor {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.difference {
+  stroke: var(--blue);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.difference.over {
+  stroke: var(--green);
 }
 
 .dot {
   fill: var(--green);
-}
-
-.pace {
-  fill: none;
-  stroke: var(--warning);
-  stroke-width: 2;
-  stroke-dasharray: 6 4;
+  stroke: var(--surface);
+  stroke-width: 1.5;
 }
 
 .legend {
@@ -54,22 +176,39 @@
   height: 8px;
   margin-right: 0.4rem;
   border-radius: 2px;
-}
-
-.bar-swatch {
-  background: var(--chart-bar);
+  vertical-align: middle;
 }
 
 .saved-swatch {
+  height: 3px;
   background: var(--green);
 }
 
-.pace-swatch {
-  background: repeating-linear-gradient(90deg, var(--warning) 0 4px, transparent 4px 7px);
+.goal-swatch {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--blue) 0 4px,
+    transparent 4px 7px
+  );
+}
+
+.cursor-swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 1px var(--text-muted);
+}
+
+.caption {
+  margin: 0.6rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-heading);
 }
 
 .note {
-  margin: 0.5rem 0 0;
+  margin: 0.35rem 0 0;
   font-size: 0.8rem;
   color: var(--text-muted);
 }

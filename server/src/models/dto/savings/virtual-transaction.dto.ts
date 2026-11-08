@@ -2,7 +2,7 @@ export interface CreateVirtualTransactionDto {
   amount: number;
   date: string;
   note?: string | null;
-  /** The caller's calendar day, so "today" does not depend on server time zone. */
+  /** The caller's calendar day. The transaction cannot be dated after it. */
   today?: string;
 }
 

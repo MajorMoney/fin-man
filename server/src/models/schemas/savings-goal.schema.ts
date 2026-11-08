@@ -24,15 +24,15 @@ export class SavingsGoal {
   @Prop({ required: true })
   targetDate!: string;
 
-  /** Calendar day the goal was created. Anchors the pace line. */
+  /** Calendar day the goal was created. */
   @Prop({ required: true })
   createdOn!: string;
 
-  /** Target amount when the goal was created. The pace line never changes. */
+  /** Target amount when the goal was created. Editing the goal does not change it. */
   @Prop({ required: true })
   paceTargetAmount!: number;
 
-  /** Target date when the goal was created. The pace line never changes. */
+  /** Target date when the goal was created. Editing the goal does not change it. */
   @Prop({ required: true })
   paceTargetDate!: string;
 }

@@ -95,6 +95,16 @@ describe('SavingsService', () => {
     expect(transactions.rows).toHaveLength(0);
   });
 
+  it('creates a goal on a past day when the caller sends that day', async () => {
+    const created = await goal({
+      today: '2024-03-01',
+      targetDate: '2024-12-01',
+      savedAmount: 10,
+    });
+    expect(created.createdOn).toBe('2024-03-01');
+    expect(transactions.rows[0]).toMatchObject({ date: '2024-03-01', amount: 10 });
+  });
+
   it('turns the amount already saved into the first virtual transaction', async () => {
     const created = await goal({ savedAmount: 250.5 });
     expect(created.savedAmount).toBe(250.5);

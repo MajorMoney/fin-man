@@ -5,7 +5,7 @@ export interface CreateSavingsGoalDto {
   targetDate: string;
   /** Amount already saved. Becomes the first virtual transaction. */
   savedAmount?: number | null;
-  /** The caller's calendar day, so "today" does not depend on server time zone. */
+  /** The caller's calendar day. This becomes the day the goal was created. */
   today?: string;
 }
 

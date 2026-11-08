@@ -154,7 +154,7 @@ export class SavingsService {
       goal.targetDate = targetDate;
     }
 
-    // The pace line stays fixed: paceTargetAmount and paceTargetDate are never touched.
+    // The original target stays fixed: paceTargetAmount and paceTargetDate are never touched.
     await goal.save();
     return this.toGoalView(goal, await this.savedAmount(id));
   }

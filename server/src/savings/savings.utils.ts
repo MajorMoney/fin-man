@@ -1,7 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 
 const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 export function utcToday(now = new Date()): string {
   return now.toISOString().slice(0, 10);
@@ -26,17 +25,11 @@ export function assertDate(value: unknown, label: string): string {
 
 /**
  * The caller's calendar day. Containers run in UTC, so the client says what day
- * it is; it can only be one day away from the server's UTC day (time zones).
+ * it is. When the client omits it, the server's UTC day is used.
  */
 export function resolveToday(clientToday?: string, now = new Date()): string {
-  const server = utcToday(now);
-  if (clientToday == null) return server;
-  const today = assertDate(clientToday, 'Today');
-  const apart = Math.abs(Date.parse(today) - Date.parse(server)) / MS_PER_DAY;
-  if (apart > 1) {
-    throw new BadRequestException('Today is out of sync with the server');
-  }
-  return today;
+  if (clientToday == null || clientToday === '') return utcToday(now);
+  return assertDate(clientToday, 'Today');
 }
 
 export function assertAmount(value: unknown, label: string): number {

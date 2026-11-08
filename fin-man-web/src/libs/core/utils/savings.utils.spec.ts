@@ -1,7 +1,10 @@
 import {
-  buildMonthlyAnalysis,
+  addDays,
+  buildBurnup,
   daysBetween,
   excessAmount,
+  formatDayLabel,
+  formatMonthLabel,
   isValidIsoDate,
   monthlyContribution,
   monthsBetween,
@@ -29,6 +32,18 @@ describe('savings.utils', () => {
       expect(daysBetween('2026-12-31', '2027-01-01')).toBe(1);
       expect(daysBetween('2026-11-05', '2026-11-01')).toBe(-4);
       expect(daysBetween('2026-03-28', '2026-03-30')).toBe(2);
+    });
+
+    it('labels a month with the shared abbreviations', () => {
+      expect(formatMonthLabel('2026-11-08', false)).toBe("Nov '26");
+      expect(formatMonthLabel('2026-11-08', true)).toBe('8 Nov');
+      expect(formatDayLabel('2026-11-08')).toBe("8 Nov '26");
+    });
+
+    it('adds calendar days across month and year ends', () => {
+      expect(addDays('2026-09-15', 0)).toBe('2026-09-15');
+      expect(addDays('2026-12-31', 1)).toBe('2027-01-01');
+      expect(addDays('2026-11-05', -4)).toBe('2026-11-01');
     });
 
     it('counts calendar months, not elapsed days', () => {
@@ -113,55 +128,63 @@ describe('savings.utils', () => {
     });
   });
 
-  describe('buildMonthlyAnalysis', () => {
+  describe('buildBurnup', () => {
     const goal = {
       createdOn: '2026-09-15',
-      paceTargetAmount: 1000,
-      paceTargetDate: '2027-03-01',
+      targetAmount: 1000,
+      targetDate: '2027-03-01',
     };
     const today = '2026-11-05';
 
-    it('has one month from the creation month through the current month', () => {
-      const { months } = buildMonthlyAnalysis(goal, [], today);
-      expect(months.map((month) => month.key)).toEqual([
-        '2026-09',
-        '2026-10',
-        '2026-11',
-      ]);
-      expect(months.map((month) => month.label)).toEqual([
-        "Sep '26",
-        "Oct '26",
-        "Nov '26",
+    it('holds a flat line at zero from creation through today', () => {
+      const analysis = buildBurnup(goal, [], today);
+      expect(analysis.end).toBe(today);
+      expect(analysis.span).toBe(daysBetween(goal.createdOn, today));
+      expect(analysis.cursor).toBe(analysis.span);
+      expect(analysis.goal).toBe(1000);
+      expect(analysis.current).toBe(0);
+      expect(analysis.gap).toBe(1000);
+      expect(analysis.steps).toEqual([
+        { x: 0, y: 0 },
+        { x: analysis.cursor, y: 0 },
       ]);
     });
 
-    it('shows zero for months without virtual transactions', () => {
-      const { months } = buildMonthlyAnalysis(
-        goal,
-        [{ amount: 100, date: '2026-09-20' }],
-        today
-      );
-      expect(months.map((month) => month.added)).toEqual([100, 0, 0]);
-      expect(months.map((month) => month.saved)).toEqual([100, 100, 100]);
-    });
-
-    it('accumulates what was added each month', () => {
-      const { months } = buildMonthlyAnalysis(
+    it('steps the cumulative amount on each deposit and stops at today', () => {
+      const analysis = buildBurnup(
         goal,
         [
+          { amount: 50, date: '2026-11-05' },
           { amount: 100, date: '2026-09-20' },
           { amount: 0.1, date: '2026-10-01' },
           { amount: 0.2, date: '2026-10-31' },
-          { amount: 50, date: '2026-11-05' },
         ],
         today
       );
-      expect(months.map((month) => month.added)).toEqual([100, 0.3, 50]);
-      expect(months.map((month) => month.saved)).toEqual([100, 100.3, 150.3]);
+      const sep20 = daysBetween('2026-09-15', '2026-09-20');
+      const oct1 = daysBetween('2026-09-15', '2026-10-01');
+      const oct31 = daysBetween('2026-09-15', '2026-10-31');
+      expect(analysis.steps).toEqual([
+        { x: 0, y: 0 },
+        { x: sep20, y: 0 },
+        { x: sep20, y: 100 },
+        { x: oct1, y: 100 },
+        { x: oct1, y: 100.1 },
+        { x: oct31, y: 100.1 },
+        { x: oct31, y: 100.3 },
+        { x: analysis.cursor, y: 100.3 },
+        { x: analysis.cursor, y: 150.3 },
+      ]);
+      expect(analysis.current).toBe(150.3);
+      expect(analysis.gap).toBe(849.7);
+      expect(analysis.cursor).toBe(analysis.span);
+      expect(analysis.steps.every((step) => step.x <= analysis.cursor)).toBe(
+        true
+      );
     });
 
-    it('counts transactions dated before the creation month in the cumulative line only', () => {
-      const analysis = buildMonthlyAnalysis(
+    it('starts from money dated before the goal was created', () => {
+      const analysis = buildBurnup(
         goal,
         [
           { amount: 40, date: '2026-01-10' },
@@ -169,60 +192,104 @@ describe('savings.utils', () => {
         ],
         today
       );
+      const oct10 = daysBetween('2026-09-15', '2026-10-10');
       expect(analysis.savedBefore).toBe(40);
-      expect(analysis.months.map((month) => month.added)).toEqual([0, 10, 0]);
-      expect(analysis.months.map((month) => month.saved)).toEqual([40, 50, 50]);
+      expect(analysis.steps[0]).toEqual({ x: 0, y: 40 });
+      expect(analysis.steps).toContainEqual({ x: oct10, y: 40 });
+      expect(analysis.steps).toContainEqual({ x: oct10, y: 50 });
+      expect(analysis.current).toBe(50);
     });
 
-    it('plots the saved line at month ends and today', () => {
-      const { saved } = buildMonthlyAnalysis(goal, [], today);
-      expect(saved.map((point) => point.x.toFixed(3))).toEqual([
-        '1.000',
-        '2.000',
-        (2 + 5 / 30).toFixed(3),
-      ]);
-    });
-
-    it('draws the pace line from zero at creation toward the target', () => {
-      const { pace } = buildMonthlyAnalysis(goal, [], today);
-      expect(pace[0]).toEqual({ x: 14 / 30, y: 0 });
-      const total = daysBetween('2026-09-15', '2027-03-01');
-      expect(pace).toHaveLength(4);
-      expect(pace[1].x).toBe(1);
-      expect(pace[1].y).toBeCloseTo((1000 * 16) / total);
-      expect(pace[3].x).toBe(3);
-      expect(pace[3].y).toBeCloseTo((1000 * daysBetween('2026-09-15', '2026-12-01')) / total);
-    });
-
-    it('ends the pace line at the target when the target date is inside the chart', () => {
-      const { pace } = buildMonthlyAnalysis(
-        { ...goal, paceTargetDate: '2026-10-16' },
+    it('ends the axis on today once the target date has passed', () => {
+      const analysis = buildBurnup(
+        { ...goal, targetDate: '2026-10-01' },
         [],
         today
       );
-      const last = pace[pace.length - 1];
-      expect(last.y).toBe(1000);
-      expect(last.x).toBeCloseTo(1 + 15 / 31);
+      expect(analysis.end).toBe(today);
+      expect(analysis.cursor).toBe(analysis.span);
     });
 
-    it('does not move the pace line when the goal is edited', () => {
-      const original = buildMonthlyAnalysis(goal, [], today).pace;
-      const edited = {
-        ...goal,
-        targetAmount: 5000,
-        targetDate: '2030-01-01',
-      };
-      expect(buildMonthlyAnalysis(edited, [], today).pace).toEqual(original);
-    });
-
-    it('draws a single month when the goal was created this month', () => {
-      const analysis = buildMonthlyAnalysis(
-        { ...goal, createdOn: '2026-11-01' },
-        [{ amount: 10, date: '2026-11-02' }],
+    it('follows the current goal when the target amount changes', () => {
+      const analysis = buildBurnup(
+        { ...goal, targetAmount: 5000, targetDate: '2030-01-01' },
+        [{ amount: 100, date: '2026-09-20' }],
         today
       );
-      expect(analysis.months).toHaveLength(1);
-      expect(analysis.months[0]).toMatchObject({ added: 10, saved: 10 });
+      expect(analysis.goal).toBe(5000);
+      expect(analysis.end).toBe(today);
+      expect(analysis.gap).toBe(4900);
+    });
+
+    it('reports a negative gap once the cumulative amount passes the goal', () => {
+      const analysis = buildBurnup(
+        goal,
+        [{ amount: 1250.25, date: '2026-10-01' }],
+        today
+      );
+      expect(analysis.current).toBe(1250.25);
+      expect(analysis.gap).toBe(-250.25);
+    });
+
+    it('raises the monthly goal by one installment at each month boundary', () => {
+      const analysis = buildBurnup(goal, [], today, 'monthly');
+      const installment = Math.floor(100000 / 6) / 100;
+      const oct1 = daysBetween('2026-09-15', '2026-10-01');
+      const nov1 = daysBetween('2026-09-15', '2026-11-01');
+      const mar1 = daysBetween('2026-09-15', '2027-03-01');
+      expect(analysis.end).toBe('2027-03-01');
+      expect(analysis.cursor).toBeLessThan(analysis.span);
+      expect(analysis.plan[0]).toEqual({ x: 0, y: 0 });
+      expect(analysis.plan).toContainEqual({ x: oct1, y: 0 });
+      expect(analysis.plan).toContainEqual({ x: oct1, y: installment });
+      expect(analysis.plan).toContainEqual({ x: nov1, y: installment * 2 });
+      expect(analysis.plan[analysis.plan.length - 1]).toEqual({
+        x: mar1,
+        y: 1000,
+      });
+      expect(analysis.planned).toBe(installment * 2);
+      expect(analysis.gap).toBe(analysis.planned);
+      expect(analysis.steps[analysis.steps.length - 1].x).toBe(analysis.cursor);
+    });
+
+    it('puts the whole monthly goal on the target date inside the creation month', () => {
+      const analysis = buildBurnup(
+        { ...goal, targetDate: '2026-09-20' },
+        [],
+        today,
+        'monthly'
+      );
+      const due = daysBetween('2026-09-15', '2026-09-20');
+      expect(analysis.plan).toContainEqual({ x: due, y: 0 });
+      expect(analysis.plan).toContainEqual({ x: due, y: 1000 });
+      expect(analysis.planned).toBe(1000);
+      expect(analysis.end).toBe(today);
+    });
+
+    it('measures the monthly gap against the plan due by today', () => {
+      const analysis = buildBurnup(
+        goal,
+        [{ amount: 400, date: '2026-10-10' }],
+        today,
+        'monthly'
+      );
+      expect(analysis.current).toBe(400);
+      expect(analysis.gap).toBeCloseTo(analysis.planned - 400);
+      expect(analysis.gap).toBeLessThan(0);
+    });
+
+    it('keeps a goal created today as a single point', () => {
+      const analysis = buildBurnup(
+        { ...goal, createdOn: today, targetDate: today },
+        [{ amount: 10, date: today }],
+        today
+      );
+      expect(analysis.span).toBe(0);
+      expect(analysis.cursor).toBe(0);
+      expect(analysis.steps).toEqual([
+        { x: 0, y: 0 },
+        { x: 0, y: 10 },
+      ]);
     });
   });
 });

@@ -43,13 +43,13 @@ describe('savings.utils', () => {
       expect(resolveToday(undefined, now)).toBe('2026-11-05');
     });
 
-    it('accepts the client day when a time zone shifts it by one day', () => {
+    it('uses the client day, including one in the past', () => {
       expect(resolveToday('2026-11-06', now)).toBe('2026-11-06');
-      expect(resolveToday('2026-11-04', now)).toBe('2026-11-04');
+      expect(resolveToday('2024-01-15', now)).toBe('2024-01-15');
     });
 
-    it('rejects a client day that is far from the server day', () => {
-      expect(() => resolveToday('2026-11-08', now)).toThrow(
+    it('rejects a client day that is not a real date', () => {
+      expect(() => resolveToday('2026-02-31', now)).toThrow(
         BadRequestException,
       );
     });
