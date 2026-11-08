@@ -1,18 +1,20 @@
 import {
   Component,
-  AfterViewInit,
   OnInit,
   OnDestroy,
   Input,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  inject,
+  effect
 } from '@angular/core';
 import { Chart } from 'chart.js/auto';
 import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
-import { Transaction } from 'src/libs/core/models/transactions';
 import { CategoryTotal } from 'src/libs/core/ui-models/category-total';
 import { TransactionUtils } from 'src/libs/core/utils/transactions.utils';
 import { TransactionsService } from 'src/services/transactions-service';
 import { UserService } from 'src/services/user-service';
+import { ThemeService } from 'src/services/theme.service';
+import { applyChartJsTheme } from 'src/libs/core/utils/chart-theme';
 
 @Component({
     selector: 'app-category-chart',
@@ -21,10 +23,18 @@ import { UserService } from 'src/services/user-service';
     changeDetection: ChangeDetectionStrategy.Eager
 })
 export class CategoryChartComponent implements OnInit, OnDestroy {
+  private readonly theme = inject(ThemeService);
+
   constructor(
     private transactionsService: TransactionsService,
     private userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.theme.resolved();
+      applyChartJsTheme();
+      this.chart?.update('none');
+    });
+  }
   @Input() selectedYear$!: Observable<number>;
 
   private chart?: Chart;

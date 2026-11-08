@@ -2,14 +2,14 @@
   position: fixed;
   inset: 0;
   z-index: 1300;
-  background: rgba(15, 23, 42, 0.45);
+  background: var(--overlay);
   display: grid;
   place-items: center;
 }
 
 .dialog {
   width: min(420px, 92vw);
-  background: #fff;
+  background: var(--surface);
   border-radius: 12px;
   padding: 1.25rem 1.35rem 1.15rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
@@ -18,12 +18,12 @@
 h3 {
   margin: 0;
   font-size: 1.05rem;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 p {
   margin: 0.7rem 0 1.15rem;
-  color: #4b5563;
+  color: var(--text-secondary);
   line-height: 1.45;
 }
 
@@ -43,8 +43,8 @@ button {
 }
 
 .cancel {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--surface-hover);
+  color: var(--text-secondary);
 }
 
 .confirm {
@@ -53,5 +53,5 @@ button {
 }
 
 .confirm.danger {
-  background: #dc2626;
+  background: var(--danger);
 }

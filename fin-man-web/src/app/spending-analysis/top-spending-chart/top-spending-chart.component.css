@@ -1,5 +1,5 @@
 .chart-card {
-  background: white;
+  background: var(--surface);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -15,7 +15,7 @@
 .card-header h2 {
   font-size: 18px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-heading);
   margin: 0;
 }
 
@@ -24,7 +24,7 @@
   border: none;
   font-size: 20px;
   cursor: pointer;
-  color: #666;
+  color: var(--text-muted);
   padding: 4px 8px;
 }
 
@@ -42,14 +42,14 @@
 
 .category-label {
   font-size: 13px;
-  color: #666;
+  color: var(--text-muted);
   min-width: 100px;
 }
 
 .bar-container {
   flex: 1;
   height: 24px;
-  background-color: #f5f5f5;
+  background-color: var(--surface-hover);
   border-radius: 4px;
   overflow: hidden;
 }

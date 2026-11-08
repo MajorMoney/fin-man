@@ -1,6 +1,6 @@
 .panel {
-  background: #fff;
-  border: 1px solid #f1f1f1;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   padding: 1rem 1.15rem;
@@ -9,7 +9,7 @@
 h3 {
   margin: 0 0 0.75rem;
   font-size: 1.05rem;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 .row {
@@ -17,17 +17,17 @@ h3 {
   justify-content: space-between;
   gap: 1rem;
   padding: 0.45rem 0;
-  color: #4b5563;
+  color: var(--text-secondary);
 }
 
 .row strong {
-  color: #111827;
+  color: var(--text-heading);
 }
 
 .good {
-  color: #16a34a;
+  color: var(--green);
 }
 
 .bad {
-  color: #dc2626;
+  color: var(--danger);
 }

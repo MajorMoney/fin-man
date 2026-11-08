@@ -39,7 +39,7 @@
   top: 0;
   bottom: 0;
   width: 5px;
-  background: var(--card-accent, #3b82f6);
+  background: var(--card-accent, var(--blue));
 }
 
 app-card-chip {

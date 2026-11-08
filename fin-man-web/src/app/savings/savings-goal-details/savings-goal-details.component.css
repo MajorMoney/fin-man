@@ -1,7 +1,7 @@
 .back {
   display: inline-block;
   margin-bottom: 0.75rem;
-  color: #3b82f6;
+  color: var(--blue);
   text-decoration: none;
   font-size: 0.9rem;
 }
@@ -18,7 +18,7 @@
 }
 
 .panel {
-  background: #fff;
+  background: var(--surface);
   border-radius: 12px;
   padding: 1.25rem;
   margin-bottom: 1.25rem;
@@ -28,7 +28,7 @@
 .panel h3 {
   margin: 0 0 0.75rem;
   font-size: 1.1rem;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 .panel-header {
@@ -44,7 +44,7 @@
 .meta,
 .hint,
 .empty {
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
@@ -54,7 +54,7 @@
 
 .description {
   margin: 0.5rem 0 0;
-  color: #334155;
+  color: var(--text);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -71,16 +71,16 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 0;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--border);
 }
 
 .amount {
   font-weight: 600;
-  color: #059669;
+  color: var(--green);
 }
 
 .note {
-  color: #64748b;
+  color: var(--text-muted);
   overflow-wrap: anywhere;
 }
 
@@ -94,20 +94,20 @@ button {
 
 .add {
   background: var(--blue);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .secondary {
   background: transparent;
-  color: #3b82f6;
+  color: var(--blue);
 }
 
 .secondary.danger {
-  color: #dc2626;
+  color: var(--danger);
 }
 
 .secondary:hover {
-  background: #f1f5f9;
+  background: var(--surface-hover);
 }
 
 @media (max-width: 640px) {

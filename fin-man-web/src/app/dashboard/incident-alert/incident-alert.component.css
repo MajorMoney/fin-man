@@ -3,13 +3,13 @@
 }
 
 .incident-alert {
-  background: #fff7ed;
-  border: 1px solid #fdba74;
-  border-left: 4px solid #d97706;
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  border-left: 4px solid var(--warning);
   border-radius: 12px;
   padding: 0.9rem 1.1rem;
   margin-bottom: 1.25rem;
-  color: #9a3412;
+  color: var(--warning-text);
 }
 
 .incident-alert ul {
@@ -34,20 +34,20 @@
 .incident-message {
   display: block;
   font-size: 0.9rem;
-  color: #7c2d12;
+  color: var(--warning-text);
   margin-top: 0.15rem;
 }
 
 .incident-alert button {
   flex-shrink: 0;
-  border: 1px solid #fdba74;
-  background: #fff;
-  color: #9a3412;
+  border: 1px solid var(--warning-border);
+  background: var(--surface);
+  color: var(--warning-text);
   border-radius: 6px;
   padding: 0.35rem 0.75rem;
   cursor: pointer;
 }
 
 .incident-alert button:hover {
-  background: #ffedd5;
+  background: var(--warning-bg);
 }

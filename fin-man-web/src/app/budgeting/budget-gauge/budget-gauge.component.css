@@ -1,6 +1,6 @@
 .panel {
-  background: #fff;
-  border: 1px solid #f1f1f1;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   padding: 1rem 1.15rem 1.15rem;
@@ -9,7 +9,7 @@
 h3 {
   margin: 0 0 0.25rem;
   font-size: 1.05rem;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 .gauge {
@@ -34,12 +34,12 @@ svg {
 .label strong {
   display: block;
   font-size: 1.35rem;
-  color: #111827;
+  color: var(--text-heading);
 }
 
 .label span,
 .stats span {
-  color: #6b7280;
+  color: var(--text-muted);
   font-size: 0.8rem;
 }
 
@@ -52,5 +52,5 @@ svg {
 
 .stats strong {
   display: block;
-  color: #111827;
+  color: var(--text-heading);
 }

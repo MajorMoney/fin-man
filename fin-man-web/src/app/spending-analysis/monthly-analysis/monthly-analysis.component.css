@@ -6,8 +6,8 @@
 
 .period-selector button {
   padding: 6px 12px;
-  border: 1px solid #e0e0e0;
-  background: white;
+  border: 1px solid var(--border);
+  background: var(--surface);
   border-radius: 6px;
   font-size: 13px;
   cursor: pointer;
@@ -15,13 +15,13 @@
 }
 
 .period-selector button.active {
-  background-color: #4a90e2;
-  color: white;
-  border-color: #4a90e2;
+  background-color: var(--blue);
+  color: var(--on-accent);
+  border-color: var(--blue);
 }
 
 .period-selector button:hover:not(.active) {
-  background-color: #f5f5f5;
+  background-color: var(--surface-hover);
 }
 
 .compare-btn {
@@ -41,7 +41,7 @@
   flex-direction: column;
   justify-content: space-between;
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted);
   padding: 10px 0;
 }
 
@@ -59,7 +59,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted);
   margin-top: 8px;
 }
 
@@ -80,5 +80,5 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #4a90e2;
+  background-color: var(--blue);
 }

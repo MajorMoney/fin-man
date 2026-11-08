@@ -4,17 +4,17 @@
 
 .amounts .saved {
   font-size: 1.3rem;
-  color: #1e293b;
+  color: var(--text-heading);
 }
 
 .amounts .target {
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
 .progress-bar {
   height: 8px;
-  background: #e2e8f0;
+  background: var(--surface-hover);
   border-radius: 6px;
   overflow: hidden;
   margin-top: 0.4rem;
@@ -22,26 +22,26 @@
 
 .progress-fill {
   height: 100%;
-  background: #3b82f6;
+  background: var(--blue);
   border-radius: 6px;
   transition: width 0.3s ease-in-out;
 }
 
 .progress-fill.done {
-  background: #10b981;
+  background: var(--green);
 }
 
 .percent {
   margin-top: 0.25rem;
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .excess {
   margin-top: 0.25rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #059669;
+  color: var(--green);
 }
 
 .facts {
@@ -50,13 +50,13 @@
   gap: 1rem;
   margin-top: 0.8rem;
   font-size: 0.9rem;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .label {
   display: block;
   font-weight: 500;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .value {
@@ -64,5 +64,5 @@
 }
 
 .contribution {
-  color: #3b82f6;
+  color: var(--blue);
 }

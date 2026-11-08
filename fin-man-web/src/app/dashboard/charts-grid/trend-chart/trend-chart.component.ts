@@ -5,7 +5,9 @@ import {
   ViewChild,
   ElementRef,
   Input,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  inject,
+  effect
 } from '@angular/core';
 import { Subject, combineLatest, BehaviorSubject, Observable } from 'rxjs';
 import { takeUntil, map, take } from 'rxjs/operators';
@@ -14,6 +16,8 @@ import { UserService } from 'src/services/user-service';
 import { MonthlyData } from 'src/libs/core/ui-models/monthly-data';
 import { TransactionsService } from 'src/services/transactions-service';
 import { TransactionUtils } from 'src/libs/core/utils/transactions.utils';
+import { ThemeService } from 'src/services/theme.service';
+import { applyChartJsTheme } from 'src/libs/core/utils/chart-theme';
 @Component({
     selector: 'app-trend-chart',
     templateUrl: './trend-chart.component.html',
@@ -31,10 +35,18 @@ export class TrendChartComponent implements OnInit, OnDestroy {
 
   loading = false;
 
+  private readonly theme = inject(ThemeService);
+
   constructor(
     private transactionService: TransactionsService,
     private userService: UserService
-  ) {}
+  ) {
+    effect(() => {
+      this.theme.resolved();
+      applyChartJsTheme();
+      this.chart?.update('none');
+    });
+  }
 
   ngOnInit(): void {
     // React to changes in expenses, user, OR year

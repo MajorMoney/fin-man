@@ -4,11 +4,11 @@
 }
 
 .total {
-  background: #ffffff;
+  background: var(--surface);
   border-radius: 12px;
   padding: 1rem 1.2rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  border: 1px solid #f1f1f1;
+  border: 1px solid var(--border);
   max-width: 280px;
 }
 
@@ -18,16 +18,16 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .amount {
   margin: 0.35rem 0;
   font-size: 1.6rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 small {
-  color: #6b7280;
+  color: var(--text-muted);
 }

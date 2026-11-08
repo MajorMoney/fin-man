@@ -8,7 +8,7 @@ li {
   display: flex;
   justify-content: space-between;
   padding: 6px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border);
 }
 
 li:last-child {
@@ -17,5 +17,5 @@ li:last-child {
 
 .percent {
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary);
 }

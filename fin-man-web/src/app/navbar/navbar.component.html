@@ -11,4 +11,23 @@
       </li>
     }
   </ul>
+
+  <button
+    type="button"
+    class="theme-toggle"
+    (click)="theme.toggle()"
+    [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+    [attr.title]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+  >
+    @if (theme.isDark()) {
+      <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 3v2M12 19v2M5.05 5.05l1.41 1.41M17.54 17.54l1.41 1.41M3 12h2M19 12h2M5.05 18.95l1.41-1.41M17.54 6.46l1.41-1.41"></path>
+      </svg>
+    } @else {
+      <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"></path>
+      </svg>
+    }
+  </button>
 </nav>

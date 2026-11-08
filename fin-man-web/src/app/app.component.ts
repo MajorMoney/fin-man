@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterOutlet } from '@angular/router';
 import { ToastContainerComponent } from './shared/toast/toast-container.component';
 import { ConfirmDialogComponent } from './shared/confirm/confirm-dialog.component';
+import { ThemeService } from 'src/services/theme.service';
 
 @Component({
     selector: 'app-root',
@@ -13,4 +14,7 @@ import { ConfirmDialogComponent } from './shared/confirm/confirm-dialog.componen
     imports: [HeaderComponent, NavbarComponent, RouterOutlet, ToastContainerComponent, ConfirmDialogComponent]
 })
 export class AppComponent {
+  constructor() {
+    inject(ThemeService);
+  }
 }

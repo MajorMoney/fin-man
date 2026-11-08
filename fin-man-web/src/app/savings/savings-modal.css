@@ -1,7 +1,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,7 +9,7 @@
 }
 
 .modal-content {
-  background: #fff;
+  background: var(--surface);
   border-radius: 8px;
   width: 90%;
   max-width: 520px;
@@ -27,13 +27,13 @@
 }
 
 .modal-header {
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 
 .modal-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 .close-btn {
@@ -41,7 +41,7 @@
   border: none;
   font-size: 2rem;
   line-height: 1;
-  color: #9ca3af;
+  color: var(--text-muted);
   cursor: pointer;
 }
 
@@ -57,25 +57,25 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 0.4rem;
 }
 
 .form-input {
   width: 100%;
   padding: 0.6rem 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   font: inherit;
   font-size: 0.875rem;
-  color: #1f2937;
+  color: var(--text-heading);
   box-sizing: border-box;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 textarea.form-input {
@@ -85,14 +85,14 @@ textarea.form-input {
 .hint {
   margin: 0.35rem 0 0;
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .modal-footer {
   justify-content: flex-end;
   gap: 0.75rem;
-  border-top: 1px solid #e5e7eb;
-  background: #f9fafb;
+  border-top: 1px solid var(--border);
+  background: var(--surface-muted);
 }
 
 .btn {
@@ -105,18 +105,18 @@ textarea.form-input {
 }
 
 .btn-secondary {
-  background: #fff;
-  color: #374151;
-  border-color: #d1d5db;
+  background: var(--surface);
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
 }
 
 .btn-primary {
-  background: #3b82f6;
-  color: #fff;
+  background: var(--blue);
+  color: var(--on-accent);
 }
 
 .btn-primary:hover {
-  background: #2563eb;
+  background: var(--blue-hover);
 }
 
 .btn:disabled {

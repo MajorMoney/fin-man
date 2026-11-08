@@ -11,7 +11,7 @@
   padding: 0.55rem 1.25rem;
   border-radius: 8px;
   border: 1px solid var(--blue);
-  background: #ffffff;
+  background: var(--surface);
   color: var(--blue);
   font-weight: 500;
   font-size: 0.9rem;
@@ -21,7 +21,7 @@
 }
 
 .transfer:hover {
-  background: #eff6ff;
+  background: var(--surface-accent);
   box-shadow: var(--shadow-hover);
 }
 
@@ -44,11 +44,11 @@
 
 .carousel {
   margin-top: 1rem;
-  background: #ffffff;
+  background: var(--surface);
   border-radius: 12px;
   padding: 1.25rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f1f1f1;
+  border: 1px solid var(--border);
 }
 
 .carousel-track {
@@ -84,7 +84,7 @@
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: #d6d3d1;
+  background: var(--surface-hover);
   cursor: pointer;
 }
 

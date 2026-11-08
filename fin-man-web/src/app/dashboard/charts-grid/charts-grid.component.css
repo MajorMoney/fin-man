@@ -24,7 +24,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  background: white;
+  background: var(--surface);
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -33,7 +33,7 @@
 .year-title {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary);
 }
 .chart-header {
   display: flex;
@@ -44,11 +44,11 @@
 }
 .year-selector {
   padding: 0.5rem 2rem 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
-  background-color: white;
+  background-color: var(--surface);
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--text-secondary);
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
@@ -61,13 +61,13 @@
 }
 
 .year-selector:hover {
-  border-color: #9ca3af;
+  border-color: var(--border-strong);
 }
 
 .year-selector:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 @media (max-width: 640px) {

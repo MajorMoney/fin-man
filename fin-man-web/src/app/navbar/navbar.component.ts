@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NavItem } from 'src/libs/core/ui-models/nav-items';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ThemeService } from 'src/services/theme.service';
 
 @Component({
     selector: 'app-navbar',
@@ -10,6 +11,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
     imports: [RouterLink, RouterLinkActive]
 })
 export class NavbarComponent {
+  protected readonly theme = inject(ThemeService);
+
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard' },
     { label: 'Upcoming Timeline', route: '/analysis' },

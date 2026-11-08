@@ -2,14 +2,14 @@
   position: fixed;
   inset: 0;
   z-index: 1000;
-  background: rgba(15, 23, 42, 0.45);
+  background: var(--overlay);
   display: grid;
   place-items: center;
 }
 
 .modal {
   width: min(440px, 92vw);
-  background: #fff;
+  background: var(--surface);
   border-radius: 12px;
   padding: 1.25rem 1.35rem 1.35rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
@@ -32,7 +32,7 @@ h3 {
   background: none;
   font-size: 1.4rem;
   cursor: pointer;
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 label {
@@ -40,7 +40,7 @@ label {
   margin-bottom: 0.85rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-secondary);
 }
 
 .field {
@@ -48,7 +48,7 @@ label {
   width: 100%;
   margin-top: 0.35rem;
   box-sizing: border-box;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   padding: 0.6rem 0.7rem;
   font: inherit;
@@ -67,8 +67,8 @@ label {
   margin: 0;
   padding: 0.25rem 0;
   list-style: none;
-  background: #fff;
-  border: 1px solid #e5e7eb;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   max-height: 180px;
@@ -81,7 +81,7 @@ label {
 }
 
 .suggest li:hover {
-  background: #f3f4f6;
+  background: var(--surface-hover);
 }
 
 footer {
@@ -102,7 +102,7 @@ footer {
 
 .delete {
   background: none;
-  color: #dc2626;
+  color: var(--danger);
 }
 
 .save {

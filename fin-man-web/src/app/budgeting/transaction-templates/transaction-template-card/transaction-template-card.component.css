@@ -3,8 +3,8 @@
   grid-template-columns: 2rem 1fr auto auto;
   gap: 0.65rem;
   align-items: center;
-  background: #fff;
-  border: 1px solid #f1f1f1;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
   padding: 0.85rem 0.9rem;
@@ -16,13 +16,13 @@
   border-radius: 8px;
   display: grid;
   place-items: center;
-  background: #fee2e2;
-  color: #dc2626;
+  background: var(--danger-bg);
+  color: var(--danger);
 }
 
 .icon.income {
-  background: #dcfce7;
-  color: #16a34a;
+  background: var(--success-bg);
+  color: var(--green);
 }
 
 .body {
@@ -35,12 +35,12 @@ span {
 }
 
 strong {
-  color: #1f2937;
+  color: var(--text-heading);
   font-size: 0.92rem;
 }
 
 .body span {
-  color: #6b7280;
+  color: var(--text-muted);
   font-size: 0.75rem;
   white-space: nowrap;
   overflow: hidden;
@@ -48,20 +48,20 @@ strong {
 }
 
 .amount {
-  color: #dc2626;
+  color: var(--danger);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .amount.income {
-  color: #16a34a;
+  color: var(--green);
 }
 
 button {
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  color: #374151;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
   border-radius: 8px;
   padding: 0.3rem 0.55rem;
   font: inherit;

@@ -26,8 +26,8 @@
   justify-content: space-between;
   padding: 1rem;
   border-radius: 8px;
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: var(--surface);
+  border: 1px solid var(--border);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   margin-bottom: 0.75rem;
 }
@@ -35,7 +35,7 @@
 .title {
   font-size: 1rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 .actions {

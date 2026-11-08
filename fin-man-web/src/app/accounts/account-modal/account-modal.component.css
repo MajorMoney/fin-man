@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,7 +23,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--surface);
   border-radius: 8px;
   width: 90%;
   max-width: 600px;
@@ -50,20 +50,20 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 
 .modal-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 .close-btn {
   background: none;
   border: none;
   font-size: 2rem;
-  color: #9ca3af;
+  color: var(--text-muted);
   cursor: pointer;
   line-height: 1;
   padding: 0;
@@ -77,8 +77,8 @@
 }
 
 .close-btn:hover {
-  background-color: #f3f4f6;
-  color: #1f2937;
+  background-color: var(--surface-hover);
+  color: var(--text-heading);
 }
 
 .modal-body {
@@ -99,25 +99,25 @@
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
 }
 
 .form-input {
   width: 100%;
   padding: 0.625rem 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   font-size: 0.875rem;
-  color: #1f2937;
+  color: var(--text-heading);
   transition: all 0.2s;
   box-sizing: border-box;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 textarea.form-input {
@@ -130,8 +130,8 @@ textarea.form-input {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-top: 1px solid #e5e7eb;
-  background-color: #f9fafb;
+  border-top: 1px solid var(--border);
+  background-color: var(--surface-muted);
 }
 
 .footer-right {
@@ -150,31 +150,31 @@ textarea.form-input {
 }
 
 .btn-secondary {
-  background-color: white;
-  color: #374151;
-  border: 1px solid #d1d5db;
+  background-color: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
 }
 
 .btn-secondary:hover {
-  background-color: #f3f4f6;
+  background-color: var(--surface-hover);
 }
 
 .btn-primary {
-  background-color: #3b82f6;
+  background-color: var(--blue);
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: #2563eb;
+  background-color: var(--blue-hover);
 }
 
 .btn-danger {
-  background-color: #ef4444;
+  background-color: var(--danger);
   color: white;
 }
 
 .btn-danger:hover {
-  background-color: #dc2626;
+  background-color: var(--danger);
 }
 
 /* Responsive */
@@ -213,7 +213,7 @@ textarea.form-input {
 
 .holders-count {
   font-size: 0.9rem;
-  color: #374151;
+  color: var(--text-secondary);
 }
 
 .holders-actions {
@@ -225,23 +225,23 @@ textarea.form-input {
   padding: 0.35rem 0.6rem;
   font-size: 0.8rem;
   border-radius: 6px;
-  border: 1px solid #d1d5db;
-  background: white;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
   cursor: pointer;
 }
 
 .holders-actions .btn.ghost {
   background: transparent;
-  border: 1px dashed #e5e7eb;
+  border: 1px dashed var(--border);
 }
 
 .holders-list {
   max-height: 180px; /* keeps it from growing too large */
   overflow-y: auto;
-  border: 1px solid #e6e9ee;
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.5rem;
-  background: #ffffff;
+  background: var(--surface);
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -259,7 +259,7 @@ textarea.form-input {
 }
 
 .holder-item:hover {
-  background: #f8fafc;
+  background: var(--bg);
 }
 
 .holder-item input[type='checkbox'] {
@@ -271,17 +271,17 @@ textarea.form-input {
 
 .holder-name {
   font-size: 0.95rem;
-  color: #111827;
+  color: var(--text-heading);
 }
 
 .holder-income {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--text-muted);
   margin-left: auto;
 }
 
 /* No users hint */
 .no-users {
-  color: #6b7280;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }

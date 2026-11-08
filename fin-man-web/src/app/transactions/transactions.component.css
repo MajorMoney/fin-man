@@ -7,7 +7,7 @@ h2 {
 }
 
 .subtitle {
-  color: #64748b;
+  color: var(--text-muted);
   margin-bottom: 1.5rem;
 }
 
@@ -23,7 +23,7 @@ h2 {
 .search-input {
   flex: 1;
   padding: 0.6rem 1rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   min-width: 250px;
 }
@@ -34,7 +34,7 @@ h2 {
 }
 
 .clear-btn {
-  background-color: #e2e8f0;
+  background-color: var(--surface-hover);
   border: none;
   padding: 0.6rem 1rem;
   border-radius: 8px;
@@ -42,7 +42,7 @@ h2 {
 }
 
 .filter-box {
-  background: white;
+  background: var(--surface);
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -53,7 +53,7 @@ h2 {
   margin: 0 0 1.5rem 0;
   font-size: 1.125rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-heading);
 }
 
 .filters {
@@ -71,17 +71,17 @@ h2 {
 .filter-field label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 0.25rem;
 }
 
 .filter-input {
   padding: 0.625rem 0.75rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   font-size: 0.875rem;
-  color: #1f2937;
-  background-color: white;
+  color: var(--text-heading);
+  background-color: var(--surface);
   transition: all 0.2s;
   width: 100%;
   box-sizing: border-box;
@@ -89,21 +89,21 @@ h2 {
 
 .filter-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
 .filter-input:hover {
-  border-color: #9ca3af;
+  border-color: var(--border-strong);
 }
 
 .filter-input.invalid {
-  border-color: #ef4444;
-  background-color: #fef2f2;
+  border-color: var(--danger);
+  background-color: var(--danger-bg);
 }
 
 .error-message {
-  color: #ef4444;
+  color: var(--danger);
   font-size: 0.75rem;
   margin-top: 0.25rem;
 }
@@ -113,8 +113,8 @@ h2 {
   align-items: center;
   gap: 8px;
 
-  background-color: #2d8cff;
-  color: white;
+  background-color: var(--blue);
+  color: var(--on-accent);
   font-weight: 600;
 
   padding: 8px 16px;
@@ -127,11 +127,11 @@ h2 {
 }
 
 .add-transaction-btn:hover {
-  background-color: #1f7aec;
+  background-color: var(--blue-hover);
 }
 
 .add-transaction-btn:active {
-  background-color: #1766c7;
+  background-color: var(--blue-hover);
 }
 
 .add-transaction-btn .icon {
@@ -139,8 +139,8 @@ h2 {
   justify-content: center;
   align-items: center;
 
-  background: white;
-  color: #2d8cff;
+  background: var(--on-accent);
+  color: var(--blue);
   font-weight: bold;
 
   width: 18px;
@@ -170,7 +170,7 @@ h2 {
 
 label {
   font-weight: 500;
-  color: #475569;
+  color: var(--text-secondary);
   display: block;
   margin-bottom: 0.25rem;
 }
@@ -179,7 +179,7 @@ input,
 select {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-strong);
   border-radius: 6px;
   font-size: 0.9rem;
 }

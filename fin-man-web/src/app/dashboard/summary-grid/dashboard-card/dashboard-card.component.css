@@ -1,5 +1,5 @@
 .card {
-  background-color: #ffffff;
+  background-color: var(--surface);
   border-radius: 12px;
   padding: 1rem 1.2rem;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -13,12 +13,12 @@
 .amount {
   font-size: 1.6rem;
   font-weight: bold;
-  color: #2c3e50;
+  color: var(--text);
   margin: 0.3rem 0;
 }
 
 small {
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 

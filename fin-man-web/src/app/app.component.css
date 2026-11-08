@@ -17,7 +17,7 @@
 /* Main content fills remaining space */
 .app-main {
   flex: 1;
-  background-color: #f4f4f4;
+  background-color: var(--bg-muted);
   overflow: auto; /* scroll if content is long */
   scrollbar-width: none;
   padding: 1rem;

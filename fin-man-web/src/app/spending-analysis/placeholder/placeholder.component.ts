@@ -15,7 +15,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     styles: [
         `
       .transactions-card {
-        background: white;
+        background: var(--surface);
         border-radius: 12px;
         padding: 24px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -25,10 +25,10 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
       .placeholder-content {
         padding: 40px 20px;
         text-align: center;
-        color: #999;
-        border: 2px dashed #e0e0e0;
+        color: var(--text-muted);
+        border: 2px dashed var(--border);
         border-radius: 8px;
-        background-color: #fafafa;
+        background-color: var(--bg);
       }
 
       .placeholder-text {
