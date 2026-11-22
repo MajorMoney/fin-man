@@ -5,13 +5,14 @@ import { RouterOutlet } from '@angular/router';
 import { ToastContainerComponent } from './shared/toast/toast-container.component';
 import { ConfirmDialogComponent } from './shared/confirm/confirm-dialog.component';
 import { ThemeService } from 'src/services/theme.service';
+import { InstallPromptComponent } from './pwa/install-prompt.component';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [HeaderComponent, NavbarComponent, RouterOutlet, ToastContainerComponent, ConfirmDialogComponent]
+    imports: [HeaderComponent, NavbarComponent, RouterOutlet, ToastContainerComponent, ConfirmDialogComponent, InstallPromptComponent]
 })
 export class AppComponent {
   constructor() {

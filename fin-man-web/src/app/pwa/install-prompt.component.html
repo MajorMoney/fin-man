@@ -1,0 +1,21 @@
+@if (visible()) {
+  <aside class="install-prompt" aria-label="Install FinMan">
+    <img src="assets/favicon.svg" alt="" class="install-icon" />
+    <div class="install-copy">
+      <p class="install-title">Add FinMan to your home screen</p>
+      @if (canInstall()) {
+        <p class="install-text">Opens full screen, without the browser around it.</p>
+      } @else {
+        <p class="install-text">
+          In Safari, tap Share, then <strong>Add to Home Screen</strong>.
+        </p>
+      }
+    </div>
+    <div class="install-actions">
+      @if (canInstall()) {
+        <button type="button" class="install-button" (click)="install()">Install</button>
+      }
+      <button type="button" class="install-dismiss" (click)="dismiss()">Not now</button>
+    </div>
+  </aside>
+}

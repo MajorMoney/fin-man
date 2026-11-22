@@ -60,4 +60,7 @@ function applyTheme(theme: ResolvedTheme): void {
   const root = document.documentElement;
   root.setAttribute('data-theme', theme);
   root.style.colorScheme = theme;
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute('content', theme === 'dark' ? '#020617' : '#2c3e50');
 }

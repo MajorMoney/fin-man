@@ -1,4 +1,4 @@
-import { provideZoneChangeDetection, importProvidersFrom, ErrorHandler } from "@angular/core";
+import { provideZoneChangeDetection, importProvidersFrom, ErrorHandler, isDevMode } from "@angular/core";
 
 import { provideHttpClient, withXhr, withInterceptorsFromDi, withInterceptors } from "@angular/common/http";
 import { BrowserModule, bootstrapApplication } from "@angular/platform-browser";
@@ -7,6 +7,7 @@ import { withEnabledBlockingInitialNavigation, provideRouter } from "@angular/ro
 import { appRoutes } from "./app/app.routes";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { AppComponent } from "./app/app.component";
+import { provideServiceWorker } from "@angular/service-worker";
 import { httpToastInterceptor } from "./app/core/http-toast.interceptor";
 import { ToastErrorHandler } from "./app/core/toast-error.handler";
 
@@ -20,7 +21,11 @@ bootstrapApplication(AppComponent, {
             withInterceptors([httpToastInterceptor])
         ),
         provideRouter(appRoutes, withEnabledBlockingInitialNavigation()),
-        { provide: ErrorHandler, useClass: ToastErrorHandler }
+        { provide: ErrorHandler, useClass: ToastErrorHandler },
+        provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+        })
     ]
 })
   .catch((err) => console.error(err));
