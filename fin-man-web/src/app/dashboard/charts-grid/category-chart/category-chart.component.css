@@ -1,7 +1,35 @@
+:host {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .chart.card {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
   padding: 1.5rem;
   background: var(--surface);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
+  overflow: hidden;
+}
+
+.chart.card h3 {
+  margin: 0 0 1rem;
+  overflow-wrap: anywhere;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: min(100%, 28rem);
+  margin-inline: auto;
+  aspect-ratio: 1;
+}
+
+.chart-wrapper canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }

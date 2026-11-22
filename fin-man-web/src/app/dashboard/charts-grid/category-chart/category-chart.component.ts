@@ -84,7 +84,10 @@ export class CategoryChartComponent implements OnInit, OnDestroy {
     this.chart = new Chart('categoryChart', {
       type: 'doughnut',
       data: data,
-      options: { responsive: true },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
     });
   }
 

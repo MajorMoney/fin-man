@@ -1,4 +1,18 @@
 
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.view {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  container-type: inline-size;
+  container-name: dashboard;
+}
 
 /* Header: title + selector side by side */
 .dashboard-header {
@@ -91,14 +105,16 @@ small {
 
 /* CHARTS */
 .charts-container {
-  padding-top: 1rem;
+  padding-top: 0.25rem;
 }
 
 .charts-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   grid-auto-rows: min-content;
+  align-items: start;
   gap: 1.5rem;
+  min-width: 0;
 }
 
 .charts-right {
@@ -126,8 +142,9 @@ small {
   background-color: var(--blue-hover);
 }
 
-/* RESPONSIVE */
-@media (max-width: 640px) {
+/* Stack charts once the content area (not the whole window) gets tight.
+   The sidebar already consumes width, so a viewport breakpoint is too late. */
+@container dashboard (max-width: 860px) {
   .dashboard-header {
     flex-direction: column;
     align-items: flex-start;
@@ -139,6 +156,6 @@ small {
   }
 
   .charts-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }

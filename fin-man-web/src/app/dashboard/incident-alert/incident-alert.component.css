@@ -1,8 +1,13 @@
 :host {
   display: block;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .incident-alert {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
   background: var(--warning-bg);
   border: 1px solid var(--warning-border);
   border-left: 4px solid var(--warning);
@@ -22,13 +27,21 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
   padding: 0.45rem 0;
+  min-width: 0;
+}
+
+.incident-alert li > div {
+  min-width: 0;
+  flex: 1 1 12rem;
 }
 
 .incident-title {
   display: block;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .incident-message {

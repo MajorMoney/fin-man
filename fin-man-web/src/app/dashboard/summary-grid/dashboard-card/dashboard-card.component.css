@@ -1,4 +1,14 @@
+:host {
+  display: block;
+  min-width: 0;
+  height: 100%;
+  container-type: inline-size;
+}
+
 .card {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
   background-color: var(--surface);
   border-radius: 12px;
   padding: 1rem 1.2rem;
@@ -6,15 +16,22 @@
   transition: transform 0.2s;
 }
 
+.card h3 {
+  margin-top: 0;
+  overflow-wrap: anywhere;
+}
+
 .card:hover {
   transform: translateY(-3px);
 }
 
 .amount {
-  font-size: 1.6rem;
+  font-size: clamp(1.15rem, 0.7rem + 8cqi, 1.6rem);
   font-weight: bold;
   color: var(--text);
   margin: 0.3rem 0;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 small {

@@ -138,7 +138,7 @@ export class TrendChartComponent implements OnInit, OnDestroy {
       data: data,
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: { display: true, position: 'top' },
           tooltip: { mode: 'index', intersect: false },
