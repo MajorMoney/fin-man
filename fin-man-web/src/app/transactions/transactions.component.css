@@ -26,6 +26,12 @@ h2 {
   border: 1px solid var(--border-strong);
   border-radius: 8px;
   min-width: 250px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
 }
 
 .actions {
@@ -34,11 +40,16 @@ h2 {
 }
 
 .clear-btn {
-  background-color: var(--surface-hover);
-  border: none;
+  background-color: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
   padding: 0.6rem 1rem;
   border-radius: 8px;
   cursor: pointer;
+}
+
+.clear-btn:hover {
+  background-color: var(--surface-hover);
 }
 
 .filter-box {

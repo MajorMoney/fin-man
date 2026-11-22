@@ -10,4 +10,5 @@ export class DashboardCardComponent {
   @Input() title!: string;
   @Input() value!: string;
   @Input() subtitle!: string;
+  @Input() tone: 'income' | 'expense' | '' = '';
 }

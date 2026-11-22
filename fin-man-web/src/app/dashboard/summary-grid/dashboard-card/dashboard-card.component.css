@@ -10,9 +10,10 @@
   min-width: 0;
   height: 100%;
   background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 1rem 1.2rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-card);
   transition: transform 0.2s;
 }
 
@@ -32,6 +33,14 @@
   margin: 0.3rem 0;
   line-height: 1.2;
   overflow-wrap: anywhere;
+}
+
+.amount.income {
+  color: var(--green);
+}
+
+.amount.expense {
+  color: var(--danger);
 }
 
 small {

@@ -14,7 +14,7 @@
   border-radius: 12px;
   padding: 0.9rem 1.1rem;
   margin-bottom: 1.25rem;
-  color: var(--warning-text);
+  color: var(--text);
 }
 
 .incident-alert ul {
@@ -41,26 +41,27 @@
 .incident-title {
   display: block;
   font-weight: 600;
+  color: var(--text-heading);
   overflow-wrap: anywhere;
 }
 
 .incident-message {
   display: block;
   font-size: 0.9rem;
-  color: var(--warning-text);
+  color: var(--text-muted);
   margin-top: 0.15rem;
 }
 
 .incident-alert button {
   flex-shrink: 0;
   border: 1px solid var(--warning-border);
-  background: var(--surface);
-  color: var(--warning-text);
+  background: var(--bg);
+  color: var(--text);
   border-radius: 6px;
   padding: 0.35rem 0.75rem;
   cursor: pointer;
 }
 
 .incident-alert button:hover {
-  background: var(--warning-bg);
+  background: var(--surface-hover);
 }

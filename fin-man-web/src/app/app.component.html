@@ -1,17 +1,19 @@
 <app-toast-container></app-toast-container>
 <app-confirm-dialog></app-confirm-dialog>
 
-<div class="app-container">
-     <app-header></app-header>
+<div class="app-container" [class.nav-open]="navOpen()">
+  <app-header [navOpen]="navOpen()" (menuToggle)="toggleNav()"></app-header>
 
   <div class="app-body">
-    <app-navbar></app-navbar>
+    @if (isMobile() && navOpen()) {
+      <button type="button" class="nav-backdrop" aria-label="Close menu" (click)="closeNav()"></button>
+    }
+
+    <app-navbar [collapsed]="isMobile() && !navOpen()"></app-navbar>
 
     <main class="app-main">
-     <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
     </main>
   </div>
 </div>
-
-<app-install-prompt></app-install-prompt>
 

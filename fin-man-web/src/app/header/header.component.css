@@ -1,4 +1,6 @@
 .app-header {
+  position: relative;
+  z-index: 50;
   height: calc(60px + env(safe-area-inset-top, 0px));
   background-color: var(--nav-bg);
   color: var(--nav-text);
@@ -7,6 +9,10 @@
   justify-content: space-between; /* title left, user selector right */
   padding: env(safe-area-inset-top, 0px) 1rem 0;
   box-sizing: border-box;
+}
+
+.menu-button {
+  display: none;
 }
 
 .brand {
@@ -31,4 +37,49 @@
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1;       /* ensure it doesn't add extra height */
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding-left: 0.4rem;
+    padding-right: 0.65rem;
+  }
+
+  .menu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--nav-text);
+    cursor: pointer;
+  }
+
+  .menu-button:hover,
+  .menu-button[aria-expanded="true"] {
+    background: var(--nav-hover);
+  }
+
+  .menu-button:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  .menu-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+  }
+
+  .app-title {
+    font-size: 1.25rem;
+  }
 }

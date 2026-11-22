@@ -10,6 +10,20 @@ export function applyChartJsTheme(): void {
   Chart.defaults.color = muted;
   Chart.defaults.borderColor = border;
 
+  const arc = Chart.defaults.elements?.arc;
+  if (arc) {
+    arc.borderColor = surface;
+    arc.hoverBorderColor = surface;
+  }
+
+  const scale = Chart.defaults.scale;
+  if (scale?.grid) {
+    scale.grid.color = border;
+  }
+  if (scale?.ticks) {
+    scale.ticks.color = muted;
+  }
+
   const legendLabels = Chart.defaults.plugins.legend?.labels;
   if (legendLabels) {
     legendLabels.color = muted;

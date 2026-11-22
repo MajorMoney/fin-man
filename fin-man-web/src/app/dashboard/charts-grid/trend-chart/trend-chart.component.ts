@@ -44,6 +44,7 @@ export class TrendChartComponent implements OnInit, OnDestroy {
     effect(() => {
       this.theme.resolved();
       applyChartJsTheme();
+      this.paintSeries();
       this.chart?.update('none');
     });
   }
@@ -107,18 +108,19 @@ export class TrendChartComponent implements OnInit, OnDestroy {
       this.userService.currentUser$.pipe(take(1)),
       this.selectedYear$.pipe(take(1)),
     ]).subscribe(([user, selectedYear]) => {
+        const colors = this.seriesColors();
       const chartData = {
         labels: expensesData.map((d) => d.month),
         datasets: [
           {
             label: 'Income',
             data: incomesData.map((i) => i.amount),
-            backgroundColor: '#22c55e',
+            backgroundColor: colors.income,
           },
           {
             label: 'Expenses',
             data: expensesData.map((d) => d.amount),
-            backgroundColor: '#ef4444',
+            backgroundColor: colors.expense,
           },
         ],
       };
@@ -150,6 +152,26 @@ export class TrendChartComponent implements OnInit, OnDestroy {
     };
 
     this.chart = new Chart(this.chartCanvas.nativeElement, config);
+  }
+
+  private seriesColors(): { income: string; expense: string } {
+    const css = getComputedStyle(document.documentElement);
+    return {
+      income: css.getPropertyValue('--green').trim() || '#10b981',
+      expense: css.getPropertyValue('--danger').trim() || '#dc2626',
+    };
+  }
+
+  private paintSeries(): void {
+    const datasets = this.chart?.data.datasets;
+    if (!datasets?.length) {
+      return;
+    }
+    const colors = this.seriesColors();
+    datasets[0].backgroundColor = colors.income;
+    if (datasets[1]) {
+      datasets[1].backgroundColor = colors.expense;
+    }
   }
 
   /**

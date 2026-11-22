@@ -95,13 +95,13 @@ html[data-theme='dark'] {
   --danger-hover: #ef4444;
   --warning: #fbbf24;
 
-  --success-bg: #052e1c;
+  --success-bg: color-mix(in srgb, #34d399 18%, #1e293b);
   --success-text: #6ee7b7;
-  --danger-bg: #450a0a;
+  --danger-bg: color-mix(in srgb, #f87171 18%, #1e293b);
   --danger-text: #fca5a5;
-  --warning-bg: #431407;
-  --warning-border: #c2410c;
-  --warning-text: #fdba74;
+  --warning-bg: #1e293b;
+  --warning-border: #334155;
+  --warning-text: #fcd34d;
   --badge-bg: #1e3a5f;
   --badge-text: #93c5fd;
   --chart-bar: #60a5fa;
@@ -348,11 +348,11 @@ html[data-theme='dark'] .items-select {
 }
 
 .data-list .amount.income {
-  color: var(--success-text);
+  color: var(--green);
 }
 
 .data-list .amount.expense {
-  color: var(--danger-text);
+  color: var(--danger);
 }
 
 .data-list .category-badge {
@@ -366,20 +366,17 @@ html[data-theme='dark'] .items-select {
 }
 
 .data-list .type-badge {
-  padding: 4px 8px;
-  border-radius: 999px;
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
+  background: none;
 }
 
 .data-list .type-badge.income {
-  background: var(--success-bg);
-  color: var(--success-text);
+  color: var(--green);
 }
 
 .data-list .type-badge.expense {
-  background: var(--danger-bg);
-  color: var(--danger-text);
+  color: var(--danger);
 }
 
 .data-list .notes {

@@ -27,6 +27,22 @@ export class SummaryGridComponent implements OnInit {
     });
   }
 
+  toneFor(card: SummaryCard): 'income' | 'expense' | '' {
+    const negative = (card.value ?? '').trim().startsWith('-');
+    switch (card.metric) {
+      case 'totalIncome':
+        return 'income';
+      case 'totalExpenses':
+      case 'averageMonthlyExpense':
+        return 'expense';
+      case 'netSavings':
+      case 'savingsRate':
+        return negative ? 'expense' : 'income';
+      default:
+        return '';
+    }
+  }
+
   private mapCardValue(metric: string, summary: any): string {
     switch (metric) {
       case 'totalIncome':

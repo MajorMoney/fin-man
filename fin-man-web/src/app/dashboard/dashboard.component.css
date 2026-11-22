@@ -112,7 +112,7 @@ small {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
   grid-auto-rows: min-content;
-  align-items: start;
+  align-items: stretch;
   gap: 1.5rem;
   min-width: 0;
 }

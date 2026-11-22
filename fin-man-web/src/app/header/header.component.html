@@ -1,5 +1,23 @@
 <header class="app-header">
   <div class="brand">
+    <button
+      type="button"
+      class="menu-button"
+      (click)="menuToggle.emit()"
+      [attr.aria-expanded]="navOpen()"
+      aria-controls="app-nav"
+      [attr.aria-label]="navOpen() ? 'Close menu' : 'Open menu'"
+    >
+      @if (navOpen()) {
+        <svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      } @else {
+        <svg class="menu-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      }
+    </button>
     <img src="assets/favicon.svg" alt="FinMan Logo" class="app-logo" />
     <h1 class="app-title">FinMan</h1>
   </div>

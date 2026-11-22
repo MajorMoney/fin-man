@@ -1,4 +1,4 @@
-<nav class="side-navbar">
+<nav id="app-nav" class="side-navbar" [attr.inert]="collapsed() ? '' : null">
   <ul>
     @for (item of navItems; track item.route ?? item.label) {
       <li>

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, input } from '@angular/core';
 import { NavItem } from 'src/libs/core/ui-models/nav-items';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ThemeService } from 'src/services/theme.service';
@@ -12,6 +12,7 @@ import { ThemeService } from 'src/services/theme.service';
 })
 export class NavbarComponent {
   protected readonly theme = inject(ThemeService);
+  readonly collapsed = input(false);
 
   navItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard' },

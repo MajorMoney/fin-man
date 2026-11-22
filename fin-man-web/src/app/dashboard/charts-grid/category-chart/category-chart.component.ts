@@ -32,6 +32,7 @@ export class CategoryChartComponent implements OnInit, OnDestroy {
     effect(() => {
       this.theme.resolved();
       applyChartJsTheme();
+      this.paintChart();
       this.chart?.update('none');
     });
   }
@@ -69,6 +70,9 @@ export class CategoryChartComponent implements OnInit, OnDestroy {
         {
           data: data.map((entry) => entry.total),
           backgroundColor: this.generateColors(data.length),
+          borderColor: this.surfaceColor(),
+          hoverBorderColor: this.surfaceColor(),
+          borderWidth: 2,
         },
       ],
     };
@@ -91,19 +95,26 @@ export class CategoryChartComponent implements OnInit, OnDestroy {
     });
   }
 
+  private paintChart(): void {
+    const dataset = this.chart?.data.datasets[0];
+    if (!dataset) {
+      return;
+    }
+    const count = Array.isArray(dataset.data) ? dataset.data.length : 0;
+    const surface = this.surfaceColor();
+    dataset.backgroundColor = this.generateColors(count);
+    dataset.borderColor = surface;
+    dataset.hoverBorderColor = surface;
+  }
+
+  private surfaceColor(): string {
+    return getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#1e293b';
+  }
+
   private generateColors(count: number): string[] {
-    const palette = [
-      '#f97316',
-      '#22c55e',
-      '#3b82f6',
-      '#a855f7',
-      '#f59e0b',
-      '#ef4444',
-      '#14b8a6',
-      '#6366f1',
-      '#eab308',
-      '#ec4899',
-    ];
+    const palette = this.theme.isDark()
+      ? ['#fb923c', '#34d399', '#60a5fa', '#c084fc', '#fbbf24', '#f87171', '#2dd4bf', '#818cf8', '#facc15', '#f472b6']
+      : ['#f97316', '#22c55e', '#3b82f6', '#a855f7', '#f59e0b', '#ef4444', '#14b8a6', '#6366f1', '#eab308', '#ec4899'];
 
     return Array.from({ length: count }, (_, i) => palette[i % palette.length]);
   }

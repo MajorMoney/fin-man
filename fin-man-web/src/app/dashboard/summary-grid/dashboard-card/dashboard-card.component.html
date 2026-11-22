@@ -1,5 +1,5 @@
 <div class="card">
   <h3>{{ title }}</h3>
-  <p class="amount">{{ value }}</p>
+  <p class="amount" [class.income]="tone === 'income'" [class.expense]="tone === 'expense'">{{ value }}</p>
   <small>{{ subtitle }}</small>
 </div>

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
 import { UserSelectorComponent } from './user-selector/user-selector.component';
 
 @Component({
@@ -9,5 +9,6 @@ import { UserSelectorComponent } from './user-selector/user-selector.component';
     imports: [UserSelectorComponent]
 })
 export class HeaderComponent {
-  
+  readonly navOpen = input(false);
+  readonly menuToggle = output<void>();
 }

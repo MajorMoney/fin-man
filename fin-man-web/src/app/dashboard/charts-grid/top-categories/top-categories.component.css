@@ -12,7 +12,7 @@
 }
 
 .chart.card h3 {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 ul {
