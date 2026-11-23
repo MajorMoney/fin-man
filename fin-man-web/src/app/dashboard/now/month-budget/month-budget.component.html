@@ -1,0 +1,65 @@
+<section class="panel" aria-labelledby="month-title">
+  <header class="head">
+    <h3 id="month-title">This month</h3>
+    <span class="period">{{ view().label }}</span>
+  </header>
+  <div class="layout">
+    <div
+      class="gauge"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [attr.aria-valuenow]="view().shown"
+      [attr.aria-label]="view().label + ' budget used'"
+    >
+      <svg viewBox="0 0 120 72" aria-hidden="true">
+        <path
+          d="M15 62 A45 45 0 0 1 105 62"
+          pathLength="100"
+          fill="none"
+          stroke="var(--border)"
+          stroke-width="10"
+          stroke-linecap="round"
+        />
+        <path
+          d="M15 62 A45 45 0 0 1 105 62"
+          pathLength="100"
+          fill="none"
+          [attr.stroke]="view().color"
+          stroke-width="10"
+          stroke-linecap="round"
+          [attr.stroke-dasharray]="view().shown + ' 100'"
+        />
+      </svg>
+      <div class="gauge-label">
+        <strong>{{ view().percent }}%</strong>
+        <span>of budget used</span>
+      </div>
+    </div>
+    <dl class="stats">
+      <div>
+        <dt>Income</dt>
+        <dd>{{ view().income }}</dd>
+      </div>
+      <div>
+        <dt>Spent</dt>
+        <dd>{{ view().spent }}</dd>
+      </div>
+      <div>
+        <dt>Budget</dt>
+        <dd>{{ view().budget }}</dd>
+      </div>
+      <div>
+        <dt>Left</dt>
+        <dd [class.over]="view().leftNegative">{{ view().left }}</dd>
+      </div>
+    </dl>
+  </div>
+  @if (view().flags.length) {
+    <p class="flags">
+      @for (flag of view().flags; track flag.name; let last = $last) {
+        <span [class.over]="flag.over" [class.warn]="!flag.over">{{ flag.text }}</span>@if (!last) {<span>. </span>}@else {<span>.</span>}
+      }
+    </p>
+  }
+</section>

@@ -1,0 +1,111 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.panel {
+  box-sizing: border-box;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-card);
+  padding: 1rem 1.2rem;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text-heading);
+}
+
+.period {
+  color: var(--text-muted);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.gauge {
+  position: relative;
+}
+
+.gauge svg {
+  width: 100%;
+  display: block;
+}
+
+.gauge-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+}
+
+.gauge-label strong {
+  display: block;
+  font-size: 1.15rem;
+  color: var(--text-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.gauge-label span,
+dt {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+}
+
+dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-heading);
+}
+
+dd.over,
+.flags .over {
+  color: var(--danger);
+}
+
+.flags {
+  margin: 0.9rem 0 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.flags .warn {
+  color: var(--warning-text);
+}
+
+@media (max-width: 720px) {
+  .layout,
+  .stats {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .gauge {
+    grid-column: 1 / -1;
+    max-width: 160px;
+  }
+}

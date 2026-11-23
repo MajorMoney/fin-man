@@ -1,0 +1,18 @@
+<section class="panel" aria-labelledby="cash-title">
+  <header class="head">
+    <h3 id="cash-title">Cash</h3>
+    <strong class="total">{{ view().total }}</strong>
+  </header>
+  @if (view().accounts.length) {
+    <ul>
+      @for (account of view().accounts; track account.id) {
+        <li>
+          <span>{{ account.name }}</span>
+          <span class="amount">{{ euro(account.holdings) }}</span>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="empty">No accounts in this view.</p>
+  }
+</section>

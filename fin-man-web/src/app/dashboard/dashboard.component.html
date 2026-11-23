@@ -1,9 +1,16 @@
 <div class="view">
   <app-incident-alert></app-incident-alert>
 
-  <!-- Flex container for title + selector -->
+  <section class="now-band" aria-label="Now">
+    <h2 class="dashboard-title">Now</h2>
+    <app-cash-position></app-cash-position>
+    <app-month-budget></app-month-budget>
+    <app-upcoming></app-upcoming>
+    <app-goal-pace></app-goal-pace>
+  </section>
+
   <div class="dashboard-header">
-    <h2 class="dashboard-title">Dashboard Overview</h2>
+    <h2 class="dashboard-title">This year</h2>
     <div class="chart-header">
       <span class="year-title">Year:</span>
       <select
@@ -27,5 +34,5 @@
     </div>
   </div>
 
-  <app-top-categories [selectedYear$]="selectedYear$"></app-top-categories>
+  <app-spending-by-account [selectedYear$]="selectedYear$"></app-spending-by-account>
 </div>

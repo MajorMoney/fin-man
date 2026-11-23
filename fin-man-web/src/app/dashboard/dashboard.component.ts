@@ -7,8 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { SummaryGridComponent } from './summary-grid/summary-grid.component';
 import { TrendChartComponent } from './charts-grid/trend-chart/trend-chart.component';
 import { CategoryChartComponent } from './charts-grid/category-chart/category-chart.component';
-import { TopCategoriesComponent } from './charts-grid/top-categories/top-categories.component';
+import { SpendingByAccountComponent } from './charts-grid/spending-by-account/spending-by-account.component';
 import { IncidentAlertComponent } from './incident-alert/incident-alert.component';
+import { CashPositionComponent } from './now/cash-position/cash-position.component';
+import { GoalPaceComponent } from './now/goal-pace/goal-pace.component';
+import { MonthBudgetComponent } from './now/month-budget/month-budget.component';
+import { UpcomingComponent } from './now/upcoming/upcoming.component';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -16,7 +20,7 @@ import { AsyncPipe } from '@angular/common';
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.css'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FormsModule, SummaryGridComponent, TrendChartComponent, CategoryChartComponent, TopCategoriesComponent, IncidentAlertComponent, AsyncPipe]
+    imports: [FormsModule, SummaryGridComponent, TrendChartComponent, CategoryChartComponent, SpendingByAccountComponent, IncidentAlertComponent, CashPositionComponent, MonthBudgetComponent, UpcomingComponent, GoalPaceComponent, AsyncPipe]
 })
 export class DashboardComponent implements OnInit {
   constructor(

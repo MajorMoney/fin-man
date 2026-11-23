@@ -50,7 +50,9 @@ export class DashboardSummaryService {
           expenseFiltered,
           year
         );
-        const topCategory = this.getTopCategory(expenseFiltered);
+        const topCategory = this.getTopCategory(
+          TransactionUtils.filterByYear(expenseFiltered, year)
+        );
 
         return {
           totalIncome: this.formatCurrency(totalIncome),

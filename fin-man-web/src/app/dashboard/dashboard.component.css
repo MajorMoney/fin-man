@@ -23,7 +23,15 @@
   gap: 1rem;
 }
 
+.now-band {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
 .dashboard-title {
+  margin: 0;
   font-size: 1.8rem;
   font-weight: 600;
 }

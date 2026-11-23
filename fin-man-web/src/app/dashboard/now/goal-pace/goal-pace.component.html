@@ -1,0 +1,48 @@
+<section class="panel" aria-labelledby="goals-title">
+  <h3 id="goals-title">Savings goals</h3>
+  @if (rows().length) {
+    <div class="goals">
+      @for (goal of rows(); track goal.id) {
+        <article class="goal">
+          <div class="top">
+            <span class="name">{{ goal.name }}</span>
+            <span class="date">{{ goal.targetDate }}</span>
+          </div>
+          <p class="figure">
+            <strong>{{ goal.saved }}</strong>
+            <span>of {{ goal.target }}</span>
+          </p>
+          <div
+            class="track"
+            role="progressbar"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [attr.aria-valuenow]="goal.savedPercent"
+            [attr.aria-label]="goal.name + ', ' + goal.saved + ' saved of ' + goal.target"
+          >
+            <span
+              class="fill"
+              [class.behind]="goal.tone === 'behind'"
+              [class.ok]="goal.tone === 'ok'"
+              [class.past]="goal.tone === 'past'"
+              [style.width.%]="goal.savedPercent"
+            ></span>
+            @if (goal.pacePercent !== null) {
+              <span class="notch" [style.left.%]="goal.pacePercent"></span>
+            }
+          </div>
+          <p
+            class="status"
+            [class.behind]="goal.tone === 'behind'"
+            [class.ok]="goal.tone === 'ok'"
+            [class.past]="goal.tone === 'past'"
+          >
+            {{ goal.status }}
+          </p>
+        </article>
+      }
+    </div>
+  } @else if (loaded()) {
+    <p class="empty">No savings goals.</p>
+  }
+</section>

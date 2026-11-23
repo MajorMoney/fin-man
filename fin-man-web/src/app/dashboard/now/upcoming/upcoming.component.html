@@ -1,0 +1,50 @@
+<section class="panel" aria-labelledby="upcoming-title">
+  <header class="head">
+    <h3 id="upcoming-title">Next 30 days</h3>
+    <p class="sums">
+      <span class="out">{{ view().outTotal }} out</span>
+      <span aria-hidden="true">·</span>
+      <span class="in">{{ view().inTotal }} in</span>
+    </p>
+  </header>
+  <div class="split">
+    <div>
+      <h4>Out</h4>
+      @if (view().outgoing.length) {
+        <ul>
+          @for (item of view().outgoing; track item.id) {
+            <li>
+              <span class="when">{{ item.when }}</span>
+              <span class="what">
+                <span class="desc">{{ item.description }}</span>
+                <span class="account">{{ item.account }}</span>
+              </span>
+              <span class="amt out">{{ item.amount }}</span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="empty">Nothing going out.</p>
+      }
+    </div>
+    <div>
+      <h4>In</h4>
+      @if (view().incoming.length) {
+        <ul>
+          @for (item of view().incoming; track item.id) {
+            <li>
+              <span class="when">{{ item.when }}</span>
+              <span class="what">
+                <span class="desc">{{ item.description }}</span>
+                <span class="account">{{ item.account }}</span>
+              </span>
+              <span class="amt in">{{ item.amount }}</span>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p class="empty">Nothing coming in.</p>
+      }
+    </div>
+  </div>
+</section>

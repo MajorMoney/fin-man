@@ -1,0 +1,18 @@
+<div class="chart card">
+  <h3>Spending by account</h3>
+  @if (accounts.length) {
+    <ul>
+      @for (account of accounts; track account.name) {
+        <li>
+          <span>{{ account.name }}</span>
+          <span class="figures">
+            <span class="amount">{{ account.amount }}</span>
+            <span class="percent">{{ account.percent }}%</span>
+          </span>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="empty">No expenses this year.</p>
+  }
+</div>
